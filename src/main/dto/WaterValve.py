@@ -18,6 +18,5 @@ class WaterValve(ReactorComponent):
 
     @status.setter
     def status(self, status: bool) -> None:
-        sleep(0.5)
         if not self._blown:
             self._status = status

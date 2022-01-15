@@ -14,5 +14,4 @@ class SteamValve(ReactorComponent):
 
     @status.setter
     def status(self, status: bool) -> None:
-        sleep(0.5)
         self._status = status

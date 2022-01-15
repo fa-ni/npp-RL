@@ -54,3 +54,7 @@ class Pump(ReactorComponent):
                     self._rpm = self._rpm_to_be_set + int((self._rpm - self._rpm_to_be_set) / 2)
                 else:
                     self._rpm = self._rpm_to_be_set - int((self._rpm_to_be_set - self._rpm) / 2)
+
+    @rpm.setter
+    def rpm(self, value):
+        self._rpm = value

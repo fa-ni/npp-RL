@@ -96,7 +96,6 @@ class BackgroundStepService:
                 self._full_reactor.water_pump1.update()
                 self._full_reactor.water_pump2.update()
                 self._full_reactor.condenser_pump.update()
-            time.sleep(0.2)
 
     def _check_and_set_failure(self) -> None:
         if self._full_reactor.water_pump1.is_blown():

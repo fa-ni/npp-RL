@@ -6,7 +6,7 @@ from src.main.services.BackgroundStepService import BackgroundStepService
 from src.main.services.ReactorCreatorService import ReactorCreatorService
 
 
-class Scenario2(Env):
+class Scenario1(Env):
     # Scenario 1 with Action Space Option 1 and Observation Space Option1
 
     def __init__(self):
@@ -32,9 +32,24 @@ class Scenario2(Env):
             100 - self.state.full_reactor.reactor.moderator_percent + moderator_percent_setting
         )
         self.state.full_reactor.water_pump1.rpm_to_be_set += wp_rpm_setting
-
+        # Necessary for Action Space Option 1
+        if len(action) == 2:
+            # This is necessary as you cannot override the state from this environment in any of the wrappers
+            if self.length == 249:
+                self.state.full_reactor.condenser_pump.rpm = 1600
+                self.state.full_reactor.steam_valve1.status = True
+                self.state.full_reactor.water_valve1.status = True
+            self.state.full_reactor.condenser_pump.rpm_to_be_set = 1600
+            self.state.full_reactor.steam_valve1.status = True
+            self.state.full_reactor.water_valve1.status = True
         # Necessary for Action Space Option 2
         if len(action) == 3:  # TODO
+            # This is necessary as Iyou cannot override the state from this environment in any of the wrappers
+            if self.length == 249:
+                self.state.full_reactor.condenser_pump.rpm = 1600
+                self.state.full_reactor.steam_valve1.status = True
+            self.state.full_reactor.condenser_pump.rpm_to_be_set = 1600
+            self.state.full_reactor.steam_valve1.status = True
             water_valve_setting = False if action[2] < 0 else True
             self.state.full_reactor.water_valve1.status = water_valve_setting
         # Necessary for Action Space Option 3
@@ -76,11 +91,6 @@ class Scenario2(Env):
     def reset(self):
         self.state = None
         self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
-        # This variable should not be accessed like this in the normal simulation. Here it is okay because otherwise we
-        # would need to run the timestep method multiple times to reach the same result.
-        self.state.full_reactor.condenser_pump.rpm = 1600
-        self.state.full_reactor.water_valve1.status = True
-        self.state.full_reactor.steam_valve1.status = True
         self.moderator_percent = 100
         self.length = 250
-        return np.array([float(0)])
+        return np.array([float(-1)])

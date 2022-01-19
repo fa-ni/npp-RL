@@ -45,6 +45,7 @@ class Scenario3(Env):
                 self.state.full_reactor.condenser_pump.rpm = 1600
                 self.state.full_reactor.steam_valve1.status = True
             self.state.full_reactor.condenser_pump.rpm_to_be_set = 1600
+            self.state.full_reactor.steam_valve1.status = True
             water_valve_setting = (
                 False if action[2] == 0 else (self.state.full_reactor.water_valve1.status if action[2] == 1 else True)
             )
@@ -94,4 +95,4 @@ class Scenario3(Env):
         self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
         self.moderator_percent = 100
         self.length = 250
-        return np.array([float(0)])
+        return np.array([float(-1)])

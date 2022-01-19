@@ -12,7 +12,10 @@ from stable_baselines3.common.vec_env import VecMonitor
 
 from RL.wrapper.ActionSpaceOption2Wrapper import ActionSpaceOption2Wrapper
 from RL.wrapper.ActionSpaceOption3Wrapper import ActionSpaceOption3Wrapper
+from RL.wrapper.ObservationOption2Wrapper import ObservationOption2Wrapper
 from RL.wrapper.ObservationOption3Wrapper import ObservationOption3Wrapper
+from RL.wrapper.ObservationOption4Wrapper import ObservationOption4Wrapper
+from RL.wrapper.ObservationOption5Wrapper import ObservationOption5Wrapper
 
 
 class SaveOnBestTrainingRewardCallback(BaseCallback):
@@ -60,8 +63,11 @@ num_cpu = 12
 log_dir = "./model"
 
 list_of_obs_wrappers = [
+    ObservationOption2Wrapper,
     ObservationOption3Wrapper,
-]  # ObservationOption2Wrapper, ObservationOption4Wrapper, ObservationOption5Wrapper]  # TODO
+    ObservationOption4Wrapper,
+    ObservationOption5Wrapper,
+]
 list_of_action_wrappers = [ActionSpaceOption2Wrapper, ActionSpaceOption3Wrapper]
 
 

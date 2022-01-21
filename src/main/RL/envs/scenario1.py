@@ -31,7 +31,7 @@ class Scenario1(Env):
         self.state.full_reactor.reactor.moderator_percent = (
             100 - self.state.full_reactor.reactor.moderator_percent + moderator_percent_setting
         )
-        self.state.full_reactor.water_pump1.rpm_to_be_set += wp_rpm_setting
+        self.state.full_reactor.water_pump1.rpm_to_be_set = wp_rpm_setting
         # Necessary for Action Space Option 1
         if len(action) == 2:
             # This is necessary as you cannot override the state from this environment in any of the wrappers

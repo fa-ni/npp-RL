@@ -61,7 +61,7 @@ class Scenario3(Env):
             condenser_rpm_setting = -25 if action[4] == 0 else (0 if action[4] == 0 else +25)
             self.state.full_reactor.water_valve1.status = water_valve_setting
             self.state.full_reactor.steam_valve1.status = steam_valve_setting
-            self.state.full_reactor.condenser_pump.rpm_to_be_set = condenser_rpm_setting
+            self.state.full_reactor.condenser_pump.rpm_to_be_set += condenser_rpm_setting
         self.state.time_step(1)
 
         calc_reward = self.state.full_reactor.generator.power / 800

@@ -5,8 +5,6 @@ from stable_baselines3.common.vec_env import VecEnvWrapper
 from stable_baselines3.common.vec_env.base_vec_env import VecEnvStepReturn
 
 
-# VecEnvWrapper
-# https://github.com/DLR-RM/stable-baselines3/blob/master/stable_baselines3/common/vec_env/vec_monitor.py
 class ObservationOption2Wrapper(Wrapper):
     # def step_wait(self) -> VecEnvStepReturn:
     #    pass

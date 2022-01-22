@@ -1,6 +1,6 @@
 import numpy as np
 from gym import Wrapper
-from gym.spaces import MultiBinary
+from gym.spaces import MultiBinary, Box, MultiDiscrete
 
 
 class ActionSpaceOption2Wrapper(Wrapper):
@@ -8,5 +8,11 @@ class ActionSpaceOption2Wrapper(Wrapper):
         super().__init__(
             env,
         )
-        # 1. WP1 RPM 2. CR/Moderator Percent 3. WV1
-        self.action_space = MultiBinary(3)
+        # Maybe we can check here which original value it had, if multibanary we go like this else.. TODO
+        # 1. CR/Moderator Percent 2. WP1 RPM 3. WV1
+        if type(env.action_space) == MultiBinary:
+            self.action_space = MultiBinary(3)
+        if type(env.action_space) == Box:
+            self.action_space = Box(np.array([-1, -1, -1]).astype(np.float32), np.array([1, 1, 1]).astype(np.float32))
+        if type(env.action_space) == MultiDiscrete:
+            self.action_space = MultiDiscrete([3, 3, 3])

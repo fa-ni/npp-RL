@@ -32,5 +32,4 @@ class ObservationOption4Wrapper(Wrapper):
         return tuple(original_result)
 
     def reset(self):
-        self.unwrapped.reset_action_spac_option2()
         return np.append(self.unwrapped.reset(), np.array([float(0), float(-1), float(0), float(-1)]))

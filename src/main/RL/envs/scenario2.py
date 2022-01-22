@@ -61,7 +61,6 @@ class Scenario2(Env):
         self.state.time_step(1)
 
         calc_reward = self.state.full_reactor.generator.power / 800
-        reward += calc_reward  # TODO #calc_reward if calc_reward < 1 else 1
         if (
             self.state.full_reactor.reactor.overheated
             or self.state.full_reactor.reactor.is_blown()
@@ -73,7 +72,8 @@ class Scenario2(Env):
             or self.state.full_reactor.water_pump1.rpm < 0
         ):
             done = True
-
+        else:
+            reward += calc_reward  # TODO #calc_reward if calc_reward < 1 else 1
         normalized_obs = 2 * (self.state.full_reactor.generator.power / 800) - 1
         return [
             # Might need to change if we dont want to have binary for first observation

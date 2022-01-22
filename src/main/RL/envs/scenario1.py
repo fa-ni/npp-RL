@@ -2,6 +2,7 @@ import numpy as np
 from gym import Env
 from gym.spaces import MultiBinary, Box
 
+from RL.utils.utils import get_real_value
 from src.main.services.BackgroundStepService import BackgroundStepService
 from src.main.services.ReactorCreatorService import ReactorCreatorService
 
@@ -26,8 +27,8 @@ class Scenario1(Env):
         # (normalized value + 1)* (max_value/2)
         # Standard/Minimal Actions
         # Option 1 Actions
-        moderator_percent_setting = (action[0] + 1) * (100 / 2)
-        wp_rpm_setting = (action[1] + 1) * (2000 / 2)
+        moderator_percent_setting = get_real_value(100, action[0])
+        wp_rpm_setting = get_real_value(2000, action[1])
         self.state.full_reactor.reactor.moderator_percent = (
             100 - self.state.full_reactor.reactor.moderator_percent + moderator_percent_setting
         )
@@ -56,14 +57,13 @@ class Scenario1(Env):
         if len(action) == 5:
             water_valve_setting = False if action[2] < 0 else True
             steam_valve_setting = False if action[3] < 0 else True
-            condenser_rpm_setting = (action[4] + 1) * (2000 / 2)
+            condenser_rpm_setting = get_real_value(2000, action[4])
             self.state.full_reactor.water_valve1.status = water_valve_setting
             self.state.full_reactor.steam_valve1.status = steam_valve_setting
             self.state.full_reactor.condenser_pump.rpm_to_be_set = condenser_rpm_setting
         self.state.time_step(1)
 
         calc_reward = self.state.full_reactor.generator.power / 800
-        reward += calc_reward  # TODO #calc_reward if calc_reward < 1 else 1
         if (
             self.state.full_reactor.reactor.overheated
             or self.state.full_reactor.reactor.is_blown()
@@ -75,6 +75,8 @@ class Scenario1(Env):
             or self.state.full_reactor.water_pump1.rpm < 0
         ):
             done = True
+        else:
+            reward += calc_reward  # TODO #calc_reward if calc_reward < 1 else 1
 
         normalized_obs = 2 * (self.state.full_reactor.generator.power / 800) - 1
         return [

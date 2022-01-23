@@ -1,6 +1,56 @@
-# python-backend
 
-This repo is used to simulate a nuclear power plant (npp). It contains the backend logic in python. It uses a similar
+# Overview
+This repo currently contains the RL Code to learn the npp-implemenation in python from a earlier project. Currently the project which is called "python-backend" is still within this repository. This might be changed later. For more information about the earlier project, please go to section "python-backend".
+
+## RL
+
+### General information & Background
+This project uses RL Algorithms from stable-baselines3 to learn Standard Operating Procedure for the nuclear power plant simulation. It builds up a custom OpenAI Gym environment with multiple scenarios and wrappers.
+### How to use
+
+### Scenarios
+
+### Wrapper
+
+The wrapper classes help to reduce code duplication. The wrappers can be used in a flexible way in the current scenario.
+Either no wrapper, one ObservationWrapper, one ActionWrapper or a combination of ActionWrapper and ObservationWrapper
+can be used. There is also no need to adjust anything else. With the helper methode make_wrapper, wrapper can be chained
+and overhanded to the
+'make_vec_env' function from gym.
+
+#### ActionWrappers
+
+The ActionWrappers only modify the number of action parameters/dimensions. ActionSpaceOption2Wrapper is used to be able
+to have 3 dimensions in the action space. ActionSpaceOption3Wrapper is used to be able to have 5 dimensions in the
+action space. By default, they already can handle all three different scenarios which are included in this package (
+continuous,multibinary,multidiscrete). The different action spaces sizes are handled with if statements in all 3
+scenarios directly. Which exact parameters are behind these functions can be seen in the description of each class.
+
+#### ObservationWrappers
+
+The ObservationWrappers modify the number of dimensions/parameters for the observation space. As the observation space
+is also used in the "reset" and "step" function of the gym environments these functions are also programmed. These
+functions (can) get the output of the original functions from the scenarios. ObservationOption2Wrapper has 3 dimensions.
+ObservationOption3Wrapper has 6 dimensions. ObservationOption4Wrapper has 5 dimensions. ObservationOption5Wrapper has 10
+dimensions. Which exact parameters are behind these functions can be seen in the description of each class.
+
+### Evaluation
+
+To evaluate the performance the eval.py script is used. It computes the mean_reward over multiple test episodes.
+
+### Frontend
+
+### Training
+
+### Logging and model saving
+
+
+
+
+
+## python-backend
+
+This part is used to simulate a nuclear power plant (npp). It contains the backend logic in python. It uses a similar
 logic for the backend as described in [Weyers et al. 2017].
 
 Next to the logic of the npp, this repo contains a function that can start the reactor and keep at stable at a certain
@@ -12,10 +62,9 @@ Python, Py4J-Bridge, Pyjnius-Bridge). You can then also analyze the results with
 Make sure that you copy the result.csv files to the results folder or change the paths in the notebook.
 
 The python code should later be used to train a reinforcement learning agent to identify whether it is possible to train an
-agent to fulfill the task of starting and shutting down a nnp. The detailed task to solve, the code and the description
-for the reinforcement approach will be in this (TODO) repository.
+agent to fulfill the task of starting and shutting down a nnp. 
 
-# How to run:
+### How to run:
 
 To run the benchmark install the packages from the requirements.txt via ```pip install -r requirements.txt```.  You need to make sure that you
 have the NPP_Simu.jar within the main folder. This jar contains the compiled NPP_Simu program from this repository https://github.com/npp-masterthesis/npp-java-adjusted with all its dependencies from the lib folder.

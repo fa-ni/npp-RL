@@ -48,7 +48,6 @@ class ObservationOption5Wrapper(Wrapper):
         sv1_status = -1
         cp_rpm_status = -1
         wv1_status = -1
-        # TODO Check mit anderem Action Space
         if self.action_space.shape[0] <= 3:
             cp_rpm_status = 2 * (1600 / 2000) - 1
             sv1_status = 1

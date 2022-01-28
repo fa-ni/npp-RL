@@ -8,7 +8,7 @@ class ActionSpaceOption2Wrapper(Wrapper):
         super().__init__(
             env,
         )
-        # Maybe we can check here which original value it had, if multibanary we go like this else.. TODO
+        # Maybe we can check here which original value it had, if multibinary we go like this else.. TODO
         # 1. CR/Moderator Percent 2. WP1 RPM 3. WV1
         if type(env.action_space) == MultiBinary:
             self.action_space = MultiBinary(3)

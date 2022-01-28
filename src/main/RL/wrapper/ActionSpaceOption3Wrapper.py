@@ -6,7 +6,7 @@ from gym.spaces import MultiBinary, Box, MultiDiscrete
 class ActionSpaceOption3Wrapper(Wrapper):
     def __init__(self, env):
         super().__init__(env)
-        # 1. CR/Moderator Percent 2. WP1 RPM 3. WV1 4. SV1 5. CPRPM
+        # 1. CR/Moderator Percent 2. WP1 RPM 3. WV1 4. SV1 5. CP RPM
         if type(env.action_space) == MultiBinary:
             self.action_space = MultiBinary(5)
         if type(env.action_space) == Box:

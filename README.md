@@ -62,7 +62,7 @@ Python, Py4J-Bridge, Pyjnius-Bridge). You can then also analyze the results with
 Make sure that you copy the result.csv files to the results folder or change the paths in the notebook.
 
 The python code should later be used to train a reinforcement learning agent to identify whether it is possible to train an
-agent to fulfill the task of starting and shutting down a nnp. 
+agent to fulfill the task of starting and shutting down a nnp.
 
 ### How to run:
 

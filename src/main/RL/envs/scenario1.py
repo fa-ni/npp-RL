@@ -23,7 +23,7 @@ class Scenario1(Env):
         moderator_percent_setting = get_real_value(100, action[0])
         wp_rpm_setting = get_real_value(2000, action[1])
         self.state.full_reactor.reactor.moderator_percent = (
-                100 - self.state.full_reactor.reactor.moderator_percent + moderator_percent_setting
+            100 - self.state.full_reactor.reactor.moderator_percent + moderator_percent_setting
         )
         self.state.full_reactor.water_pump1.rpm_to_be_set = wp_rpm_setting
         # Necessary for Action Space Option 1

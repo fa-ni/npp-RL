@@ -24,7 +24,7 @@ class Scenario3(Env):
         moderator_percent_setting = -1 if action[0] == 0 else (0 if action[0] == 1 else 1)
         wp_rpm_setting = -25 if action[1] == 0 else (0 if action[1] == 1 else 25)
         self.state.full_reactor.reactor.moderator_percent = (
-                100 - self.state.full_reactor.reactor.moderator_percent + moderator_percent_setting
+            100 - self.state.full_reactor.reactor.moderator_percent + moderator_percent_setting
         )
         self.state.full_reactor.water_pump1.rpm_to_be_set += wp_rpm_setting
 

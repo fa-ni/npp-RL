@@ -1,15 +1,15 @@
 import numpy as np
 from gym import Env
-from gym.spaces import MultiBinary, Box
+from gym.spaces import Box
 
-from RL.utils.utils import get_real_value
+from RL.utils.utils import get_real_value, is_done
 from src.main.services.BackgroundStepService import BackgroundStepService
 from src.main.services.ReactorCreatorService import ReactorCreatorService
 
 
 class Scenario1(Env):
-    # Scenario 1 with Action Space Option 1 and Observation Space Option1
-
+    # Scenario 1 with continuous action spaces
+    # if no wrapper is specified this will use ActionSpaceOption 1 and ObservationSpaceOption1
     def __init__(self):
         # 1. moderator_percent 2. WP1 RPM
         self.action_space = Box(np.array([-1, -1]).astype(np.float32), np.array([1, 1]).astype(np.float32))
@@ -17,20 +17,13 @@ class Scenario1(Env):
         self.length = 250
 
     def step(self, action):
-        done = False
         reward = 0
         self.length -= 1
-        self.state.full_reactor.condenser_pump.rpm_to_be_set = 1600
-        self.state.full_reactor.steam_valve1.status = True
-        self.state.full_reactor.water_valve1.status = True
-
-        # (normalized value + 1)* (max_value/2)
         # Standard/Minimal Actions
-        # Option 1 Actions
         moderator_percent_setting = get_real_value(100, action[0])
         wp_rpm_setting = get_real_value(2000, action[1])
         self.state.full_reactor.reactor.moderator_percent = (
-            100 - self.state.full_reactor.reactor.moderator_percent + moderator_percent_setting
+                100 - self.state.full_reactor.reactor.moderator_percent + moderator_percent_setting
         )
         self.state.full_reactor.water_pump1.rpm_to_be_set = wp_rpm_setting
         # Necessary for Action Space Option 1
@@ -44,8 +37,8 @@ class Scenario1(Env):
             self.state.full_reactor.steam_valve1.status = True
             self.state.full_reactor.water_valve1.status = True
         # Necessary for Action Space Option 2
-        if len(action) == 3:  # TODO
-            # This is necessary as Iyou cannot override the state from this environment in any of the wrappers
+        if len(action) == 3:
+            # This is necessary as you cannot override the state from this environment in any of the wrappers
             if self.length == 249:
                 self.state.full_reactor.condenser_pump.rpm = 1600
                 self.state.full_reactor.steam_valve1.status = True
@@ -63,20 +56,10 @@ class Scenario1(Env):
             self.state.full_reactor.condenser_pump.rpm_to_be_set = condenser_rpm_setting
         self.state.time_step(1)
 
-        calc_reward = self.state.full_reactor.generator.power / 800
-        if (
-            self.state.full_reactor.reactor.overheated
-            or self.state.full_reactor.reactor.is_blown()
-            or self.state.full_reactor.generator.is_blown()
-            or self.state.full_reactor.condenser.is_blown()
-            or self.state.full_reactor.water_pump1.is_blown()
-            or self.state.full_reactor.condenser_pump.is_blown()
-            or self.length <= 0
-            or self.state.full_reactor.water_pump1.rpm < 0
-        ):
-            done = True
-        else:
-            reward += calc_reward  # TODO #calc_reward if calc_reward < 1 else 1
+        done = is_done(self.state.full_reactor, self.length)
+        if not done:
+            calc_reward = self.state.full_reactor.generator.power / 800
+            reward += calc_reward  # TODO calc_reward if calc_reward < 1 else 1
 
         normalized_obs = 2 * (self.state.full_reactor.generator.power / 800) - 1
         return [

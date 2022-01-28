@@ -6,7 +6,7 @@ from stable_baselines3.common.results_plotter import ts2xy
 
 class SaveOnBestTrainingRewardCallback(BaseCallback):
     def __init__(
-            self, check_freq, log_dir, minimum_required_reward: int = 190, number_of_last_episodes_to_check: int = 100
+        self, check_freq, log_dir, minimum_required_reward: int = 190, number_of_last_episodes_to_check: int = 100
     ):
         super(SaveOnBestTrainingRewardCallback, self).__init__()
         self.check_freq = check_freq

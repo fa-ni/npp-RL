@@ -2,5 +2,5 @@
 /out/
 /.idea/
 **/__pycache__
-/src/test/cov/
-/src/test/.pytest_cache/
+/src/tests/cov/
+/src/tests/.pytest_cache/

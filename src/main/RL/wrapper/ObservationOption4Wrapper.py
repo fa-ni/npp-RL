@@ -32,4 +32,6 @@ class ObservationOption4Wrapper(Wrapper):
         return tuple(original_result)
 
     def reset(self):
+        # normalized_reactor_water_level is at start at 50% -> 0; normalized_reactor_pressure is at start at 0 -> -1
+        # normalized_condenser_water_level is at start at 50% -> 0; normalized_condenser_pressure is at start at 0 -> -1
         return np.append(self.unwrapped.reset(), np.array([float(0), float(-1), float(0), float(-1)]))

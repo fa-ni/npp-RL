@@ -4,12 +4,12 @@ from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import VecMonitor
 
-from RL.utils.utils import WrapperMaker, parse_scenario_name
-from RL.wrapper.ObservationOption5Wrapper import ObservationOption5Wrapper
+from src.main.RL.utils.utils import WrapperMaker, parse_scenario_name
+from src.main.RL.wrapper.ObservationOption5Wrapper import ObservationOption5Wrapper
 
 # TODO Refactor
 # TODO Callback to save best model
-from RL.utils.constants import ALL_ACTION_WRAPPERS, ALL_OBSERVATION_WRAPPERS
+from src.main.RL.utils.constants import ALL_ACTION_WRAPPERS, ALL_OBSERVATION_WRAPPERS, ALL_SCENARIOS
 
 num_cpu = 12  # TODO
 log_dir = "./model"
@@ -27,28 +27,28 @@ def train_agent(
         # Just some tires -> best one
         # n_steps=512, gae_lambda=0.8, batch_size=128, gamma=0.95, n_epochs=60,
         # ent_coef=0.0, learning_rate=0.0005, clip_range=0.2
-        eval_callback = EvalCallback(environment, best_model_save_path="./best_model/scenario2", verbose=1)
+        # eval_callback = EvalCallback(environment, best_model_save_path="./best_model/scenario2", verbose=1)
 
         model = algorithm(
             "MlpPolicy",
             env=environment,
             verbose=1,
-            tensorboard_log=f"./logs/npp_automation/{log_name_scenario}",
+            tensorboard_log=f"./logs/{log_name_scenario}",
             device="cpu",
-            n_steps=512,
-            gae_lambda=0.8,
-            batch_size=128,
-            gamma=0.95,
-            n_epochs=60,
-            ent_coef=0.0,
-            learning_rate=0.0005,
-            clip_range=0.2,
+            # n_steps=512,
+            # gae_lambda=0.8,
+            # batch_size=128,
+            # gamma=0.95,
+            # n_epochs=60,
+            # ent_coef=0.0,
+            # learning_rate=0.0005,
+            # clip_range=0.2,
         ).learn(
             700000,
             tb_log_name=log_name,
             # n_eval_episodes=1,
             # eval_freq=1,
-            callback=eval_callback,
+            # callback=eval_callback,
         )
     except Exception as exception:
         print("Error")

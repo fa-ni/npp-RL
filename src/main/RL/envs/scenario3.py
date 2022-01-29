@@ -2,7 +2,7 @@ import numpy as np
 from gym import Env
 from gym.spaces import Box, MultiDiscrete
 
-from RL.utils.utils import is_done
+from src.main.RL.utils.utils import is_done
 from src.main.services.BackgroundStepService import BackgroundStepService
 from src.main.services.ReactorCreatorService import ReactorCreatorService
 

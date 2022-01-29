@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from time import sleep
 
-from dto.ReactorComponent import ReactorComponent
+from src.main.dto.ReactorComponent import ReactorComponent
 
 
 @dataclass

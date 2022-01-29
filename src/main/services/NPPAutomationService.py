@@ -1,6 +1,6 @@
 from time import sleep
 
-from services.BackgroundStepService import BackgroundStepService
+from src.main.services.BackgroundStepService import BackgroundStepService
 
 
 class NPPAutomationService:

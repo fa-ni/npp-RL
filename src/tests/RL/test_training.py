@@ -1,8 +1,8 @@
 import gym
 import mock
 
+from src.main.RL.utils.constants import ALL_SCENARIOS
 from src.main.RL.training import train_all_scenarios
-from RL.utils.constants import ALL_SCENARIOS
 
 
 @mock.patch("src.main.RL.training.train_agent")
@@ -19,6 +19,8 @@ def test_number_of_models_with_one_envs(mock_train_agent):
     assert mock_train_agent.call_count == 45
     # And 45 / 3 (Alg) = 15 -> 15 different scenarios with/without Wrappers
     assert len_standard_env_dict + 15 == len(gym.envs.registration.registry.env_specs)
+    # Resetting all registered envs in gym
+    gym.envs.registration.registry.env_specs.clear()
 
 
 @mock.patch("src.main.RL.training.train_agent")

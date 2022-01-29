@@ -1,8 +1,8 @@
 import gym
 import pytest
 
-from RL.utils.utils import get_real_value, is_done, parse_scenario_name, delete_env_id
-from services.ReactorCreatorService import ReactorCreatorService
+from src.main.RL.utils.utils import get_real_value, is_done, parse_scenario_name, delete_env_id
+from src.main.services.ReactorCreatorService import ReactorCreatorService
 
 
 @pytest.mark.parametrize(

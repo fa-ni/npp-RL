@@ -1,6 +1,6 @@
 import gym
 
-from dto.FullReactor import FullReactor
+from src.main.dto.FullReactor import FullReactor
 
 
 def get_real_value(max_value: int, scaled_value: float) -> int:

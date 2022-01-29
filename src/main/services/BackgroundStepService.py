@@ -1,8 +1,8 @@
 import math
 import time
 
-from dto.FullReactor import FullReactor
-from services.CalculatorService import CalculatorService
+from src.main.dto.FullReactor import FullReactor
+from src.main.services.CalculatorService import CalculatorService
 
 
 class BackgroundStepService:

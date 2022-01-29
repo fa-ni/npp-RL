@@ -1,4 +1,4 @@
-from dto.ReactorComponent import ReactorComponent
+from src.main.dto.ReactorComponent import ReactorComponent
 
 
 class Pump(ReactorComponent):

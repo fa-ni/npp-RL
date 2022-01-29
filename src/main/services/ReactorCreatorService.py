@@ -1,11 +1,11 @@
-from dto.Condenser import Condenser
-from dto.FullReactor import FullReactor
-from dto.Generator import Generator
-from dto.Pump import Pump
-from dto.Reactor import Reactor
-from dto.SteamValve import SteamValve
-from dto.Turbine import Turbine
-from dto.WaterValve import WaterValve
+from src.main.dto.Condenser import Condenser
+from src.main.dto.FullReactor import FullReactor
+from src.main.dto.Generator import Generator
+from src.main.dto.Pump import Pump
+from src.main.dto.Reactor import Reactor
+from src.main.dto.SteamValve import SteamValve
+from src.main.dto.Turbine import Turbine
+from src.main.dto.WaterValve import WaterValve
 
 
 class ReactorCreatorService:

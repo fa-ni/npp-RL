@@ -2,7 +2,7 @@ import numpy as np
 from gym import Env
 from gym.spaces import Box
 
-from RL.utils.utils import get_real_value, is_done
+from src.main.RL.utils.utils import get_real_value, is_done
 from src.main.services.BackgroundStepService import BackgroundStepService
 from src.main.services.ReactorCreatorService import ReactorCreatorService
 

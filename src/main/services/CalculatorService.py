@@ -1,8 +1,8 @@
-from dto.FullReactor import FullReactor
-from dto.Pump import Pump
-from dto.SteamValve import SteamValve
+from src.main.dto.FullReactor import FullReactor
+from src.main.dto.Pump import Pump
+from src.main.dto.SteamValve import SteamValve
 
-from dto.WaterValve import WaterValve
+from src.main.dto.WaterValve import WaterValve
 
 
 class CalculatorService:

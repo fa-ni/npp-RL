@@ -1,7 +1,7 @@
 from collections import deque
 from dataclasses import dataclass
 
-from dto.ReactorComponent import ReactorComponent
+from src.main.dto.ReactorComponent import ReactorComponent
 
 
 @dataclass

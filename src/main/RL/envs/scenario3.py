@@ -53,12 +53,12 @@ class Scenario3(Env):
         # Necessary for Action Space Option 3
         if len(action) == 5:  # TODO
             water_valve_setting = (
-                False if action[2] == 0 else (self.state.full_reactor.water_valve1.status if action[2] == 0 else True)
+                False if action[2] == 0 else (self.state.full_reactor.water_valve1.status if action[2] == 1 else True)
             )
             steam_valve_setting = (
-                False if action[3] == 0 else (self.state.full_reactor.steam_valve1.status if action[3] == 0 else True)
+                False if action[3] == 0 else (self.state.full_reactor.steam_valve1.status if action[3] == 1 else True)
             )
-            condenser_rpm_setting = -25 if action[4] == 0 else (0 if action[4] == 0 else +25)
+            condenser_rpm_setting = -25 if action[4] == 0 else (0 if action[4] == 1 else +25)
             self.state.full_reactor.water_valve1.status = water_valve_setting
             self.state.full_reactor.steam_valve1.status = steam_valve_setting
             self.state.full_reactor.condenser_pump.rpm_to_be_set += condenser_rpm_setting

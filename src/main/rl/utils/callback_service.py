@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 from gym.wrappers.monitor import load_results
 from stable_baselines3.common.callbacks import BaseCallback

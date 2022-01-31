@@ -1,7 +1,7 @@
 import gym
 import pytest
 
-from src.main.RL.utils.utils import get_real_value, is_done, parse_scenario_name, delete_env_id
+from src.main.rl.utils.utils import get_real_value, is_done, parse_scenario_name, delete_env_id
 from src.main.services.ReactorCreatorService import ReactorCreatorService
 
 

@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "npp-rl"
+version = "0.1.0"
+description = ""
+authors = ["fa-ni"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+stable-baselines3 = "^1.4.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+mock = "^4.0.3"
+tensorboard = "^2.8.0"
+pre-commit = "^2.17.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

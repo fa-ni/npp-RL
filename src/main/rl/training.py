@@ -4,12 +4,12 @@ from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import VecMonitor
 
-from src.main.RL.utils.utils import WrapperMaker, parse_scenario_name
-from src.main.RL.wrapper.ObservationOption5Wrapper import ObservationOption5Wrapper
+from src.main.rl.utils.utils import WrapperMaker, parse_scenario_name
+from src.main.rl.wrapper.obs_wrapper5 import ObservationOption5Wrapper
 
 # TODO Refactor
 # TODO Callback to save best model
-from src.main.RL.utils.constants import ALL_ACTION_WRAPPERS, ALL_OBSERVATION_WRAPPERS, ALL_SCENARIOS
+from src.main.rl.utils.constants import ALL_ACTION_WRAPPERS, ALL_OBSERVATION_WRAPPERS, ALL_SCENARIOS
 
 num_cpu = 12  # TODO
 log_dir = "./model"

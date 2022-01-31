@@ -1,6 +1,6 @@
 import mock
 import numpy as np
-from src.main.RL.envs.scenario1 import Scenario1
+from src.main.rl.envs.scenario1 import Scenario1
 from gym.spaces import Box
 
 
@@ -16,7 +16,7 @@ def test_scenario1_init():
     assert scenario1.observation_space == Box(np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32))
 
 
-@mock.patch("src.main.RL.envs.scenario1.get_real_value")
+@mock.patch("src.main.rl.envs.scenario1.get_real_value")
 def test_scenario1_step_with_two_actions(mock_get_real_value):
     mock_get_real_value.return_value = 40
     scenario1 = Scenario1()
@@ -43,7 +43,7 @@ def test_scenario1_step_with_two_actions(mock_get_real_value):
     assert step_two_result == [np.array([2.18]), 0, True, {}]
 
 
-@mock.patch("src.main.RL.envs.scenario1.get_real_value")
+@mock.patch("src.main.rl.envs.scenario1.get_real_value")
 def test_scenario1_step_with_three_actions(mock_get_real_value):
     mock_get_real_value.return_value = 40
     scenario1 = Scenario1()
@@ -70,7 +70,7 @@ def test_scenario1_step_with_three_actions(mock_get_real_value):
     assert step_two_result == [np.array([2.18]), 0, True, {}]
 
 
-@mock.patch("src.main.RL.envs.scenario1.get_real_value")
+@mock.patch("src.main.rl.envs.scenario1.get_real_value")
 def test_scenario1_step_with_five_actions(mock_get_real_value):
     mock_get_real_value.return_value = 40
     scenario1 = Scenario1()

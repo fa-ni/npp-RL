@@ -3,8 +3,8 @@ import pytest
 from gym import register, make
 from gym.spaces import Box
 
-from src.main.RL.utils.utils import delete_env_id
-from src.main.RL.wrapper.ObservationOption5Wrapper import ObservationOption5Wrapper
+from src.main.rl.utils.utils import delete_env_id
+from src.main.rl.wrapper.obs_wrapper5 import ObservationOption5Wrapper
 
 
 @pytest.fixture
@@ -12,7 +12,7 @@ def set_up(request):
     version = request.node.get_closest_marker("number").args[0]
     env_id = f"test-v{version}"
     delete_env_id(env_id)
-    scenario = "src.main.RL.envs.scenario2:Scenario2"
+    scenario = "src.main.rl.envs.scenario2:Scenario2"
     register(id=env_id, entry_point=scenario)
     env = make(env_id)
     wrapper = ObservationOption5Wrapper(env)

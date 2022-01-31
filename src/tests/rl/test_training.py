@@ -1,13 +1,13 @@
 import gym
 import mock
 
-from src.main.RL.utils.constants import ALL_SCENARIOS
-from src.main.RL.training import train_all_scenarios
+from src.main.rl.utils.constants import ALL_SCENARIOS
+from src.main.rl.training import train_all_scenarios
 
 
-@mock.patch("src.main.RL.training.train_agent")
+@mock.patch("src.main.rl.training.train_agent")
 def test_number_of_models_with_one_envs(mock_train_agent):
-    scenarios = ["src.main.RL.envs.scenario2:Scenario2"]
+    scenarios = ["src.main.rl.envs.scenario2:Scenario2"]
     len_standard_env_dict = len(gym.envs.registration.registry.env_specs)
     train_all_scenarios(scenarios)
     # Count is the following:
@@ -23,7 +23,7 @@ def test_number_of_models_with_one_envs(mock_train_agent):
     gym.envs.registration.registry.env_specs.clear()
 
 
-@mock.patch("src.main.RL.training.train_agent")
+@mock.patch("src.main.rl.training.train_agent")
 def test_number_of_models_with_three_envs(mock_train_agent):
     len_standard_env_dict = len(gym.envs.registration.registry.env_specs)
     train_all_scenarios(ALL_SCENARIOS)

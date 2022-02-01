@@ -32,4 +32,5 @@ jobs:
           poetry install
       - name: run tests
         run: |
-          poetry run pytest src/tests/rl/
+          ls -la
+          poetry run pytest src/tests/rl/test-training.py

@@ -52,13 +52,6 @@ def test_is_done_true_because_of_failure():
     assert actual == expected
 
 
-def test_is_done_true_because_of_wp1rpm():
-    reactor = ReactorCreatorService.create_standard_full_reactor()
-    reactor.water_pump1.__setattr__("rpm", -20)
-    actual = is_done(reactor, 200)
-    assert actual == True
-
-
 def test_is_done_true_because_of_length():
     reactor = ReactorCreatorService.create_standard_full_reactor()
     actual = is_done(reactor, 0)

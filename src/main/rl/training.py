@@ -110,7 +110,8 @@ def train_all_scenarios(scenarios: list, name_ending: str = None):
         # x = WrapperMaker(ActionSpaceOption2Wrapper, ObservationOption5Wrapper)
         register(id=f"{parsed_scenario_name}-v1", entry_point=scenario)
         vec_env = make_vec_env(
-            f"{parsed_scenario_name}-v1", n_envs=num_cpu, wrapper_class=ObservationOption5Wrapper
+            f"{parsed_scenario_name}-v1",
+            n_envs=num_cpu,
         )  # wrapper_class=ObservationOption5Wrapper)
         vec_env_monitor = VecMonitor(vec_env)
         for alg in algorithms:

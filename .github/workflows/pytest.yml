@@ -23,8 +23,8 @@ jobs:
       - id: cache-poetry
         uses: actions/cache@v2
         with:
-          path: ~/.venv
-          key: ${{ runner.os }}-pipenv-${{ hashFiles('**/poetry.lock') }}
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
 
       - name: install dependencies
         if: steps.cache-pipenv.outputs.cache-hit != 'true'

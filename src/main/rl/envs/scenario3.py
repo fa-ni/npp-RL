@@ -26,7 +26,10 @@ class Scenario3(Env):
         self.state.full_reactor.reactor.moderator_percent = (
             100 - self.state.full_reactor.reactor.moderator_percent + moderator_percent_setting
         )
-        self.state.full_reactor.water_pump1.rpm_to_be_set += wp_rpm_setting
+        if wp_rpm_setting + self.state.full_reactor.water_pump1.rpm_to_be_set > 0:
+            self.state.full_reactor.water_pump1.rpm_to_be_set += wp_rpm_setting
+        else:
+            self.state.full_reactor.water_pump1.rpm_to_be_set += 0
 
         # Necessary for Action Space Option 1
         if len(action) == 2:

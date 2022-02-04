@@ -17,7 +17,6 @@ def is_done(full_reactor: FullReactor, length: int) -> bool:
         or full_reactor.water_pump1.is_blown()
         or full_reactor.condenser_pump.is_blown()
         or length <= 0
-        or full_reactor.water_pump1.rpm < 0
     ):
         done = True
     return done

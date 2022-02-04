@@ -118,6 +118,3 @@ def train_all_scenarios(scenarios: list, name_ending: str = None):
             # vec_env_monitor = VecMonitor(env)
             # eval_frontend(vec_env_monitor)
             train_agent(alg, vec_env_monitor, scenario, None, None, name_ending)
-
-
-train_all_scenarios(ALL_SCENARIOS)

@@ -42,7 +42,7 @@ for scenario in scenarios:
 
     mean_reward_over_multiple_evaluations = []
     model = PPO.load(
-        "models/scenario2/reward_roof_blow_counter_pump_30_with_obs_blow_counter/scenario2_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_PPO_reward_roof_blow_counter_pump_30_with_obs_blow_counter/best_model.zip"
+        "models/scenario2/reward_roof_blow_counter_pump_200_with_obs_blow_counter/scenario2_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_PPO_reward_roof_blow_counter_pump_200_with_obs_blow_counter/best_model.zip"
     )
     obs = vec_env.reset()
     actions_taken = []

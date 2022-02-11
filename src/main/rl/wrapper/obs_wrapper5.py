@@ -24,7 +24,7 @@ class ObservationOption5Wrapper(Wrapper):
         normalized_cp_rpm = 2 * (self.state.full_reactor.condenser_pump.rpm / 2000) - 1
         normalized_wv1_status = float(self.state.full_reactor.water_valve1.status)
         normalized_sv1_status = float(self.state.full_reactor.steam_valve1.status)
-        normalized_rpm_counter = 2 * float(self.state.full_reactor.water_pump1.blow_counter / 30) - 1
+        normalized_rpm_counter = 2 * float(self.state.full_reactor.water_pump1.blow_counter / 200) - 1
         print(normalized_rpm_counter)
         original_result[0] = np.append(
             original_result[0],

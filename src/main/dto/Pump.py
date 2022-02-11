@@ -8,7 +8,7 @@ class Pump(ReactorComponent):
     _upper_rpm_threshold: int
     _max_rpm: int
 
-    BLOW_COUNTER_INIT = 30
+    BLOW_COUNTER_INIT = 200
 
     def __init__(self, rpm: int, upper_rpm_threshold: int, max_rpm: int, blown: bool):
         self._rpm = rpm

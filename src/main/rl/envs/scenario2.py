@@ -70,8 +70,11 @@ class Scenario2(Env):
         # sleep(0.2)
         done = is_done(self.state.full_reactor, self.length)
         if not done:
-            calc_reward = self.state.full_reactor.generator.power / 800
-            reward += calc_reward  # TODO #calc_reward if calc_reward < 1 else 1
+            if self.state.full_reactor.generator.power <= 700:
+                calc_reward = self.state.full_reactor.generator.power / 700
+            else:
+                calc_reward = 700 / self.state.full_reactor.generator.power
+            reward += calc_reward  # TODO calc_reward if calc_reward < 1 else 1
         normalized_obs = 2 * (self.state.full_reactor.generator.power / 800) - 1
         return [
             # Might need to change if we dont want to have binary for first observation
@@ -81,7 +84,9 @@ class Scenario2(Env):
             {},
         ]
 
-    def render(self):
+    def render(self, mode):
+        # print(self.state.full_reactor.water_pump1.rpm)
+        # print(self.state.full_reactor.reactor.moderator_percent)
         pass
 
     def reset(self):

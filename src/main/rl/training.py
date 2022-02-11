@@ -32,23 +32,23 @@ def train_agent(
         # n_steps=512, gae_lambda=0.8, batch_size=128, gamma=0.95, n_epochs=60,
         # ent_coef=0.0, learning_rate=0.0005, clip_range=0.2
         eval_callback = EvalCallback(
-            environment, best_model_save_path=f"./models/{log_name_scenario}/{log_name}", verbose=1
+            environment, best_model_save_path=f"./models/{log_name_scenario}/{name_ending}/{log_name}", verbose=1
         )
 
         model = algorithm(
             "MlpPolicy",
             env=environment,
             verbose=1,
-            tensorboard_log=f"./logs/{log_name_scenario}",
+            tensorboard_log=f"./logs/{log_name_scenario}/{name_ending}/",
             device="cpu",
-            # n_steps=512,
-            # gae_lambda=0.8,
-            # batch_size=128,
-            # gamma=0.95,
-            # n_epochs=60,
-            # ent_coef=0.0,
-            # learning_rate=0.0005,
-            # clip_range=0.2,
+            n_steps=64,
+            gae_lambda=0.9,
+            batch_size=32,
+            gamma=0.95,
+            n_epochs=30,
+            ent_coef=0.0,
+            learning_rate=0.0008,
+            clip_range=0.2,
         ).learn(
             700000,
             tb_log_name=log_name,
@@ -67,8 +67,8 @@ def train_all_scenarios(scenarios: list, name_ending: str = None):
     for scenario in scenarios:
         parsed_scenario_name = parse_scenario_name(scenario)
         # With Wrappers
-        for action_wrapper in ALL_ACTION_WRAPPERS:
-            for observation_wrapper in ALL_OBSERVATION_WRAPPERS:
+        for action_wrapper in ALL_ACTION_WRAPPERS[1:2]:
+            for observation_wrapper in ALL_OBSERVATION_WRAPPERS[3:4]:
 
                 env_id = f"{parsed_scenario_name}_{observation_wrapper.__name__}_{action_wrapper.__name__}-v1"
                 register(id=env_id, entry_point=scenario)
@@ -89,33 +89,35 @@ def train_all_scenarios(scenarios: list, name_ending: str = None):
                         name_ending,
                     )
         # Single Wrapper
-        for action_wrapper in ALL_ACTION_WRAPPERS:
-            env_id = f"{parsed_scenario_name}_None_{action_wrapper.__name__}-v1"
-            register(id=env_id, entry_point=scenario)
+        # for action_wrapper in ALL_ACTION_WRAPPERS:
+        #    env_id = f"{parsed_scenario_name}_None_{action_wrapper.__name__}-v1"
+        #    register(id=env_id, entry_point=scenario)
 
-            vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=action_wrapper)
-            vec_env_monitor = VecMonitor(vec_env)
-            for alg in algorithms:
-                train_agent(alg, vec_env_monitor, scenario, action_wrapper.__name__, None, name_ending)
-        for observation_wrapper in ALL_OBSERVATION_WRAPPERS:
-            env_id = f"{parsed_scenario_name}_{observation_wrapper.__name__}_None-v1"
-            register(id=env_id, entry_point=scenario)
 
-            vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=observation_wrapper)
-            vec_env_monitor = VecMonitor(vec_env)
-            for alg in algorithms:
-                train_agent(alg, vec_env_monitor, scenario, None, observation_wrapper.__name__, name_ending)
+#
+#    vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=action_wrapper)
+#    vec_env_monitor = VecMonitor(vec_env)
+#    for alg in algorithms:
+#        train_agent(alg, vec_env_monitor, scenario, action_wrapper.__name__, None, name_ending)
+# for observation_wrapper in ALL_OBSERVATION_WRAPPERS:
+#    env_id = f"{parsed_scenario_name}_{observation_wrapper.__name__}_None-v1"
+#    register(id=env_id, entry_point=scenario)
+#
+#    vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=observation_wrapper)
+#    vec_env_monitor = VecMonitor(vec_env)
+#    for alg in algorithms:
+#        train_agent(alg, vec_env_monitor, scenario, None, observation_wrapper.__name__, name_ending)
 
-        ## Without Wrappers
-        # x = WrapperMaker(ActionSpaceOption2Wrapper, ObservationOption5Wrapper)
-        register(id=f"{parsed_scenario_name}-v1", entry_point=scenario)
-        vec_env = make_vec_env(
-            f"{parsed_scenario_name}-v1",
-            n_envs=num_cpu,
-        )  # wrapper_class=ObservationOption5Wrapper)
-        vec_env_monitor = VecMonitor(vec_env)
-        for alg in algorithms:
-            # env=make_vec_env(env_id, n_envs=num_cpu,wrapper_class==)#wrapper_class=x.make_wrapper)
-            # vec_env_monitor = VecMonitor(env)
-            # eval_frontend(vec_env_monitor)
-            train_agent(alg, vec_env_monitor, scenario, None, None, name_ending)
+## Without Wrappers
+# x = WrapperMaker(ActionSpaceOption2Wrapper, ObservationOption5Wrapper)
+# register(id=f"{parsed_scenario_name}-v1", entry_point=scenario)
+# vec_env = make_vec_env(
+#    f"{parsed_scenario_name}-v1",
+#    n_envs=num_cpu,
+# )  # wrapper_class=ObservationOption5Wrapper)
+# vec_env_monitor = VecMonitor(vec_env)
+# for alg in algorithms:
+#    # env=make_vec_env(env_id, n_envs=num_cpu,wrapper_class==)#wrapper_class=x.make_wrapper)
+#    # vec_env_monitor = VecMonitor(env)
+#    # eval_frontend(vec_env_monitor)
+#    train_agent(alg, vec_env_monitor, scenario, None, None, name_ending)

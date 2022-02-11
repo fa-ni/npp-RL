@@ -8,7 +8,7 @@ class Pump(ReactorComponent):
     _upper_rpm_threshold: int
     _max_rpm: int
 
-    BLOW_COUNTER_INIT = 200
+    BLOW_COUNTER_INIT = 30
 
     def __init__(self, rpm: int, upper_rpm_threshold: int, max_rpm: int, blown: bool):
         self._rpm = rpm
@@ -17,6 +17,10 @@ class Pump(ReactorComponent):
         self._max_rpm = max_rpm
         self._blow_counter = self.BLOW_COUNTER_INIT
         super().__init__(blown)
+
+    @property
+    def blow_counter(self) -> int:
+        return self._blow_counter
 
     @property
     def rpm_to_be_set(self) -> int:

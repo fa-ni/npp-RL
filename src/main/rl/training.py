@@ -3,11 +3,12 @@ from stable_baselines3 import A2C, PPO, TD3
 from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import VecMonitor
+from pathlib import Path
 
 # TODO Refactor
 # TODO Callback to save best model
 from src.main.rl.utils.constants import ALL_ACTION_WRAPPERS, ALL_OBSERVATION_WRAPPERS, ALL_SCENARIOS
-from src.main.rl.utils.utils import WrapperMaker, parse_scenario_name
+from src.main.rl.utils.utils import WrapperMaker, parse_scenario_name, delete_env_id
 from src.main.rl.wrapper.obs_wrapper5 import ObservationOption5Wrapper
 
 num_cpu = 12  # TODO
@@ -31,9 +32,17 @@ def train_agent(
         # Just some tires -> best one
         # n_steps=512, gae_lambda=0.8, batch_size=128, gamma=0.95, n_epochs=60,
         # ent_coef=0.0, learning_rate=0.0005, clip_range=0.2
-        eval_callback = EvalCallback(
-            environment, best_model_save_path=f"./models/{log_name_scenario}/{name_ending}/{log_name}", verbose=1
-        )
+        # This is used to use the same logic for model saving as for logs to directly identify them
+        continue_search = True
+        counter = 1
+        model_save_path = ""
+        while continue_search:
+            my_file = Path(f"./models/{log_name_scenario}/{name_ending}/{log_name}_{counter}")
+            if not my_file.is_dir():
+                continue_search = False
+                model_save_path = f"./models/{log_name_scenario}/{name_ending}/{log_name}_{counter}"
+            counter += 1
+        eval_callback = EvalCallback(environment, eval_freq=1000, best_model_save_path=model_save_path, verbose=1)
 
         model = algorithm(
             "MlpPolicy",
@@ -41,14 +50,14 @@ def train_agent(
             verbose=1,
             tensorboard_log=f"./logs/{log_name_scenario}/{name_ending}/",
             device="cpu",
-            n_steps=64,
-            gae_lambda=0.9,
-            batch_size=32,
-            gamma=0.95,
-            n_epochs=30,
-            ent_coef=0.0,
-            learning_rate=0.0008,
-            clip_range=0.2,
+            # n_steps=64,
+            # gae_lambda=0.9,
+            # batch_size=32,
+            # gamma=0.95,
+            # n_epochs=30,
+            # ent_coef=0.0,
+            # learning_rate=0.0008,
+            # clip_range=0.2,
         ).learn(
             700000,
             tb_log_name=log_name,
@@ -61,9 +70,14 @@ def train_agent(
         print(exception)
 
 
-def train_all_scenarios(scenarios: list, name_ending: str = None):
+def train_all_scenarios(
+    scenarios: list,
+    name_ending: str = None,
+):
     # Algorithms
-    algorithms = [PPO, A2C, TD3]  # TD3
+    algorithms = [
+        PPO,
+    ]  # TD3]  # TD3 A2C
     for scenario in scenarios:
         parsed_scenario_name = parse_scenario_name(scenario)
         # With Wrappers
@@ -88,6 +102,7 @@ def train_all_scenarios(scenarios: list, name_ending: str = None):
                         observation_wrapper.__name__,
                         name_ending,
                     )
+                delete_env_id(env_id)
         # Single Wrapper
         # for action_wrapper in ALL_ACTION_WRAPPERS:
         #    env_id = f"{parsed_scenario_name}_None_{action_wrapper.__name__}-v1"

@@ -41,9 +41,7 @@ for scenario in scenarios:
     vec_env = make_vec_env(env_id, n_envs=1, wrapper_class=x.make_wrapper)
 
     mean_reward_over_multiple_evaluations = []
-    model = PPO.load(
-        "models/scenario2/reward_roof_blow_counter_pump_200_with_obs_blow_counter/scenario2_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_PPO_reward_roof_blow_counter_pump_200_with_obs_blow_counter/best_model.zip"
-    )
+    model = PPO.load("best_model.zip")
     obs = vec_env.reset()
     actions_taken = []
 
@@ -57,7 +55,6 @@ for scenario in scenarios:
         obs, reward, done, info = vec_env.step(action)
         mean_reward_over_multiple_evaluations.append(reward)
         if done:
-
             # plot_actions_taken(actions_taken)
             print(sum(mean_reward_over_multiple_evaluations))
             mean_reward_over_multiple_evaluations = []

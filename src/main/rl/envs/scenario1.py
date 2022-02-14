@@ -58,10 +58,7 @@ class Scenario1(Env):
 
         done = is_done(self.state.full_reactor, self.length)
         if not done:
-            if self.state.full_reactor.generator.power <= 700:
-                calc_reward = self.state.full_reactor.generator.power / 700
-            else:
-                calc_reward = 700 / self.state.full_reactor.generator.power
+            calc_reward = self.state.full_reactor.generator.power / 700
             reward += calc_reward  # TODO calc_reward if calc_reward < 1 else 1
 
         normalized_obs = 2 * (self.state.full_reactor.generator.power / 800) - 1

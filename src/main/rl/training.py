@@ -99,6 +99,7 @@ def train_all_scenarios(
             vec_env_monitor = VecMonitor(vec_env)
             for alg in algorithms:
                 train_agent(alg, vec_env_monitor, scenario, action_wrapper.__name__, None, name_ending)
+                delete_env_id(env_id)
 
         for observation_wrapper in ALL_OBSERVATION_WRAPPERS:
             env_id = f"{parsed_scenario_name}_{observation_wrapper.__name__}_None-v1"
@@ -107,10 +108,12 @@ def train_all_scenarios(
             vec_env_monitor = VecMonitor(vec_env)
             for alg in algorithms:
                 train_agent(alg, vec_env_monitor, scenario, None, observation_wrapper.__name__, name_ending)
-
+                delete_env_id(env_id)
         # Without Wrappers
-        register(id=f"{parsed_scenario_name}_None_None-v1", entry_point=scenario)
+        env_id = f"{parsed_scenario_name}_None_None-v1"
+        register(id=env_id, entry_point=scenario)
         vec_env = make_vec_env(f"{parsed_scenario_name}_None_None-v1", n_envs=num_cpu)
         vec_env_monitor = VecMonitor(vec_env)
         for alg in algorithms:
             train_agent(alg, vec_env_monitor, scenario, None, None, name_ending)
+            delete_env_id(env_id)

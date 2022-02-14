@@ -14,7 +14,7 @@ class ObservationOption5Wrapper(Wrapper):
         )
 
     def step(self, action):
-        original_result = self.unwrapped.step(action)
+        original_result = list(self.env.step(action))
         normalized_reactor_water_level = 2 * (self.state.full_reactor.reactor.water_level / 4000) - 1
         normalized_reactor_pressure = 2 * (self.state.full_reactor.reactor.pressure / 550) - 1
         normalized_condenser_water_level = 2 * (self.state.full_reactor.condenser.water_level / 8000) - 1
@@ -25,7 +25,6 @@ class ObservationOption5Wrapper(Wrapper):
         normalized_wv1_status = float(self.state.full_reactor.water_valve1.status)
         normalized_sv1_status = float(self.state.full_reactor.steam_valve1.status)
         normalized_rpm_counter = 2 * float(self.state.full_reactor.water_pump1.blow_counter / 200) - 1
-        print(normalized_rpm_counter)
         original_result[0] = np.append(
             original_result[0],
             np.array(
@@ -57,7 +56,7 @@ class ObservationOption5Wrapper(Wrapper):
             wv1_status = 1
 
         return np.append(
-            self.unwrapped.reset(),
+            self.env.reset(),
             np.array(
                 [
                     float(0),

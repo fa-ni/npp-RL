@@ -12,7 +12,7 @@ class ObservationOption4Wrapper(Wrapper):
         )
 
     def step(self, action):
-        original_result = self.unwrapped.step(action)
+        original_result = list(self.env.step(action))
         normalized_reactor_water_level = 2 * (self.state.full_reactor.reactor.water_level / 4000) - 1
         normalized_reactor_pressure = 2 * (self.state.full_reactor.reactor.pressure / 550) - 1
         normalized_condenser_water_level = 2 * (self.state.full_reactor.condenser.water_level / 8000) - 1
@@ -34,4 +34,4 @@ class ObservationOption4Wrapper(Wrapper):
     def reset(self):
         # normalized_reactor_water_level is at start at 50% -> 0; normalized_reactor_pressure is at start at 0 -> -1
         # normalized_condenser_water_level is at start at 50% -> 0; normalized_condenser_pressure is at start at 0 -> -1
-        return np.append(self.unwrapped.reset(), np.array([float(0), float(-1), float(0), float(-1)]))
+        return np.append(self.env.reset(), np.array([float(0), float(-1), float(0), float(-1)]))

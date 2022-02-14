@@ -15,7 +15,7 @@ class ObservationOption2Wrapper(Wrapper):
         self.observation_space = Box(np.array([-1, -1, -1]).astype(np.float32), np.array([1, 1, 1]).astype(np.float32))
 
     def step(self, action):
-        original_result = self.unwrapped.step(action)
+        original_result = list(self.env.step(action))
         normalized_rpm = 2 * (self.state.full_reactor.water_pump1.rpm / 2000) - 1
         normalized_moderator_percent = 2 * (self.state.full_reactor.reactor.moderator_percent / 100) - 1
         original_result[0] = np.append(
@@ -24,4 +24,4 @@ class ObservationOption2Wrapper(Wrapper):
         return tuple(original_result)
 
     def reset(self):
-        return np.append(self.unwrapped.reset(), np.array([float(-1), float(1)]))
+        return np.append(self.env.reset(), np.array([float(-1), float(1)]))

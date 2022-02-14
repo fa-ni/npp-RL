@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from gym import register
-from stable_baselines3 import PPO
+from stable_baselines3 import PPO, TD3, A2C
 from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import VecMonitor
@@ -63,9 +63,7 @@ def train_all_scenarios(
     name_ending: str = None,
 ):
     # Algorithms
-    algorithms = [
-        PPO,
-    ]  # TD3]  # TD3 A2C
+    algorithms = [PPO, A2C, TD3]  # TD3]  # TD3 A2C
     for scenario in scenarios:
         parsed_scenario_name = parse_scenario_name(scenario)
         # With Wrappers

@@ -30,7 +30,7 @@ def test_scenario1_step_with_two_actions(mock_get_real_value):
     assert mock_get_real_value.call_count == 2
     assert scenario1.state.full_reactor.reactor.moderator_percent == 60
     assert scenario1.state.full_reactor.water_pump1.rpm_to_be_set == 40
-    assert step_one_result == [np.array([-0.275]), 0.3625, False, {}]
+    assert step_one_result == [np.array([-0.275]), 0.4142857142857143, False, {}]
     step_two_result = scenario1.step([-1, 1])
     assert scenario1.length == 248
     assert scenario1.state.full_reactor.condenser_pump.rpm == 1600
@@ -57,7 +57,7 @@ def test_scenario1_step_with_three_actions(mock_get_real_value):
     assert mock_get_real_value.call_count == 2
     assert scenario1.state.full_reactor.reactor.moderator_percent == 60
     assert scenario1.state.full_reactor.water_pump1.rpm_to_be_set == 40
-    assert step_one_result == [np.array([-0.275]), 0.3625, False, {}]
+    assert step_one_result == [np.array([-0.275]), 0.4142857142857143, False, {}]
     step_two_result = scenario1.step([-1, 1, 1])
     assert scenario1.length == 248
     assert scenario1.state.full_reactor.condenser_pump.rpm == 1600

@@ -19,6 +19,10 @@ class Pump(ReactorComponent):
         super().__init__(blown)
 
     @property
+    def blow_counter(self) -> int:
+        return self._blow_counter
+
+    @property
     def rpm_to_be_set(self) -> int:
         return self._rpm_to_be_set
 

@@ -14,7 +14,7 @@ class ObservationOption3Wrapper(Wrapper):
         )
 
     def step(self, action):
-        original_result = self.unwrapped.step(action)
+        original_result = list(self.env.step(action))
         normalized_wp1_rpm = 2 * (self.state.full_reactor.water_pump1.rpm / 2000) - 1
         normalized_moderator_percent = 2 * (self.state.full_reactor.reactor.moderator_percent / 100) - 1
         normalized_cp_rpm = 2 * (self.state.full_reactor.condenser_pump.rpm / 2000) - 1
@@ -45,6 +45,6 @@ class ObservationOption3Wrapper(Wrapper):
         if self.action_space.shape[0] == 2:
             wv1_status = 1
         return np.append(
-            self.unwrapped.reset(),
+            self.env.reset(),
             np.array([float(-1), float(1), float(cp_rpm_status), float(wv1_status), float(sv1_status)]),
         )

@@ -6,6 +6,7 @@ from stable_baselines3.common.env_util import make_vec_env
 
 from src.main.rl.utils.utils import WrapperMaker
 from src.main.rl.wrapper.action_wrapper3 import ActionSpaceOption3Wrapper
+from src.main.rl.wrapper.obs_wrapper4 import ObservationOption4Wrapper
 from src.main.rl.wrapper.obs_wrapper5 import ObservationOption5Wrapper
 
 scenarios = ["envs.scenario2:Scenario2"]
@@ -44,7 +45,9 @@ for scenario in scenarios:
     obs = vec_env.reset()
     actions_taken = []
 
-    for _ in range(10000):
+    for _ in range(1000):
+        vec_env.render()
+
         # Evaluate
         # Interesting if deterministic==True, we always get the same reward, otherwise not
         action, _states = model.predict(obs, deterministic=True)
@@ -52,7 +55,7 @@ for scenario in scenarios:
         obs, reward, done, info = vec_env.step(action)
         mean_reward_over_multiple_evaluations.append(reward)
         if done:
-            plot_actions_taken(actions_taken)
+            # plot_actions_taken(actions_taken)
             print(sum(mean_reward_over_multiple_evaluations))
             mean_reward_over_multiple_evaluations = []
             done = False

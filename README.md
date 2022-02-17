@@ -1,5 +1,7 @@
 
 # Overview
+![example workflow](https://github.com/fa-ni/npp-RL/actions/workflows/pytest.yml/badge.svg)
+![example workflow](https://github.com/fa-ni/npp-RL/actions/workflows/black.yml/badge.svg)
 This repo currently contains the RL Code to learn the npp-implemenation in python from a earlier project. Currently the project which is called "python-backend" is still within this repository. This might be changed later. For more information about the earlier project, please go to section "python-backend".
 
 ## RL
@@ -7,7 +9,15 @@ This repo currently contains the RL Code to learn the npp-implemenation in pytho
 ### General information & Background
 This project uses RL Algorithms from stable-baselines3 to learn Standard Operating Procedure for the nuclear power plant simulation. It builds up a custom OpenAI Gym environment with multiple scenarios and wrappers.
 ### How to use
-
+TODO: Add how to start training, how to start testing
+This project is tested with python version 3.9.
+To install the necessary packages there are two options available:
+1. Poetry
+   1. Install poetry (https://python-poetry.org/)
+   2. Optional: Run the command 'poetry config virtualenvs.in-project true' to create a new venv only for this project
+   3. Run the command 'poetry install'
+2. Requirements.txt
+   1. Run the command 'pip install -r requirements.txt'
 ### Scenarios
 
 ### Wrapper
@@ -44,12 +54,22 @@ To evaluate the performance the eval.py script is used. It computes the mean_rew
 
 ### Logging and model saving
 
+##WHY - Explanations of using different stuff
+*Black*: To make a project consistent and easy to read a formatter like black is really helpful.
 
+*Pytest* + Mock: To be able to do unit testing. Mocking is an essential part for unit testing.
 
+*Poetry*: Poetry is a dependency management and resolver tool which also takes into account the transitive dependencies
+of packages and therefore allows easy updates with a single command.
 
+*Github Actions*: To make sure that only code with a certain quality is merged to master Github Actions are
+used. In every Pull request two Github Actions are run automatically which are running black and pytest to check
+if everything is formatted correct and all tests are run successful.
+
+*Pre-Commit*: This tool can check the code before you do a commit from a local device. In this case it is used, so
+that no unformatted code can be committed if pr-commit is installed on the local device.
 
 ## python-backend
-
 This part is used to simulate a nuclear power plant (npp). It contains the backend logic in python. It uses a similar
 logic for the backend as described in [Weyers et al. 2017].
 
@@ -65,19 +85,6 @@ The python code should later be used to train a reinforcement learning agent to 
 agent to fulfill the task of starting and shutting down a nnp.
 
 ### How to run:
-
-To run the benchmark install the packages from the requirements.txt via ```pip install -r requirements.txt```.  You need to make sure that you
-have the NPP_Simu.jar within the main folder. This jar contains the compiled NPP_Simu program from this repository https://github.com/npp-masterthesis/npp-java-adjusted with all its dependencies from the lib folder.
-Also make sure that you have installed the Java JDK. This program was tested with OpenJDK 11 and Python 3.8 on a Windows 10 machine.
-Under the raspberry pi OS it also runs under Python 3.7.
-
-You can then execute the run_benchmark.sh file. This will produce three different csv files with the results.
-If you execute this script under a linux environment you might need to change
-the script to use "python3" instead of "python". You can also execute the main functions itself. For that you need to pass in a ```--round-number``` argument
-which is used in the benchmark to understand which iteration it was.
-
-If you also want to use the analysis folder which is used to analyze the results. You also need to install scipy,
-matplotlib, numpy and jupyter notebooks.
 
 ## Citations:
 

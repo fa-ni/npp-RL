@@ -2,6 +2,8 @@
 # Overview
 ![example workflow](https://github.com/fa-ni/npp-RL/actions/workflows/pytest.yml/badge.svg)
 ![example workflow](https://github.com/fa-ni/npp-RL/actions/workflows/black.yml/badge.svg)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
+
 This repo currently contains the RL Code to learn the npp-implemenation in python from a earlier project. Currently the project which is called "python-backend" is still within this repository. This might be changed later. For more information about the earlier project, please go to section "python-backend".
 
 ## RL
@@ -84,7 +86,6 @@ Make sure that you copy the result.csv files to the results folder or change the
 The python code should later be used to train a reinforcement learning agent to identify whether it is possible to train an
 agent to fulfill the task of starting and shutting down a nnp.
 
-### How to run:
 
 ## Citations:
 

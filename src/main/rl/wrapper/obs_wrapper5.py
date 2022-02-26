@@ -66,7 +66,6 @@ class ObservationOption5Wrapper(Wrapper):
                     float(cp_rpm_status),
                     float(wv1_status),
                     float(sv1_status),
-                    float(1),
                 ]
             ),
         )

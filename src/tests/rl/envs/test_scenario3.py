@@ -36,7 +36,7 @@ def test_scenario3_step_with_two_actions():
     assert scenario.state.full_reactor.condenser_pump.rpm_to_be_set == 1600
     assert scenario.state.full_reactor.reactor.moderator_percent == 100
     assert scenario.state.full_reactor.water_pump1.rpm_to_be_set == 25
-    assert step_two_result == [np.array([-0.9975]), 0.00125, False, {}]
+    assert step_two_result == [np.array([-0.9975]), 0.0014285714285714286, False, {}]
 
 
 def test_scenario3_step_with_three_actions():
@@ -59,7 +59,7 @@ def test_scenario3_step_with_three_actions():
     assert scenario.state.full_reactor.condenser_pump.rpm_to_be_set == 1600
     assert scenario.state.full_reactor.reactor.moderator_percent == 100
     assert scenario.state.full_reactor.water_pump1.rpm_to_be_set == 25
-    assert step_two_result == [np.array([-0.9975]), 0.00125, False, {}]
+    assert step_two_result == [np.array([-0.9975]), 0.0014285714285714286, False, {}]
 
 
 def test_scenario3_step_with_five_actions():
@@ -80,4 +80,4 @@ def test_scenario3_step_with_five_actions():
     assert scenario.state.full_reactor.condenser_pump.rpm_to_be_set == 25
     assert scenario.state.full_reactor.reactor.moderator_percent == 100
     assert scenario.state.full_reactor.water_pump1.rpm_to_be_set == 25
-    assert step_two_result == [np.array([-0.9975]), 0.00125, False, {}]
+    assert step_two_result == [np.array([-0.9975]), 0.0014285714285714286, False, {}]

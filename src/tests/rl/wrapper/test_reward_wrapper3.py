@@ -30,7 +30,7 @@ def test_reward_wrapper3(mock1, mock2, mock3):
     mock3.side_effect = [0.4]
     wrapper = set_up()
     actual = wrapper.reward(0)
-    expected = 2
+    expected = 0.4666666666666667
     assert mock1.call_count == 1
     assert mock2.call_count == 3
     assert mock3.call_count == 1

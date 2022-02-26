@@ -57,13 +57,11 @@ def delete_env_id(env_id: str):
 
 
 class WrapperMaker:
-    def __init__(self, action_wrapper, observation_wrapper, reward_wrapper):
+    def __init__(self, action_wrapper, observation_wrapper):
         self.action_wrapper = action_wrapper
         self.observation_wrapper = observation_wrapper
-        self.reward_wrapper = reward_wrapper
 
     def make_wrapper(self, env):
         env = self.action_wrapper(env)
         env = self.observation_wrapper(env)
-        env = self.reward_wrapper(env)
         return env

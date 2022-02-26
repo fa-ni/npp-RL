@@ -29,12 +29,12 @@ def test_step(set_up):
     actual_step_one = wrapper.step(action=[0, 1])
     actual_step_two = wrapper.step(action=[1, 1])
     actual_step_three = wrapper.step(action=[1, 1])
-    assert len(actual_step_one[0]) == 6
-    assert len(actual_step_two[0]) == 6
+    assert len(actual_step_one[0]) == 7
+    assert len(actual_step_two[0]) == 7
     # Will raise Exception if not equal
-    np.testing.assert_almost_equal(actual_step_one[0], np.array([-1, -0.987, 1, 0.6, 1, 1]))
-    np.testing.assert_almost_equal(actual_step_two[0], np.array([-1, -0.968, 0.98, 0.6, 1, 1]))
-    np.testing.assert_almost_equal(actual_step_three[0], np.array([-0.995, -0.946, 0.96, 0.6, 1, 1]))
+    np.testing.assert_almost_equal(actual_step_one[0], np.array([-1, -0.987, 1, 0.6, 1, 1, 1]))
+    np.testing.assert_almost_equal(actual_step_two[0], np.array([-1, -0.968, 0.98, 0.6, 1, 1, 1]))
+    np.testing.assert_almost_equal(actual_step_three[0], np.array([-0.995, -0.946, 0.96, 0.6, 1, 1, 1]))
 
 
 @pytest.mark.number(2)
@@ -42,12 +42,12 @@ def test_reset(set_up):
     wrapper = set_up
     actual = wrapper.reset()
     # Will raise Exception if not equal
-    np.testing.assert_almost_equal(actual, np.array([-1, -1, 1, float(0.6), 1, 1]))
+    np.testing.assert_almost_equal(actual, np.array([-1, -1, 1, float(0.6), 1, 1, 1]))
 
 
 @pytest.mark.number(3)
 def test_obs_space(set_up):
     wrapper = set_up
     assert wrapper.observation_space == Box(
-        np.array([-1, -1, -1, -1, -1, -1]).astype(np.float32), np.array([1, 1, 1, 1, 1, 1]).astype(np.float32)
+        np.array([-1, -1, -1, -1, -1, -1, -1]).astype(np.float32), np.array([1, 1, 1, 1, 1, 1, 1]).astype(np.float32)
     )

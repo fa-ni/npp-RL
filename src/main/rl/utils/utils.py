@@ -24,14 +24,6 @@ def is_done(full_reactor: FullReactor, length: int) -> bool:
 
 def is_done_java(backend, length: int) -> bool:
     done = False
-    # print(backend.getReactorTankStatus())
-    # print(backend.getReactorStatus())
-    # print(backend.getTurbineStatus())
-    # print(backend.getCondenserStatus())
-    # print(backend.getWP1Status())
-    # print(backend.getCPStatus())
-    # print(backend.getWP1RPM())
-
     if (
         not backend.getReactorTankStatus()
         or not backend.getReactorStatus()
@@ -40,7 +32,6 @@ def is_done_java(backend, length: int) -> bool:
         or not backend.getWP1Status()
         or not backend.getCPStatus()
         or length <= 0
-        or backend.getWP1RPM() < 0
     ):
         done = True
     return done
@@ -53,6 +44,8 @@ def parse_scenario_name(scenario: str) -> str:
         result = "scenario2"
     elif "scenario3" in scenario:
         result = "scenario3"
+    else:
+        raise Exception("Not able to parse scenario name.")
     return result
 
 

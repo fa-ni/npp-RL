@@ -38,9 +38,11 @@ def test_scenario1_step_with_two_actions(mock_get_real_value):
     assert scenario1.state.full_reactor.water_valve1.status == True
     assert scenario1.state.full_reactor.condenser_pump.rpm_to_be_set == 1600
     assert mock_get_real_value.call_count == 4
-    assert scenario1.state.full_reactor.reactor.moderator_percent == 20
+    assert scenario1.state.full_reactor.reactor.moderator_percent == 60
     assert scenario1.state.full_reactor.water_pump1.rpm_to_be_set == 40
-    assert step_two_result == [np.array([2.18]), 0, True, {}]
+    np.testing.assert_almost_equal(step_two_result[0], np.array([0.285]))
+    np.testing.assert_almost_equal(step_two_result[1], [0.7342857])
+    assert step_two_result[2] == False
 
 
 @mock.patch("src.main.rl.envs.scenario1.get_real_value")
@@ -65,9 +67,11 @@ def test_scenario1_step_with_three_actions(mock_get_real_value):
     assert scenario1.state.full_reactor.water_valve1.status == True
     assert scenario1.state.full_reactor.condenser_pump.rpm_to_be_set == 1600
     assert mock_get_real_value.call_count == 4
-    assert scenario1.state.full_reactor.reactor.moderator_percent == 20
+    assert scenario1.state.full_reactor.reactor.moderator_percent == 60
     assert scenario1.state.full_reactor.water_pump1.rpm_to_be_set == 40
-    assert step_two_result == [np.array([2.18]), 0, True, {}]
+    np.testing.assert_almost_equal(step_two_result[0], np.array([0.285]))
+    np.testing.assert_almost_equal(step_two_result[1], [0.7342857])
+    assert step_two_result[2] == False
 
 
 @mock.patch("src.main.rl.envs.scenario1.get_real_value")
@@ -90,6 +94,8 @@ def test_scenario1_step_with_five_actions(mock_get_real_value):
     assert scenario1.state.full_reactor.water_valve1.status == True
     assert scenario1.state.full_reactor.condenser_pump.rpm_to_be_set == 40
     assert mock_get_real_value.call_count == 6
-    assert scenario1.state.full_reactor.reactor.moderator_percent == 20
+    assert scenario1.state.full_reactor.reactor.moderator_percent == 60
     assert scenario1.state.full_reactor.water_pump1.rpm_to_be_set == 40
-    assert step_two_result == [np.array([2.18]), 0, True, {}]
+    np.testing.assert_almost_equal(step_two_result[0], np.array([0.285]))
+    np.testing.assert_almost_equal(step_two_result[1], [0.7342857])
+    assert step_two_result[2] == False

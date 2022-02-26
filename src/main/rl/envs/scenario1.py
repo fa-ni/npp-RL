@@ -22,9 +22,7 @@ class Scenario1(Env):
         # Standard/Minimal Actions
         moderator_percent_setting = get_real_value(100, action[0])
         wp_rpm_setting = get_real_value(2000, action[1])
-        self.state.full_reactor.reactor.moderator_percent = (
-            100 - self.state.full_reactor.reactor.moderator_percent + moderator_percent_setting
-        )
+        self.state.full_reactor.reactor.moderator_percent = moderator_percent_setting
         self.state.full_reactor.water_pump1.rpm_to_be_set = wp_rpm_setting
         # Necessary for Action Space Option 1
         if len(action) == 2:
@@ -59,7 +57,7 @@ class Scenario1(Env):
         done = is_done(self.state.full_reactor, self.length)
         if not done:
             calc_reward = self.state.full_reactor.generator.power / 700
-            reward += calc_reward  # TODO calc_reward if calc_reward < 1 else 1
+            reward += calc_reward
 
         normalized_obs = 2 * (self.state.full_reactor.generator.power / 800) - 1
         return [

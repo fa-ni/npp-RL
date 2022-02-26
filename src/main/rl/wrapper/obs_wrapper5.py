@@ -9,8 +9,8 @@ class ObservationOption5Wrapper(Wrapper):
         # 1. Power Output 2. Reactor WaterLevel 3. Reactor Pressure 4. Condenser WaterLevel 5. Condenser Pressure
         # 6. WP1 RPM 7. Moderator_Percent/CR 8. CP RPM 9. WV1 10. SV1
         self.observation_space = Box(
-            np.array([-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]).astype(np.float32),
-            np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]).astype(np.float32),
+            np.array([-1, -1, -1, -1, -1, -1, -1, -1, -1, -1]).astype(np.float32),
+            np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1]).astype(np.float32),
         )
 
     def step(self, action):
@@ -24,8 +24,6 @@ class ObservationOption5Wrapper(Wrapper):
         normalized_cp_rpm = 2 * (self.state.full_reactor.condenser_pump.rpm / 2000) - 1
         normalized_wv1_status = float(self.state.full_reactor.water_valve1.status)
         normalized_sv1_status = float(self.state.full_reactor.steam_valve1.status)
-        normalized_blow_counter = 2 * (self.state.full_reactor.water_pump1.blow_counter / 30) - 1
-
         original_result[0] = np.append(
             original_result[0],
             np.array(
@@ -39,7 +37,6 @@ class ObservationOption5Wrapper(Wrapper):
                     float(normalized_cp_rpm),
                     float(normalized_wv1_status),
                     float(normalized_sv1_status),
-                    float(normalized_blow_counter),
                 ]
             ),
         )

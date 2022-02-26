@@ -8,7 +8,7 @@ class ObservationOption4Wrapper(Wrapper):
         super().__init__(env)
         # 1. Power Output 2. Reactor WaterLevel 3. Reactor Pressure 4. Condenser WaterLevel 5. Condenser Pressure
         self.observation_space = Box(
-            np.array([-1, -1, -1, -1, -1]).astype(np.float32), np.array([1, 1, 1, 1, 1]).astype(np.float32)
+            np.array([-1, -1, -1, -1, -1, -1]).astype(np.float32), np.array([1, 1, 1, 1, 1, 1]).astype(np.float32)
         )
 
     def step(self, action):

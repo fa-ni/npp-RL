@@ -1,17 +1,15 @@
 from pathlib import Path
 
 from gym import register
-from stable_baselines3 import PPO, TD3, A2C, DDPG
+from stable_baselines3 import PPO, A2C, DDPG
 from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import VecMonitor
-import torch as th
-from src.main.rl.utils.constants import ALL_ACTION_WRAPPERS, ALL_OBSERVATION_WRAPPERS, ALL_SCENARIOS
+
+from src.main.rl.utils.constants import ALL_ACTION_WRAPPERS, ALL_OBSERVATION_WRAPPERS
 from src.main.rl.utils.utils import WrapperMaker, parse_scenario_name, delete_env_id
-from src.main.rl.wrapper.reward_wrapper2 import RewardOption2Wrapper
 from src.main.rl.wrapper.reward_wrapper3 import RewardOption3Wrapper
 
-num_cpu = 1
 log_dir = "./model"
 
 
@@ -68,15 +66,21 @@ def train_all_scenarios(
         # With Wrappers
         for action_wrapper in ALL_ACTION_WRAPPERS:
             for observation_wrapper in ALL_OBSERVATION_WRAPPERS:
-                env_id = f"{parsed_scenario_name}_{observation_wrapper.__name__}_{action_wrapper.__name__}-v1"
-                register(id=env_id, entry_point=scenario)
-                # This is needed because make_vec_env does not allow a method with multiple parameters as wrapper_class
-                wrapper_maker = WrapperMaker(action_wrapper, observation_wrapper, reward_wrapper)
-                vec_env = make_vec_env(
-                    env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper, monitor_dir=log_dir
-                )
-                vec_env_monitor = VecMonitor(vec_env)
                 for alg in algorithms:
+                    if alg == DDPG:
+                        num_cpu = 1
+                    else:
+                        num_cpu = 8
+                    print(f"num_cpu_{num_cpu}")
+                    env_id = f"{parsed_scenario_name}_{observation_wrapper.__name__}_{action_wrapper.__name__}-v1"
+                    register(id=env_id, entry_point=scenario)
+                    # This is needed because make_vec_env does not allow a method with multiple parameters as wrapper_class
+                    wrapper_maker = WrapperMaker(action_wrapper, observation_wrapper, reward_wrapper)
+                    vec_env = make_vec_env(
+                        env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper, monitor_dir=log_dir
+                    )
+                    vec_env_monitor = VecMonitor(vec_env)
+
                     train_agent(
                         alg,
                         vec_env_monitor,
@@ -86,26 +90,34 @@ def train_all_scenarios(
                         reward_wrapper.__name__,
                         name_ending,
                     )
-                delete_env_id(env_id)
+                    delete_env_id(env_id)
         # Single Wrapper
         for action_wrapper in ALL_ACTION_WRAPPERS:
-            env_id = f"{parsed_scenario_name}_None_{action_wrapper.__name__}-v1"
-            register(id=env_id, entry_point=scenario)
-            wrapper_maker = WrapperMaker(action_wrapper, None, reward_wrapper)
-            vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper)
-            vec_env_monitor = VecMonitor(vec_env)
             for alg in algorithms:
+                if alg == DDPG:
+                    num_cpu = 1
+                else:
+                    num_cpu = 8
+                env_id = f"{parsed_scenario_name}_None_{action_wrapper.__name__}-v1"
+                register(id=env_id, entry_point=scenario)
+                wrapper_maker = WrapperMaker(action_wrapper, None, reward_wrapper)
+                vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper)
+                vec_env_monitor = VecMonitor(vec_env)
                 train_agent(
                     alg, vec_env_monitor, scenario, action_wrapper.__name__, None, reward_wrapper.__name__, name_ending
                 )
                 delete_env_id(env_id)
         for observation_wrapper in ALL_OBSERVATION_WRAPPERS:
-            env_id = f"{parsed_scenario_name}_{observation_wrapper.__name__}_None-v1"
-            register(id=env_id, entry_point=scenario)
-            wrapper_maker = WrapperMaker(None, observation_wrapper, reward_wrapper)
-            vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper)
-            vec_env_monitor = VecMonitor(vec_env)
             for alg in algorithms:
+                if alg == DDPG:
+                    num_cpu = 1
+                else:
+                    num_cpu = 8
+                env_id = f"{parsed_scenario_name}_{observation_wrapper.__name__}_None-v1"
+                register(id=env_id, entry_point=scenario)
+                wrapper_maker = WrapperMaker(None, observation_wrapper, reward_wrapper)
+                vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper)
+                vec_env_monitor = VecMonitor(vec_env)
                 train_agent(
                     alg,
                     vec_env_monitor,
@@ -117,10 +129,14 @@ def train_all_scenarios(
                 )
                 delete_env_id(env_id)
         # Without Wrappers
-        env_id = f"{parsed_scenario_name}_None_None-v1"
-        register(id=env_id, entry_point=scenario)
-        vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=RewardOption3Wrapper, monitor_dir=log_dir)
-        vec_env_monitor = VecMonitor(vec_env)
         for alg in algorithms:
+            if alg == DDPG:
+                num_cpu = 1
+            else:
+                num_cpu = 8
+            env_id = f"{parsed_scenario_name}_None_None-v1"
+            register(id=env_id, entry_point=scenario)
+            vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=RewardOption3Wrapper, monitor_dir=log_dir)
+            vec_env_monitor = VecMonitor(vec_env)
             train_agent(alg, vec_env_monitor, scenario, None, None, reward_wrapper.__name__, name_ending)
             delete_env_id(env_id)

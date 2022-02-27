@@ -4,6 +4,7 @@ from gym.spaces import Box
 
 from src.main.rl.utils.utils import get_real_value, is_done
 from src.main.services.BackgroundStepService import BackgroundStepService
+from src.main.services.NPPAutomationStepService import NPPAutomationStepService
 from src.main.services.ReactorCreatorService import ReactorCreatorService
 
 
@@ -53,6 +54,7 @@ class Scenario1(Env):
             self.state.full_reactor.steam_valve1.status = steam_valve_setting
             self.state.full_reactor.condenser_pump.rpm_to_be_set = condenser_rpm_setting
         self.state.time_step(1)
+        self.npp_automation.run()
 
         done = is_done(self.state.full_reactor, self.length)
         if not done:
@@ -75,5 +77,6 @@ class Scenario1(Env):
         self.state = None
         self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
         self.moderator_percent = 100
+        self.npp_automation = NPPAutomationStepService(self.state)
         self.length = 250
         return np.array([float(-1)])

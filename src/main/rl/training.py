@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from gym import register
-from stable_baselines3 import PPO, A2C, DDPG
+from stable_baselines3 import PPO, A2C, DDPG, SAC, TD3
 from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import VecMonitor
@@ -60,14 +60,14 @@ def train_all_scenarios(
     name_ending: str = None,
 ):
     # Algorithms
-    algorithms = [A2C, PPO, DDPG]  # A2C, TD3]  # TD3]  # TD3 A2C
+    algorithms = [TD3]  # A2C, TD3]  # TD3]  # TD3 A2C
     for scenario in scenarios:
         parsed_scenario_name = parse_scenario_name(scenario)
         # With Wrappers
         for action_wrapper in ALL_ACTION_WRAPPERS:
             for observation_wrapper in ALL_OBSERVATION_WRAPPERS:
                 for alg in algorithms:
-                    if alg == DDPG:
+                    if alg == DDPG or alg == TD3:
                         num_cpu = 1
                     else:
                         num_cpu = 8
@@ -94,7 +94,7 @@ def train_all_scenarios(
         # Single Wrapper
         for action_wrapper in ALL_ACTION_WRAPPERS:
             for alg in algorithms:
-                if alg == DDPG:
+                if alg == DDPG or alg == TD3:
                     num_cpu = 1
                 else:
                     num_cpu = 8
@@ -109,7 +109,7 @@ def train_all_scenarios(
                 delete_env_id(env_id)
         for observation_wrapper in ALL_OBSERVATION_WRAPPERS:
             for alg in algorithms:
-                if alg == DDPG:
+                if alg == DDPG or alg == TD3:
                     num_cpu = 1
                 else:
                     num_cpu = 8
@@ -130,7 +130,7 @@ def train_all_scenarios(
                 delete_env_id(env_id)
         # Without Wrappers
         for alg in algorithms:
-            if alg == DDPG:
+            if alg == DDPG or alg == TD3:
                 num_cpu = 1
             else:
                 num_cpu = 8

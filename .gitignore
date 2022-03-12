@@ -3,6 +3,10 @@
 /.idea/
 **/__pycache__
 /src/tests/cov/
+/src/tests/model
+/src/tests/rl/model
+/src/tests/rl/logs
+/src/tests/rl/.pytest_cache
 /src/tests/.pytest_cache/
 /src/main/rl/logs
 /src/main/rl/model

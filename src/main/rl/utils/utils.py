@@ -49,7 +49,7 @@ def parse_scenario_name(scenario: str) -> str:
     return result
 
 
-def delete_env_id(env_id: str):
+def delete_env_id(env_id: str) -> None:
     env_dict = gym.envs.registration.registry.env_specs.copy()
     for env in env_dict:
         if env_id in env:

@@ -1,11 +1,7 @@
 from src.main.rl.utils.utils import delete_env_id
 from src.main.rl.wrapper.reward_wrapper3 import RewardOption3Wrapper
-import pytest
 import mock
 import gym
-
-# @pytest.fixture
-from src.main.services.ReactorCreatorService import ReactorCreatorService
 
 
 def set_up():

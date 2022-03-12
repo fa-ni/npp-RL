@@ -1,14 +1,9 @@
 import numpy as np
 from gym import Wrapper
 from gym.spaces import Box
-from stable_baselines3.common.vec_env import VecEnvWrapper
-from stable_baselines3.common.vec_env.base_vec_env import VecEnvStepReturn
 
 
 class ObservationOption2Wrapper(Wrapper):
-    # def step_wait(self) -> VecEnvStepReturn:
-    #    pass
-
     def __init__(self, env):
         super().__init__(env)
         # 1. Power Output 2. WP1 RPM 3. CP/moderator Percentage

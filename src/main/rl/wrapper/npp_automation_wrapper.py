@@ -2,9 +2,7 @@ import numpy as np
 from gym import Wrapper
 
 from src.main.rl.utils.utils import is_done
-from src.main.services.BackgroundStepService import BackgroundStepService
 from src.main.services.NPPAutomationStepService import NPPAutomationStepService
-from src.main.services.ReactorCreatorService import ReactorCreatorService
 
 
 class NPPAutomationWrapper(Wrapper):

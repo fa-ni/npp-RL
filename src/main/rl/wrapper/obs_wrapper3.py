@@ -1,8 +1,6 @@
 import numpy as np
 from gym import Wrapper
 from gym.spaces import Box
-from stable_baselines3.common.vec_env import VecEnvWrapper
-from stable_baselines3.common.vec_env.base_vec_env import VecEnvStepReturn
 
 
 class ObservationOption3Wrapper(Wrapper):

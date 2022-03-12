@@ -12,7 +12,7 @@ class ActionSpaceOption2Wrapper(Wrapper):
         # 1. CR/Moderator Percent 2. WP1 RPM 3. WV1
         if type(env.action_space) == MultiBinary:
             self.action_space = MultiBinary(3)
-        if type(env.action_space) == Box:
+        elif type(env.action_space) == Box:
             self.action_space = Box(np.array([-1, -1, -1]).astype(np.float32), np.array([1, 1, 1]).astype(np.float32))
-        if type(env.action_space) == MultiDiscrete:
+        elif type(env.action_space) == MultiDiscrete:
             self.action_space = MultiDiscrete([3, 3, 3])

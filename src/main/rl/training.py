@@ -47,7 +47,7 @@ def train_agent(
             tensorboard_log=f"./logs/{log_name_scenario}/{name_ending}/",
             device="cpu",
         ).learn(
-            100000,
+            500000,
             tb_log_name=log_name,
             callback=eval_callback,
         )

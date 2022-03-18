@@ -8,8 +8,6 @@ from stable_baselines3.common.vec_env import VecMonitor
 
 from src.main.rl.utils.constants import ALL_ACTION_WRAPPERS, ALL_OBSERVATION_WRAPPERS
 from src.main.rl.utils.utils import WrapperMaker, parse_scenario_name, delete_env_id
-from src.main.rl.wrapper.npp_automation_wrapper import NPPAutomationWrapper
-from src.main.rl.wrapper.reward_wrapper3 import RewardOption3Wrapper
 
 log_dir = "./model"
 
@@ -59,69 +57,13 @@ def train_agent(
 def train_all_scenarios(
     scenarios: list,
     reward_wrapper,
+    algorithms: list,
+    automation_wrapper,
     name_ending: str = None,
 ):
     env_id = f"env-v1"
-    # Algorithms
-    algorithms = [A2C, PPO, TD3, SAC]
-    # Whether to run with or without NPPAutomation active
-    npp_automation = [None, NPPAutomationWrapper]
     for scenario in scenarios:
-        parsed_scenario_name = parse_scenario_name(scenario)
-        for npp_automation_wrapper in npp_automation:
-            # With Wrappers
-            for action_wrapper in ALL_ACTION_WRAPPERS:
-                for observation_wrapper in ALL_OBSERVATION_WRAPPERS:
-                    for alg in algorithms:
-                        if alg == TD3:
-                            num_cpu = 1
-                        else:
-                            num_cpu = 8
-                        register(id=env_id, entry_point=scenario)
-                        # This is needed because make_vec_env does not allow a method with multiple parameters as wrapper_class
-                        wrapper_maker = WrapperMaker(
-                            action_wrapper, observation_wrapper, npp_automation_wrapper, reward_wrapper
-                        )
-                        vec_env = make_vec_env(
-                            env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper, monitor_dir=log_dir
-                        )
-                        vec_env_monitor = VecMonitor(vec_env)
-
-                        train_agent(
-                            alg,
-                            vec_env_monitor,
-                            scenario,
-                            action_wrapper.__name__,
-                            observation_wrapper.__name__,
-                            npp_automation_wrapper.__name__ if npp_automation_wrapper != None else None,
-                            reward_wrapper.__name__ if reward_wrapper != None else None,
-                            name_ending,
-                        )
-                        delete_env_id(env_id)
-        # Only NPPAutomationWrapper/No Wrapper with ActionWrapper
-        for npp_automation_wrapper in npp_automation:
-            for action_wrapper in ALL_ACTION_WRAPPERS:
-                for alg in algorithms:
-                    if alg == TD3:
-                        num_cpu = 1
-                    else:
-                        num_cpu = 8
-                    register(id=env_id, entry_point=scenario)
-                    wrapper_maker = WrapperMaker(action_wrapper, None, NPPAutomationWrapper, reward_wrapper)
-                    vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper)
-                    vec_env_monitor = VecMonitor(vec_env)
-                    train_agent(
-                        alg,
-                        vec_env_monitor,
-                        scenario,
-                        action_wrapper.__name__,
-                        None,
-                        npp_automation_wrapper.__name__ if npp_automation_wrapper != None else None,
-                        reward_wrapper.__name__ if reward_wrapper != None else None,
-                        name_ending,
-                    )
-                    delete_env_id(env_id)
-            # Only NPPAutomationWrapper/No Wrapper with ObsWrapper
+        for action_wrapper in ALL_ACTION_WRAPPERS:
             for observation_wrapper in ALL_OBSERVATION_WRAPPERS:
                 for alg in algorithms:
                     if alg == TD3:
@@ -129,38 +71,87 @@ def train_all_scenarios(
                     else:
                         num_cpu = 8
                     register(id=env_id, entry_point=scenario)
-                    wrapper_maker = WrapperMaker(None, observation_wrapper, NPPAutomationWrapper, reward_wrapper)
-                    vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper)
+                    # This is needed because make_vec_env does not allow a method with multiple parameters as wrapper_class
+                    wrapper_maker = WrapperMaker(
+                        action_wrapper, automation_wrapper, observation_wrapper, reward_wrapper
+                    )
+                    vec_env = make_vec_env(
+                        env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper, monitor_dir=log_dir
+                    )
                     vec_env_monitor = VecMonitor(vec_env)
+
                     train_agent(
                         alg,
                         vec_env_monitor,
                         scenario,
-                        None,
+                        action_wrapper.__name__,
                         observation_wrapper.__name__,
-                        npp_automation_wrapper.__name__ if npp_automation_wrapper != None else None,
+                        automation_wrapper.__name__ if automation_wrapper != None else None,
                         reward_wrapper.__name__ if reward_wrapper != None else None,
                         name_ending,
                     )
                     delete_env_id(env_id)
-        # Only NPPAutomationWrapper/No Wrapper
-        for npp_automation_wrapper in npp_automation:
+        # No obs Wrapper
+        for action_wrapper in ALL_ACTION_WRAPPERS:
             for alg in algorithms:
                 if alg == TD3:
                     num_cpu = 1
                 else:
                     num_cpu = 8
                 register(id=env_id, entry_point=scenario)
-                vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=RewardOption3Wrapper, monitor_dir=log_dir)
+                wrapper_maker = WrapperMaker(action_wrapper, automation_wrapper, None, reward_wrapper)
+                vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper)
+                vec_env_monitor = VecMonitor(vec_env)
+                train_agent(
+                    alg,
+                    vec_env_monitor,
+                    scenario,
+                    action_wrapper.__name__,
+                    None,
+                    automation_wrapper.__name__ if automation_wrapper != None else None,
+                    reward_wrapper.__name__ if reward_wrapper != None else None,
+                    name_ending,
+                )
+                delete_env_id(env_id)
+        # No action Wrapper
+        for observation_wrapper in ALL_OBSERVATION_WRAPPERS:
+            for alg in algorithms:
+                if alg == TD3:
+                    num_cpu = 1
+                else:
+                    num_cpu = 8
+                register(id=env_id, entry_point=scenario)
+                wrapper_maker = WrapperMaker(None, automation_wrapper, observation_wrapper, reward_wrapper)
+                vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper)
                 vec_env_monitor = VecMonitor(vec_env)
                 train_agent(
                     alg,
                     vec_env_monitor,
                     scenario,
                     None,
-                    None,
-                    npp_automation_wrapper.__name__ if npp_automation_wrapper != None else None,
+                    observation_wrapper.__name__,
+                    automation_wrapper.__name__ if automation_wrapper != None else None,
                     reward_wrapper.__name__ if reward_wrapper != None else None,
                     name_ending,
                 )
                 delete_env_id(env_id)
+        # No obs and no action Wrappers
+        for alg in algorithms:
+            if alg == TD3:
+                num_cpu = 1
+            else:
+                num_cpu = 8
+            register(id=env_id, entry_point=scenario)
+            vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=automation_wrapper, monitor_dir=log_dir)
+            vec_env_monitor = VecMonitor(vec_env)
+            train_agent(
+                alg,
+                vec_env_monitor,
+                scenario,
+                None,
+                None,
+                automation_wrapper.__name__ if automation_wrapper != None else None,
+                reward_wrapper.__name__ if reward_wrapper != None else None,
+                name_ending,
+            )
+            delete_env_id(env_id)

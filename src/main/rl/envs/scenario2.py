@@ -4,8 +4,6 @@ from gym.spaces import MultiBinary, Box
 
 from src.main.rl.utils.utils import is_done
 
-# from src.main.services.NPPAutomationService import NPPAutomationService
-# from src.main.services.NPPAutomationStepService import NPPAutomationStepService
 from src.main.services.BackgroundStepService import BackgroundStepService
 from src.main.services.ReactorCreatorService import ReactorCreatorService
 
@@ -89,8 +87,4 @@ class Scenario2(Env):
         self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
         self.moderator_percent = 100
         self.length = 250
-        # self.npp_automation = NPPAutomationStepService(int(self.state.full_reactor.reactor.water_level))
-        # self._npp_automation = NPPAutomationService(background_step_service=self.state)
-        # y = threading.Thread(target=self._npp_automation.run)
-        # y.start()
         return np.array([float(-1)])

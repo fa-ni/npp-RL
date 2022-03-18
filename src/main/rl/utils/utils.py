@@ -57,10 +57,10 @@ def delete_env_id(env_id: str) -> None:
 
 
 class WrapperMaker:
-    def __init__(self, action_wrapper, observation_wrapper, npp_automation_wrapper, reward_wrapper):
+    def __init__(self, action_wrapper, npp_automation_wrapper, observation_wrapper, reward_wrapper):
         self.action_wrapper = action_wrapper
-        self.observation_wrapper = observation_wrapper
         self.npp_automation_wrapper = npp_automation_wrapper
+        self.observation_wrapper = observation_wrapper
         self.reward_wrapper = reward_wrapper
 
     def make_wrapper(self, env):
@@ -70,7 +70,6 @@ class WrapperMaker:
             env = self.npp_automation_wrapper(env)
         if self.observation_wrapper:
             env = self.observation_wrapper(env)
-
         if self.reward_wrapper:
             env = self.reward_wrapper(env)
         return env

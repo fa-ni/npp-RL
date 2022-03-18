@@ -1,5 +1,6 @@
 from src.main.rl.wrapper.action_wrapper2 import ActionSpaceOption2Wrapper
 from src.main.rl.wrapper.action_wrapper3 import ActionSpaceOption3Wrapper
+from src.main.rl.wrapper.npp_automation_wrapper import NPPAutomationWrapper
 from src.main.rl.wrapper.obs_wrapper2 import ObservationOption2Wrapper
 from src.main.rl.wrapper.obs_wrapper3 import ObservationOption3Wrapper
 from src.main.rl.wrapper.obs_wrapper4 import ObservationOption4Wrapper
@@ -25,13 +26,17 @@ def parse_wrapper(string: str):
         obs_result = ObservationOption5Wrapper
     else:
         obs_result = None
+    if "NPPAutomationWrapper" in string:
+        npp_automation_result = NPPAutomationWrapper
+    else:
+        npp_automation_result = None
     if "RewardOption2Wrapper" in string:
         reward_result = RewardOption2Wrapper
     elif "RewardOption3Wrapper" in string:
         reward_result = RewardOption3Wrapper
     else:
         reward_result = None
-    return action_result, obs_result, reward_result
+    return action_result, npp_automation_result, obs_result, reward_result
 
 
 def parse_scenario_name(scenario: str) -> str:

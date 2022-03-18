@@ -5,4 +5,4 @@ from src.main.rl.wrapper.reward_wrapper2 import RewardOption2Wrapper
 from stable_baselines3 import PPO, A2C, SAC, TD3
 
 if __name__ == "__main__":
-    train_all_scenarios(ALL_SCENARIOS, RewardOption2Wrapper, [PPO, A2C, SAC], NPPAutomationWrapper, "delete")
+    train_all_scenarios(ALL_SCENARIOS, RewardOption2Wrapper, [PPO, A2C, SAC], NPPAutomationWrapper, "training_18_03")

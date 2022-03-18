@@ -7,6 +7,6 @@ def parse_information_from_path(path: str):
     scenario_name = parse_scenario_name(path)
     result_scenario = f"envs.{scenario_name}:{scenario_name.capitalize()}"
     alg = alg_mapping[parse_alg_name(path)]
-    action_wrapper, obs_wrapper, reward_wrapper = parse_wrapper(path)
-    wrapper_maker = WrapperMaker(action_wrapper, obs_wrapper, reward_wrapper)
+    action_wrapper, automation_wrapper, obs_wrapper, reward_wrapper = parse_wrapper(path)
+    wrapper_maker = WrapperMaker(action_wrapper, automation_wrapper, obs_wrapper, reward_wrapper)
     return result_scenario, alg, wrapper_maker

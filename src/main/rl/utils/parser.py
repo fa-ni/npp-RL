@@ -36,7 +36,7 @@ def parse_wrapper(string: str):
         reward_result = RewardOption3Wrapper
     else:
         reward_result = None
-    return action_result, obs_result, npp_automation_result, reward_result
+    return action_result, npp_automation_result, obs_result, reward_result
 
 
 def parse_scenario_name(scenario: str) -> str:

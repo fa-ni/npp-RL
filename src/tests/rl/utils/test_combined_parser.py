@@ -14,7 +14,7 @@ from stable_baselines3 import PPO
 def test_parse_information_from_path(mock_parse_scenario, mock_parse_alg, mock_parse_wrapper, mock_wrapper_maker):
     mock_parse_scenario.return_value = "scenario2"
     mock_parse_alg.return_value = "PPO"
-    mock_parse_wrapper.return_value = ActionSpaceOption3Wrapper, ObservationOption3Wrapper, RewardOption2Wrapper
+    mock_parse_wrapper.return_value = ActionSpaceOption3Wrapper, None, ObservationOption3Wrapper, RewardOption2Wrapper
     mock_wrapper_maker.return_value = "x"
     actual = parse_information_from_path("test_path")
 

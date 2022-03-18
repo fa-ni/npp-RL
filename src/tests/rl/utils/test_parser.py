@@ -1,6 +1,7 @@
 from src.main.rl.utils.parser import parse_wrapper, parse_scenario_name, parse_alg_name
 from src.main.rl.wrapper.action_wrapper2 import ActionSpaceOption2Wrapper
 from src.main.rl.wrapper.action_wrapper3 import ActionSpaceOption3Wrapper
+from src.main.rl.wrapper.npp_automation_wrapper import NPPAutomationWrapper
 from src.main.rl.wrapper.obs_wrapper2 import ObservationOption2Wrapper
 from src.main.rl.wrapper.obs_wrapper3 import ObservationOption3Wrapper
 from src.main.rl.wrapper.obs_wrapper4 import ObservationOption4Wrapper
@@ -11,39 +12,43 @@ import pytest
 
 
 @pytest.mark.parametrize(
-    ["input", "action", "obs", "reward"],
+    ["input", "action", "automation", "obs", "reward"],
     [
         [
             "scenario1ActionSpaceOption2WrapperObservationOption2WrapperRewardOption2Wrapper",
             ActionSpaceOption2Wrapper,
+            None,
             ObservationOption2Wrapper,
             RewardOption2Wrapper,
         ],
         [
             "scenario1ActionSpaceOption3WrapperObservationOption3WrapperRewardOption3Wrapper",
             ActionSpaceOption3Wrapper,
+            None,
             ObservationOption3Wrapper,
             RewardOption3Wrapper,
         ],
-        ["scenario1NoneWrapperObservationOption4WrapperRewarder", None, ObservationOption4Wrapper, None],
+        ["scenario1NoneWrapperObservationOption4WrapperRewarder", None, None, ObservationOption4Wrapper, None],
         [
             "scenario1ActionSpaceOption2WrapperObservationOption5WrapperRewardOption2Wrapper",
             ActionSpaceOption2Wrapper,
+            None,
             ObservationOption5Wrapper,
             RewardOption2Wrapper,
         ],
-        ["", None, None, None],
+        ["", None, None, None, None],
         [
-            "scenario1ActionSpaceOption2WrapperObservationOption2WrapperRewardOption2WrapperActionSpaceOption3",
+            "scenario1ActionSpaceOption2WrapperObservationOption2WrapperRewardOption2WrapperNPPAutomationWrapperActionSpaceOption3",
             ActionSpaceOption2Wrapper,
+            NPPAutomationWrapper,
             ObservationOption2Wrapper,
             RewardOption2Wrapper,
         ],
     ],
 )
-def test_parse_wrapper(input, action, obs, reward):
+def test_parse_wrapper(input, action, automation, obs, reward):
     actual = parse_wrapper(input)
-    assert actual == (action, obs, reward)
+    assert actual == (action, automation, obs, reward)
 
 
 @pytest.mark.parametrize(

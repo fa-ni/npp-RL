@@ -66,10 +66,11 @@ class WrapperMaker:
     def make_wrapper(self, env):
         if self.action_wrapper:
             env = self.action_wrapper(env)
-        if self.observation_wrapper:
-            env = self.observation_wrapper(env)
         if self.npp_automation_wrapper:
             env = self.npp_automation_wrapper(env)
+        if self.observation_wrapper:
+            env = self.observation_wrapper(env)
+
         if self.reward_wrapper:
             env = self.reward_wrapper(env)
         return env

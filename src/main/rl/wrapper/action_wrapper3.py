@@ -14,4 +14,4 @@ class ActionSpaceOption3Wrapper(Wrapper):
                 np.array([-1, -1, -1, -1, -1]).astype(np.float32), np.array([1, 1, 1, 1, 1]).astype(np.float32)
             )
         elif type(env.action_space) == MultiDiscrete:
-            self.action_space = MultiDiscrete([3, 3, 3, 3, 3])
+            self.action_space = MultiDiscrete([9, 9, 2, 2, 9])

@@ -12,17 +12,20 @@ class Scenario3(Env):
     # if no wrapper is specified this will use ActionSpaceOption 1 and ObservationSpaceOption1
     def __init__(self):
         # 1. moderator_percent 2. WP1 RPM
-        self.action_space = MultiDiscrete([3, 3])
+        self.action_space = MultiDiscrete([9, 9])
         self.observation_space = Box(np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32))
         self.length = 250
+        # The key is the action value and the value is the mapping for the actual change for the real value.
+        self.get_moderator_percentage_change = {0: -10, 1: -5, 2: -3, 3: -1, 4: 0, 5: 1, 6: 3, 7: 5, 8: 10}
+        self.get_pump_change = {0: -200, 1: -100, 2: -50, 3: -25, 4: 0, 5: 25, 6: 50, 7: 100, 8: 200}
 
     def step(self, action):
         reward = 0
         self.length -= 1
 
         # Standard/Minimal Actions (Option 1 Actions)
-        moderator_percent_setting = -1 if action[0] == 0 else (0 if action[0] == 1 else 1)
-        wp_rpm_setting = -25 if action[1] == 0 else (0 if action[1] == 1 else 25)
+        moderator_percent_setting = self.get_moderator_percentage_change[action[0]]
+        wp_rpm_setting = self.get_pump_change[action[1]]
         self.state.full_reactor.reactor.moderator_percent = (
             100 - self.state.full_reactor.reactor.moderator_percent + moderator_percent_setting
         )
@@ -49,19 +52,14 @@ class Scenario3(Env):
                 self.state.full_reactor.steam_valve1.status = True
             self.state.full_reactor.condenser_pump.rpm_to_be_set = 1600
             self.state.full_reactor.steam_valve1.status = True
-            water_valve_setting = (
-                False if action[2] == 0 else (self.state.full_reactor.water_valve1.status if action[2] == 1 else True)
-            )
+            water_valve_setting = False if action[2] == 0 else True
+
             self.state.full_reactor.water_valve1.status = water_valve_setting
         # Necessary for Action Space Option 3
         if len(action) == 5:  # TODO
-            water_valve_setting = (
-                False if action[2] == 0 else (self.state.full_reactor.water_valve1.status if action[2] == 1 else True)
-            )
-            steam_valve_setting = (
-                False if action[3] == 0 else (self.state.full_reactor.steam_valve1.status if action[3] == 1 else True)
-            )
-            condenser_rpm_setting = -25 if action[4] == 0 else (0 if action[4] == 1 else +25)
+            water_valve_setting = False if action[2] == 0 else True
+            steam_valve_setting = False if action[3] == 0 else True
+            condenser_rpm_setting = self.get_pump_change[action[4]]
             self.state.full_reactor.water_valve1.status = water_valve_setting
             self.state.full_reactor.steam_valve1.status = steam_valve_setting
             self.state.full_reactor.condenser_pump.rpm_to_be_set += condenser_rpm_setting

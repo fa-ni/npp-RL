@@ -12,4 +12,4 @@ jobs:
     - uses: psf/black@stable
       with:
         options: "--line-length 120 --check --verbose"
-        version: 21.9b0
+        version: 22.3.0

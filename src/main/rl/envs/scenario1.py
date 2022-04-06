@@ -2,6 +2,8 @@ import numpy as np
 from gym import Env
 from gym.spaces import Box
 
+from src.main.dto.FullReactor import FullReactor
+from src.main.rl.utils.reactor_starting_states import get_reactor_starting_state
 from src.main.rl.utils.utils import get_real_value, is_done
 from src.main.services.BackgroundStepService import BackgroundStepService
 from src.main.services.ReactorCreatorService import ReactorCreatorService
@@ -10,11 +12,12 @@ from src.main.services.ReactorCreatorService import ReactorCreatorService
 class Scenario1(Env):
     # Scenario 1 with continuous action spaces
     # if no wrapper is specified this will use ActionSpaceOption 1 and ObservationSpaceOption1
-    def __init__(self):
+    def __init__(self, starting_state=None):
         # 1. moderator_percent 2. WP1 RPM
         self.action_space = Box(np.array([-1, -1]).astype(np.float32), np.array([1, 1]).astype(np.float32))
         self.observation_space = Box(np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32))
         self.length = 250
+        self.starting_state = starting_state
 
     def step(self, action):
         reward = 0
@@ -26,20 +29,11 @@ class Scenario1(Env):
         self.state.full_reactor.water_pump1.rpm_to_be_set = wp_rpm_setting
         # Necessary for Action Space Option 1
         if len(action) == 2:
-            # This is necessary as you cannot override the state from this environment in any of the wrappers
-            if self.length == 249:
-                self.state.full_reactor.condenser_pump.rpm = 1600
-                self.state.full_reactor.steam_valve1.status = True
-                self.state.full_reactor.water_valve1.status = True
             self.state.full_reactor.condenser_pump.rpm_to_be_set = 1600
             self.state.full_reactor.steam_valve1.status = True
             self.state.full_reactor.water_valve1.status = True
         # Necessary for Action Space Option 2
         if len(action) == 3:
-            # This is necessary as you cannot override the state from this environment in any of the wrappers
-            if self.length == 249:
-                self.state.full_reactor.condenser_pump.rpm = 1600
-                self.state.full_reactor.steam_valve1.status = True
             self.state.full_reactor.condenser_pump.rpm_to_be_set = 1600
             self.state.full_reactor.steam_valve1.status = True
             water_valve_setting = False if action[2] < 0 else True
@@ -73,7 +67,21 @@ class Scenario1(Env):
 
     def reset(self):
         self.state = None
-        self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
-        self.moderator_percent = 100
         self.length = 250
-        return np.array([float(-1)])
+        if self.starting_state:
+            self.state = BackgroundStepService(get_reactor_starting_state(self.starting_state))
+        else:
+            self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
+            # For ActionSpaceOption 1 we need to set these values in the beginning.
+            # If we have a different ActionSpaceOption we will override the values again in the
+            # action_wrapper.
+            self.state.full_reactor.condenser_pump.rpm = 1600
+            self.state.full_reactor.steam_valve1.status = True
+            self.state.full_reactor.water_valve1.status = True
+        return_values = get_return_values_for_starting_state(self.state.full_reactor)
+        return return_values
+
+
+def get_return_values_for_starting_state(full_reactor: FullReactor):
+    normalized_power = 2 * (full_reactor.generator.power / 800) - 1
+    return np.array([float(normalized_power)])

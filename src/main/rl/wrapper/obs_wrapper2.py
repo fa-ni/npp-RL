@@ -24,9 +24,6 @@ class ObservationOption2Wrapper(Wrapper):
 
     def reset(self):
         self.env.reset()
-        # We overwrite here the state as this is the outer wrapper
-        if self.starting_state:
-            self.state = BackgroundStepService(get_reactor_starting_state(self.starting_state))
         return_values = get_return_values_for_starting_state(self.state.full_reactor)
         return return_values
 

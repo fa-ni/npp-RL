@@ -50,7 +50,6 @@ class ObservationOption5Wrapper(Wrapper):
 
     def reset(self):
         self.env.reset()
-        # We overwrite here the state as this is the outer wrapper
         return_values = get_return_values_for_starting_state(self.state.full_reactor)
         return return_values
 

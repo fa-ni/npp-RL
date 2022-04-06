@@ -33,6 +33,9 @@ class Pump(ReactorComponent):
         # This is the slider max in the java implementation
         elif rpm > 2000:
             self._rpm_to_be_set = 2000
+        # This is the slider min in the java implementation
+        elif rpm < 0:
+            self._rpm_to_be_set = 0
         else:
             self._rpm_to_be_set = rpm
 

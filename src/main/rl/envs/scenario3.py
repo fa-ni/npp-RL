@@ -79,16 +79,16 @@ class Scenario3(Env):
     def reset(self):
         self.state = None
         self.length = 250
-
-        self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
-        # For ActionSpaceOption 1 we need to set these values in the beginning.
-        # If we have a different ActionSpaceOption we will override the values again in the
-        # action_wrapper.
-        self.state.full_reactor.condenser_pump.rpm = 1600
-        self.state.full_reactor.steam_valve1.status = True
-        self.state.full_reactor.water_valve1.status = True
         if self.starting_state:
             self.state = BackgroundStepService(get_reactor_starting_state(self.starting_state))
+        else:
+            self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
+            # For ActionSpaceOption 1 we need to set these values in the beginning.
+            # If we have a different ActionSpaceOption we will override the values again in the
+            # action_wrapper.
+            self.state.full_reactor.condenser_pump.rpm = 1600
+            self.state.full_reactor.steam_valve1.status = True
+            self.state.full_reactor.water_valve1.status = True
         return_values = get_return_values_for_starting_state(self.state.full_reactor)
         return return_values
 

@@ -11,7 +11,7 @@ class ObservationOption5Wrapper(Wrapper):
     def __init__(self, env):
         super().__init__(env)
         # 1. Power Output 2. Reactor WaterLevel 3. Reactor Pressure 4. Condenser WaterLevel 5. Condenser Pressure
-        # 6. WP1 RPM 7. Moderator_Percent/CR 8. CP RPM 9. WV1 10. SV1
+        # 6. WP1 RPM 7. Moderator_Percent/CR 8. CP RPM 9. WV1 10. SV1 11. Blow Counter
         self.observation_space = Box(
             np.array([-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1]).astype(np.float32),
             np.array([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]).astype(np.float32),

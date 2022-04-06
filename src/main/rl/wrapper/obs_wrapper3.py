@@ -10,7 +10,7 @@ from src.main.services.BackgroundStepService import BackgroundStepService
 class ObservationOption3Wrapper(Wrapper):
     def __init__(self, env):
         super().__init__(env)
-        # 1. Power Output 2. WP1 RPM 3. CP/moderator Percentage 4. CP RPM 5. WV1 6. SV1
+        # 1. Power Output 2. WP1 RPM 3. CP/moderator Percentage 4. CP RPM 5. WV1 6. SV1 7. Blow Counter
         self.observation_space = Box(
             np.array([-1, -1, -1, -1, -1, -1, -1]).astype(np.float32),
             np.array([1, 1, 1, 1, 1, 1, 1]).astype(np.float32),

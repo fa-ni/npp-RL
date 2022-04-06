@@ -2,6 +2,10 @@ import numpy as np
 from gym import Wrapper
 from gym.spaces import Box
 
+from src.main.dto.FullReactor import FullReactor
+from src.main.rl.utils.reactor_starting_states import get_reactor_starting_state
+from src.main.services.BackgroundStepService import BackgroundStepService
+
 
 class ObservationOption2Wrapper(Wrapper):
     def __init__(self, env):
@@ -19,4 +23,17 @@ class ObservationOption2Wrapper(Wrapper):
         return tuple(original_result)
 
     def reset(self):
-        return np.append(self.env.reset(), np.array([float(-1), float(1)]))
+        self.env.reset()
+        # We overwrite here the state as this is the outer wrapper
+        if self.starting_state:
+            self.state = BackgroundStepService(get_reactor_starting_state(self.starting_state))
+        return_values = get_return_values_for_starting_state(self.state.full_reactor)
+        return return_values
+
+
+def get_return_values_for_starting_state(full_reactor: FullReactor):
+    normalized_power = 2 * (full_reactor.generator.power / 800) - 1
+    normalized_wp1_rpm = 2 * (full_reactor.water_pump1.rpm / 2000) - 1
+    normalized_cr = 2 * (full_reactor.reactor.moderator_percent / 100) - 1
+
+    return np.array([float(normalized_power), float(normalized_wp1_rpm), float(normalized_cr)])

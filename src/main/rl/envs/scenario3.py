@@ -12,11 +12,11 @@ from src.main.services.ReactorCreatorService import ReactorCreatorService
 class Scenario3(Env):
     # Scenario 3 with MultiDiscrete Action Spaces
     # if no wrapper is specified this will use ActionSpaceOption 1 and ObservationSpaceOption1
-    def __init__(self, starting_state=None):
+    def __init__(self, starting_state=None, length=250):
         # 1. moderator_percent 2. WP1 RPM
         self.action_space = MultiDiscrete([9, 9])
         self.observation_space = Box(np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32))
-        self.length = 250
+        self.length = length
         # The key is the action value and the value is the mapping for the actual change for the real value.
         self.get_moderator_percentage_change = {0: -10, 1: -5, 2: -3, 3: -1, 4: 0, 5: 1, 6: 3, 7: 5, 8: 10}
         self.get_pump_change = {0: -200, 1: -100, 2: -50, 3: -25, 4: 0, 5: 25, 6: 50, 7: 100, 8: 200}
@@ -80,7 +80,7 @@ class Scenario3(Env):
         self.state = None
         self.length = 250
         if self.starting_state:
-            self.state = BackgroundStepService(get_reactor_starting_state(self.starting_state))
+            self.state = BackgroundStepService(self.starting_state)
         else:
             self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
             # For ActionSpaceOption 1 we need to set these values in the beginning.

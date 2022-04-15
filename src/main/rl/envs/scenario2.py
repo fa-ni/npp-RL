@@ -13,11 +13,11 @@ from src.main.services.ReactorCreatorService import ReactorCreatorService
 class Scenario2(Env):
     # Scenario 2 with MultiBinary Action Spaces
     # if no wrapper is specified this will use ActionSpaceOption 1 and ObservationSpaceOption1
-    def __init__(self, starting_state=None):
+    def __init__(self, starting_state=None, length=250):
         # 1. moderator_percent 2. WP1 RPM
         self.action_space = MultiBinary(n=2)
         self.observation_space = Box(np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32))
-        self.length = 250
+        self.length = length
         self.starting_state = starting_state
 
     def step(self, action):
@@ -78,7 +78,7 @@ class Scenario2(Env):
         self.state = None
         self.length = 250
         if self.starting_state:
-            self.state = BackgroundStepService(get_reactor_starting_state(self.starting_state))
+            self.state = BackgroundStepService(self.starting_state)
         else:
             self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
             # For ActionSpaceOption 1 we need to set these values in the beginning.

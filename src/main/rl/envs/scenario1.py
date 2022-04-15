@@ -46,10 +46,7 @@ class Scenario1(Env):
             self.state.full_reactor.steam_valve1.status = steam_valve_setting
             self.state.full_reactor.condenser_pump.rpm_to_be_set = condenser_rpm_setting
         self.state.time_step(1)
-        print(f"WaterLEvel: {self.state.full_reactor.reactor.water_level}")
 
-        if self.length == 150:
-            print("AWdwa")
         done = is_done(self.state.full_reactor, self.length)
         if not done:
             calc_reward = self.state.full_reactor.generator.power / 700

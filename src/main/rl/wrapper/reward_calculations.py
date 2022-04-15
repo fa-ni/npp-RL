@@ -1,8 +1,6 @@
 def calculate_reward_for_corridor(lower: int, upper: int, perfect: int, number: float) -> float:
     if number < lower or number > upper:
-        result = -1
-    # else:
-    #    result = 1
+        result = 0
     else:
         if number == perfect:
             result = 1

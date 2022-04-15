@@ -14,13 +14,13 @@ def get_scaled_value(max_value: int, normal_value: float) -> float:
 def is_done(full_reactor: FullReactor, length: int) -> bool:
     done = False
     if (
-            full_reactor.reactor.overheated
-            or full_reactor.reactor.is_blown()
-            or full_reactor.generator.is_blown()
-            or full_reactor.condenser.is_blown()
-            or full_reactor.water_pump1.is_blown()
-            or full_reactor.condenser_pump.is_blown()
-            or length <= 0
+        full_reactor.reactor.overheated
+        or full_reactor.reactor.is_blown()
+        or full_reactor.generator.is_blown()
+        or full_reactor.condenser.is_blown()
+        or full_reactor.water_pump1.is_blown()
+        or full_reactor.condenser_pump.is_blown()
+        or length <= 0
     ):
         done = True
     return done
@@ -29,13 +29,13 @@ def is_done(full_reactor: FullReactor, length: int) -> bool:
 def is_done_java(backend, length: int) -> bool:
     done = False
     if (
-            not backend.getReactorTankStatus()
-            or not backend.getReactorStatus()
-            or not backend.getTurbineStatus()
-            or not backend.getCondenserStatus()
-            or not backend.getWP1Status()
-            or not backend.getCPStatus()
-            or length <= 0
+        not backend.getReactorTankStatus()
+        or not backend.getReactorStatus()
+        or not backend.getTurbineStatus()
+        or not backend.getCondenserStatus()
+        or not backend.getWP1Status()
+        or not backend.getCPStatus()
+        or length <= 0
     ):
         done = True
     return done
@@ -61,8 +61,15 @@ def delete_env_id(env_id: str) -> None:
 
 
 class WrapperMaker:
-    def __init__(self, action_wrapper, npp_automation_wrapper, observation_wrapper, reward_wrapper, delay_wrapper=None,
-                 obs_varies_wrapper=None):
+    def __init__(
+        self,
+        action_wrapper,
+        npp_automation_wrapper,
+        observation_wrapper,
+        reward_wrapper,
+        delay_wrapper=None,
+        obs_varies_wrapper=None,
+    ):
         self.action_wrapper = action_wrapper
         self.npp_automation_wrapper = npp_automation_wrapper
         self.observation_wrapper = observation_wrapper
@@ -84,3 +91,11 @@ class WrapperMaker:
         if self.reward_wrapper:
             env = self.reward_wrapper(env)
         return env
+
+
+def fibonacci_of(n):
+    if n in {0, 1}:
+        result = n
+    else:
+        result = fibonacci_of(n - 1) + fibonacci_of(n - 2)
+    return result

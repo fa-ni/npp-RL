@@ -3,7 +3,6 @@ from gym import Env
 from gym.spaces import Box
 
 from src.main.dto.FullReactor import FullReactor
-from src.main.rl.utils.reactor_starting_states import get_reactor_starting_state
 from src.main.rl.utils.utils import get_real_value, is_done
 from src.main.services.BackgroundStepService import BackgroundStepService
 from src.main.services.ReactorCreatorService import ReactorCreatorService
@@ -12,11 +11,11 @@ from src.main.services.ReactorCreatorService import ReactorCreatorService
 class Scenario1(Env):
     # Scenario 1 with continuous action spaces
     # if no wrapper is specified this will use ActionSpaceOption 1 and ObservationSpaceOption1
-    def __init__(self, starting_state=None):
+    def __init__(self, starting_state=None, length=250):
         # 1. moderator_percent 2. WP1 RPM
         self.action_space = Box(np.array([-1, -1]).astype(np.float32), np.array([1, 1]).astype(np.float32))
         self.observation_space = Box(np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32))
-        self.length = 250
+        self.length = length
         self.starting_state = starting_state
 
     def step(self, action):
@@ -53,13 +52,20 @@ class Scenario1(Env):
             calc_reward = self.state.full_reactor.generator.power / 700
             reward += calc_reward
 
+        info = {
+            "Reactor_WaterLevel": self.state.full_reactor.reactor.water_level,
+            "Reactor_Pressure": self.state.full_reactor.reactor.pressure,
+            "Condenser_WaterLevel": self.state.full_reactor.condenser.water_level,
+            "Condenser_Pressure": self.state.full_reactor.condenser.pressure,
+            "Blow_Counter": self.state.full_reactor.water_pump1.blow_counter,
+        }
         normalized_obs = 2 * (self.state.full_reactor.generator.power / 800) - 1
         return [
             # Might need to change if we dont want to have binary for first observation
             np.array([normalized_obs]),
             reward,
             done,
-            {},
+            info,
         ]
 
     def render(self):
@@ -67,9 +73,9 @@ class Scenario1(Env):
 
     def reset(self):
         self.state = None
-        self.length = 250
+        self.length = self.length
         if self.starting_state:
-            self.state = BackgroundStepService(get_reactor_starting_state(self.starting_state))
+            self.state = BackgroundStepService(self.starting_state)
         else:
             self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
             # For ActionSpaceOption 1 we need to set these values in the beginning.

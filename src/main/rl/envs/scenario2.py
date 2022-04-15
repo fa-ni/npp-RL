@@ -13,11 +13,11 @@ from src.main.services.ReactorCreatorService import ReactorCreatorService
 class Scenario2(Env):
     # Scenario 2 with MultiBinary Action Spaces
     # if no wrapper is specified this will use ActionSpaceOption 1 and ObservationSpaceOption1
-    def __init__(self, starting_state=None):
+    def __init__(self, starting_state=None, length=250):
         # 1. moderator_percent 2. WP1 RPM
         self.action_space = MultiBinary(n=2)
         self.observation_space = Box(np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32))
-        self.length = 250
+        self.length = length
         self.starting_state = starting_state
 
     def step(self, action):
@@ -62,13 +62,21 @@ class Scenario2(Env):
         if not done:
             calc_reward = self.state.full_reactor.generator.power / 700
             reward += calc_reward
+
+        info = {
+            "Reactor_WaterLevel": self.state.full_reactor.reactor.water_level,
+            "Reactor_Pressure": self.state.full_reactor.reactor.pressure,
+            "Condenser_WaterLevel": self.state.full_reactor.condenser.water_level,
+            "Condenser_Pressure": self.state.full_reactor.condenser.pressure,
+            "Blow_Counter": self.state.full_reactor.water_pump1.blow_counter,
+        }
         normalized_obs = 2 * (self.state.full_reactor.generator.power / 800) - 1
         return [
             # Might need to change if we dont want to have binary for first observation
             np.array([normalized_obs]),
             reward,
             done,
-            {},
+            info,
         ]
 
     def render(self, mode):
@@ -78,7 +86,7 @@ class Scenario2(Env):
         self.state = None
         self.length = 250
         if self.starting_state:
-            self.state = BackgroundStepService(get_reactor_starting_state(self.starting_state))
+            self.state = BackgroundStepService(self.starting_state)
         else:
             self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
             # For ActionSpaceOption 1 we need to set these values in the beginning.

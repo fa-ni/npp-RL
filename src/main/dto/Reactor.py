@@ -24,14 +24,18 @@ class Reactor(ReactorComponent):
         overheated: bool,
         moderator_percent: int,
         melt_stage: int,
+        poisoning_factor=None,
     ):
         self._water_level = water_level
         self._pressure = pressure
         self._overheated = overheated
         self._moderator_percent = moderator_percent
         self._melt_stage = melt_stage
-        self._poisoning_factor = deque(maxlen=100)
-        [self._poisoning_factor.append(moderator_percent) for _ in range(100)]
+        if not poisoning_factor:
+            self._poisoning_factor = deque(maxlen=100)
+            [self._poisoning_factor.append(moderator_percent) for _ in range(100)]
+        else:
+            self._poisoning_factor = poisoning_factor
         super().__init__(False)
 
     def meltdown(self):

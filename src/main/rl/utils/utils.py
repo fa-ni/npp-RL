@@ -22,6 +22,14 @@ def is_done(full_reactor: FullReactor, length: int) -> bool:
         or full_reactor.condenser_pump.is_blown()
         or length <= 0
     ):
+        print(
+            full_reactor.reactor.overheated,
+            full_reactor.reactor.is_blown(),
+            full_reactor.condenser.is_blown(),
+            full_reactor.condenser.is_blown(),
+            full_reactor.water_pump1.is_blown(),
+            full_reactor.condenser_pump.is_blown(),
+        )
         done = True
     return done
 

@@ -14,6 +14,7 @@ from src.main.rl.utils.constants import (
     action_dimensions,
     obs_scaling_factors,
     obs_dimensions,
+    scaling_factors_scenario3,
 )
 from src.main.rl.utils.parser import parse_scenario_name
 from src.main.rl.utils.utils import WrapperMaker, delete_env_id
@@ -43,7 +44,9 @@ def plot_actions_taken(actions_taken: list, scenario_name: str) -> None:
             scaled_values.append(
                 [-scaling_factors_scenario2[idx] if x == 0 else scaling_factors_scenario2[idx] for x in item]
             )
-    # TODO if needed at scaled values for scenario 3
+    if parsed_scenario_name == "scenario3":
+        for idx, item in enumerate(actions_positions):
+            scaled_values.append([scaling_factors_scenario3[idx][x] for x in item])
 
     # Plotting
     [ax[idx].plot(action_position) for idx, action_position in enumerate(scaled_values)]
@@ -116,7 +119,7 @@ def evaluate(
         observations_taken.append(obs)
         mean_reward_over_multiple_evaluations.append(reward)
         if done:
-            # plot_actions_taken(actions_taken, scenario_name)
+            plot_actions_taken(actions_taken, scenario_name)
             # plot_observations(observations_taken)
             criticality_score = calculate_criticality_score_with_reward_functions(reactor_status_over_time)
             print(f"Criticality Score1: {criticality_score}")
@@ -168,10 +171,12 @@ def evaluate_sop():
 
 # evaluate_sop()
 # path = "../scenario1/training_18_03/scenario1_ActionSpaceOption3Wrapper_ObservationOption4Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_TD3_training_18_03_1/best_model.zip"
-# scenario, alg, wrapper_maker = parse_information_from_path(path)
-# evaluate(
-#    scenario,
-#    path,
-#    alg,
-#    wrapper_maker,
-# )  # starting_state=create_starting_state_option3a(), episode_lgenth=250)
+path = "../models/models/scenario3/training_04_06/scenario3_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_PPO_training_04_06_1/best_model.zip"
+
+scenario, alg, wrapper_maker = parse_information_from_path(path)
+evaluate(
+    scenario,
+    path,
+    alg,
+    wrapper_maker,
+)  # starting_state=create_starting_state_option3a(), episode_lgenth=250)

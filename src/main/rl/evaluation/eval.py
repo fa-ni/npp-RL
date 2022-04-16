@@ -1,11 +1,12 @@
 import matplotlib.pyplot as plt
 import matplotlib.ticker as plticker
+import numpy as np
 from gym import register
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.on_policy_algorithm import OnPolicyAlgorithm
 
-from src.main.rl.analysis.criticality_helper import calculate_criticality_score_with_reward_functions
-from src.main.rl.envs.sop import get_actions_sop
+from src.main.rl.evaluation.criticality_helper import calculate_criticality_score_with_reward_functions
+from src.main.rl.evaluation.sop import get_actions_sop
 from src.main.rl.utils.combined_parser import parse_information_from_path
 from src.main.rl.utils.constants import (
     scaling_factors_scenario_1,
@@ -85,8 +86,8 @@ def evaluate(
     alg: OnPolicyAlgorithm,
     wrapper: WrapperMaker,
     starting_state=None,
-    episode_lgenth: int = 250,
-) -> float:
+    episode_length: int = 250,
+) -> [float, float]:
     env_id = "TestEnv-v1"
     delete_env_id(env_id)
 
@@ -95,17 +96,18 @@ def evaluate(
         env_id,
         n_envs=1,
         wrapper_class=wrapper.make_wrapper,
-        env_kwargs={"starting_state": starting_state, "length": episode_lgenth},
+        env_kwargs={"starting_state": starting_state, "length": episode_length},
     )
 
     mean_reward_over_multiple_evaluations = []
+    x = "src/main/rl/scenario1/training_18_03/scenario1_ActionSpaceOption3Wrapper_ObservationOption4Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_TD3_training_18_03_1/best_model.zip"
     model = alg.load(path)
     obs = vec_env.reset()
     actions_taken = []
     observations_taken = []
     reactor_status_over_time = []
     observations_taken.append(obs)
-    for _ in range(250):
+    for _ in range(episode_length):
         # vec_env.render()
 
         action, _states = model.predict(obs, deterministic=True)
@@ -115,10 +117,10 @@ def evaluate(
         observations_taken.append(obs)
         mean_reward_over_multiple_evaluations.append(reward)
         if done:
-            plot_actions_taken(actions_taken, scenario_name)
-            plot_observations(observations_taken)
-
-            print(f"Criticality Score1: {calculate_criticality_score_with_reward_functions(reactor_status_over_time)}")
+            # plot_actions_taken(actions_taken, scenario_name)
+            # plot_observations(observations_taken)
+            criticality_score = calculate_criticality_score_with_reward_functions(reactor_status_over_time)
+            print(f"Criticality Score1: {criticality_score}")
             # criticality_of_states = prepare_critical_states_analysis(reactor_status_over_time)
             # print(f"Criticality Score2: {calculate_score(criticality_of_states)}")
             # print(sum(mean_reward_over_multiple_evaluations))
@@ -128,7 +130,7 @@ def evaluate(
             obs = vec_env.reset()
             actions_taken = []
             observations_taken = []
-            return result
+            return result[0], criticality_score
 
 
 def evaluate_sop():
@@ -166,11 +168,11 @@ def evaluate_sop():
 
 
 # evaluate_sop()
-path = "scenario1/training_18_03/scenario1_ActionSpaceOption3Wrapper_ObservationOption4Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_TD3_training_18_03_2/best_model.zip"
-scenario, alg, wrapper_maker = parse_information_from_path(path)
-evaluate(
-    scenario,
-    path,
-    alg,
-    wrapper_maker,
-)  # starting_state=create_starting_state_option3a(), episode_lgenth=250)
+# path = "../scenario1/training_18_03/scenario1_ActionSpaceOption3Wrapper_ObservationOption4Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_TD3_training_18_03_1/best_model.zip"
+# scenario, alg, wrapper_maker = parse_information_from_path(path)
+# evaluate(
+#    scenario,
+#    path,
+#    alg,
+#    wrapper_maker,
+# )  # starting_state=create_starting_state_option3a(), episode_lgenth=250)

@@ -38,6 +38,7 @@ def plot_actions_taken(actions_taken: list, scenario_name: str) -> None:
     parsed_scenario_name = parse_scenario_name(scenario_name)
     if parsed_scenario_name == "scenario1":
         for idx, item in enumerate(actions_positions):
+            # TODO double check
             scaled_values.append([int(round((x + 1) * (scaling_factors_scenario_1[idx] / 2))) for x in item])
     if parsed_scenario_name == "scenario2":
         for idx, item in enumerate(actions_positions):
@@ -171,12 +172,14 @@ def evaluate_sop():
 
 # evaluate_sop()
 # path = "../scenario1/training_18_03/scenario1_ActionSpaceOption3Wrapper_ObservationOption4Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_TD3_training_18_03_1/best_model.zip"
-path = "../models/models/scenario3/training_04_06/scenario3_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_PPO_training_04_06_1/best_model.zip"
-
-scenario, alg, wrapper_maker = parse_information_from_path(path)
-evaluate(
-    scenario,
-    path,
-    alg,
-    wrapper_maker,
-)  # starting_state=create_starting_state_option3a(), episode_lgenth=250)
+# path = "../models/models/scenario3/training_04_06/scenario3_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_PPO_training_04_06_1/best_model.zip"
+#
+# path = "../models/models/scenario2/training_04_06/scenario2_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_None_RewardOption2Wrapper_PPO_training_04_06_1/best_model.zip"
+#
+# scenario, alg, wrapper_maker = parse_information_from_path(path)
+# evaluate(
+#    scenario,
+#    path,
+#    alg,
+#    wrapper_maker,
+# )  # starting_state=create_starting_state_option3a(), episode_lgenth=250)

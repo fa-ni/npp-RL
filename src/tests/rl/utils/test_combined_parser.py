@@ -22,4 +22,4 @@ def test_parse_information_from_path(mock_parse_scenario, mock_parse_alg, mock_p
     assert mock_parse_alg.call_count == 1
     assert mock_parse_wrapper.call_count == 1
     assert mock_wrapper_maker.call_count == 1
-    assert actual == ("envs.scenario2:Scenario2", PPO, "x")
+    assert actual == ("src.main.rl.envs.scenario2:Scenario2", PPO, "x")

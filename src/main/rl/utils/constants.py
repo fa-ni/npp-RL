@@ -62,6 +62,15 @@ STARTING_STATE_OPTION3 = [create_starting_state_option3, create_starting_state_o
 # Action based information
 scaling_factors_scenario_1 = [100, 2000, 1, 1, 2000]
 scaling_factors_scenario2 = [1, 25, 1, 1, 25]
+moderator_percentage_change_scenario3 = {0: -10, 1: -5, 2: -3, 3: -1, 4: 0, 5: 1, 6: 3, 7: 5, 8: 10}
+pump_change_scenario3 = {0: -200, 1: -100, 2: -50, 3: -25, 4: 0, 5: 25, 6: 50, 7: 100, 8: 200}
+scaling_factors_scenario3 = [
+    moderator_percentage_change_scenario3,
+    pump_change_scenario3,
+    {1: 1, 0: 0},
+    {1: 1, 0: 0},
+    pump_change_scenario3,
+]
 action_dimensions = ["Moderator Percent", "WP1 RPM", "WV1", "SV1", "CP RPM"]
 # Observation based information
 obs_scaling_factors = {

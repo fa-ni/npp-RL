@@ -39,13 +39,13 @@ class ObservationVariesNoiseWrapper1(Wrapper):
         original_result = list(self.env.step(action))
         new_obs = []
         if self.length in self.fibonacci:
-            for item in original_result:
+            for item in original_result[0]:
                 if self.maths_sign == "negative":
                     new_obs.append(item - 0.1 if item > 0 else 0)
                     self.maths_sign = "positive"
                 else:
                     new_obs.append(item + 0.1 if item < 2 else 2)
-        original_result[0] = np.array(new_obs)
+            original_result[0] = np.array(new_obs)
         return original_result
 
 
@@ -56,7 +56,7 @@ class ObservationVariesNoiseWrapper2(Wrapper):
         new_obs = []
         # for 5 % deviation in the normal value we need to add/subtract 0.1 from the scaled value
         factor = random.randint(-10, 10) / 100
-        for item in original_result:
+        for item in original_result[0]:
             new_obs.append(item + factor if item < 2 else 2)
         original_result[0] = np.array(new_obs)
         return original_result

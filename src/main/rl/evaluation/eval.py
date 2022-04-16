@@ -100,7 +100,6 @@ def evaluate(
     )
 
     mean_reward_over_multiple_evaluations = []
-    x = "src/main/rl/scenario1/training_18_03/scenario1_ActionSpaceOption3Wrapper_ObservationOption4Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_TD3_training_18_03_1/best_model.zip"
     model = alg.load(path)
     obs = vec_env.reset()
     actions_taken = []

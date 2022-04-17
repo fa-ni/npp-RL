@@ -49,6 +49,18 @@ def is_done_java(backend, length: int) -> bool:
     return done
 
 
+def parse_category(category: str) -> str:
+    if "scenario" in category:
+        result = "Szenario"
+    elif "obs_wrapper" in category:
+        result = "Observation Space Option"
+    elif "action_wrapper" in category:
+        result = "Action Space Option"
+    else:
+        raise Exception("Not able to parse category name.")
+    return result
+
+
 def parse_scenario_name(scenario: str) -> str:
     if "scenario1" in scenario:
         result = "scenario1"

@@ -1,12 +1,10 @@
 import glob
+
+import pandas as pd
 from scipy.stats import iqr
 
-import numpy as np
-import pandas as pd
-from matplotlib import pyplot as plt
-
 from src.main.rl.evaluation.eval import evaluate
-from src.main.rl.evaluation.plots.phase_2_plots import create_multi_object_plot, create_phase_1_counts_plots
+from src.main.rl.evaluation.plots.phase_2_plots import create_multi_object_plot, create_phase_2_counts_plots
 from src.main.rl.utils.combined_parser import parse_information_from_path
 from src.main.rl.utils.parser import parse_wrapper, parse_scenario_name
 
@@ -94,10 +92,10 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
 
     create_multi_object_plot(statistics_wo.merge(statistics_w, how="outer"))
 
-    paths_that_fulfil_condition_wo_automation = statistics_wo.query("reward_max>200 and reward_std<20")
-    paths_that_fulfil_condition_w_automation = statistics_w.query("reward_max>200 and reward_std<20")
+    paths_that_fulfil_condition_wo_automation = statistics_wo.query("reward_max>200 and reward_std<15")
+    paths_that_fulfil_condition_w_automation = statistics_w.query("reward_max>200 and reward_std<15")
 
-    create_phase_1_counts_plots(
+    create_phase_2_counts_plots(
         paths_that_fulfil_condition_wo_automation.merge(paths_that_fulfil_condition_w_automation, how="outer")
     )
 
@@ -123,23 +121,23 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
 
     # Only ActionSpaceOption3Wrapper:
     wo_automation_scenario1_action_space3 = paths_that_fulfil_condition_wo_automation.query(
-        "scenario=='src.main.rl.envs.scenario1:Scenario1' and action_wrapper=='ActionSpaceOption3Wrapper'"
+        "scenario=='scenario1' and action_wrapper=='ActionSpaceOption3Wrapper'"
     )
     wo_automation_scenario2_action_space3 = paths_that_fulfil_condition_wo_automation.query(
-        "scenario=='src.main.rl.envs.scenario2:Scenario2' and action_wrapper=='ActionSpaceOption3Wrapper'"
+        "scenario=='scenario2' and action_wrapper=='ActionSpaceOption3Wrapper'"
     )
     wo_automation_scenario3_action_space3 = paths_that_fulfil_condition_wo_automation.query(
-        "scenario=='src.main.rl.envs.scenario3:Scenario3' and action_wrapper=='ActionSpaceOption3Wrapper'"
+        "scenario=='scenario3' and action_wrapper=='ActionSpaceOption3Wrapper'"
     )
 
     w_automation_scenario1_action_space3 = paths_that_fulfil_condition_w_automation.query(
-        "scenario=='src.main.rl.envs.scenario1:Scenario1' and action_wrapper=='ActionSpaceOption3Wrapper'"
+        "scenario=='scenario1' and action_wrapper=='ActionSpaceOption3Wrapper'"
     )
     w_automation_scenario2_action_space3 = paths_that_fulfil_condition_w_automation.query(
-        "scenario=='src.main.rl.envs.scenario2:Scenario2' and action_wrapper=='ActionSpaceOption3Wrapper'"
+        "scenario=='scenario2' and action_wrapper=='ActionSpaceOption3Wrapper'"
     )
     w_automation_scenario3_action_space3 = paths_that_fulfil_condition_w_automation.query(
-        "scenario=='src.main.rl.envs.scenario3:Scenario3' and action_wrapper=='ActionSpaceOption3Wrapper'"
+        "scenario=='scenario3' and action_wrapper=='ActionSpaceOption3Wrapper'"
     )
 
     print(f"Only ActionSpace3 and scenario1 without automation:\n {wo_automation_scenario1_action_space3}")
@@ -151,5 +149,10 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
     print(f"Only ActionSpace3 and scenario3 with automation:\n {w_automation_scenario3_action_space3}")
 
 
-df = pd.read_csv("output/phase_1_all_combinations_and_runs_with_rewards.csv")
+pd.options.display.max_colwidth = 150
+df = pd.DataFrame()
+try:
+    df = pd.read_csv("output/phase_1_all_combinations_and_runs_with_rewards.csv")
+except:
+    pass
 start_phase_2_evaluation(df)

@@ -4,27 +4,44 @@ import numpy as np
 from matplotlib.ticker import ScalarFormatter
 import re
 
-# Used for showing that random seeds have a significant influence on the result
 from src.main.rl.utils.utils import parse_category
 
+colors_to_use = ["#1D2D5F", "#F65E5D", "#FFBC47", "#40CEE3"]
 
+color_mapping = {
+    "scenario1": "#1D2D5F",
+    "scenario2": "#F65E5D",
+    "scenario3": "#FFBC47",
+    "None": "#1D2D5F",
+    "NPPAutomationWrapper": "#F65E5D",
+    "ActionSpaceOption2Wrapper": "#F65E5D",
+    "ActionSpaceOption3Wrapper": "#FFBC47",
+}
+
+
+# Used for showing that random seeds have a significant influence on the result
 def create_multi_object_plot(df: pd.DataFrame) -> None:
     # Decide if we want to color for actionSpace, NPPAutomation or Scenario
     df = df.fillna("None")
 
-    for item in ["scenario", "automation_wrapper", "action_wrapper"]:
-        fig, ax = plt.subplots()
+    for idx, item in enumerate(["scenario", "automation_wrapper", "action_wrapper"]):
+        fig, ax = plt.subplots(figsize=(5, 6), dpi=300, constrained_layout=True)
         groups = df.groupby(item, dropna=False)
+        counter = 0
         labels = []
         for name, group in groups:
-            ax.plot(group["reward_std"], group["reward_max"], marker="o", linestyle="", label=name)
+            ax.plot(
+                group["reward_std"],
+                group["reward_max"],
+                marker="o",
+                linestyle="",
+                label=name,
+                color=color_mapping[name],
+            )
             ax.set_xscale("symlog", linthresh=10)
-            # TODO decide scale
-            # ax.set_xscale("log")
-            # ax.set_xticks([1,10, 100])
             ax.xaxis.set_major_formatter(ScalarFormatter())
             ax.set_xlabel("Standardabweichung")
-            ax.set_ylabel("Maximaler Reward")
+            ax.set_ylabel("Max Reward")
             if item == "action_wrapper":
                 if name == "None":
                     labels.append("ActionSpaceOption1")
@@ -32,14 +49,21 @@ def create_multi_object_plot(df: pd.DataFrame) -> None:
                     labels.append(name[:-7])
             else:
                 labels.append(name)
-        ax.legend(labels)
+            counter += 1
+        ax.legend(groups.groups.keys())
+        fig.savefig(
+            f"plot_results/phase2_summary_plots{idx}.png",
+            format="png",
+            dpi=300,
+        )
     plt.show()
 
 
-def create_phase_1_counts_plots(df: pd.DataFrame) -> None:
+def create_phase_2_counts_plotsA(df: pd.DataFrame) -> None:
     df = df.fillna("None")
-    for item in ["scenario", "obs_wrapper", "action_wrapper"]:
-        fig, ax = plt.subplots()
+    df.loc[df["action_wrapper"] == "None", "action_wrapper"] = "ActionSpaceOption1Wrapper"
+    for idx, item in enumerate(["scenario", "obs_wrapper", "action_wrapper"]):
+        fig, ax = plt.subplots(figsize=(3, 5), dpi=300, constrained_layout=True)
         groups = df.groupby(item, dropna=False)
         labels = []
         for name in list(groups.groups.keys()):
@@ -47,19 +71,70 @@ def create_phase_1_counts_plots(df: pd.DataFrame) -> None:
             if digit:
                 labels.append(digit[0])
             else:
-                labels.append(1)
+                labels.append((1))
         x = np.arange(len(labels))
-        width = 0.35
+        width = 0.45
         counts_wo_automation = [len(group.query("automation_wrapper == 'None'")) for name, group in groups]
         counts_w_automation = [
             len(group.query("automation_wrapper == 'NPPAutomationWrapper'")) for name, group in groups
         ]
         for name, group in groups:
-            ax.bar(x - width / 2, counts_wo_automation, width=width, label="Without Automation", color="red")
-            ax.bar(x + width / 2, counts_w_automation, width=width, label="With Automation", color="blue")
-            ax.set_ylabel("Count")
+            ax.bar(x - width / 2, counts_wo_automation, width=width, label="Without Automation", color="#F65E5D")
+            ax.bar(x + width / 2, counts_w_automation, width=width, label="With Automation", color="#1D2D5F")
+            ax.set_ylabel("Anzahl erfolgreicher Kombinationen")
             ax.set_xlabel(parse_category(item))
             ax.set_xticks(x, labels)
-            ax.legend(["Without Automation", "With Automation"])
+            ax.legend(["NPPAutomation deaktiviert", "NPPAutomation aktiviert"])
         plt.show()
+        fig.savefig(
+            f"plot_results/phase2_count_plots{idx}.png",
+            format="png",
+            dpi=300,
+        )
         plt.clf()
+
+
+def create_phase_2_counts_plots(df: pd.DataFrame) -> None:
+    df = df.fillna("None")
+    df.loc[df["action_wrapper"] == "None", "action_wrapper"] = "ActionSpaceOption1Wrapper"
+    fig = plt.figure(constrained_layout=True, dpi=300)
+    widths = [3, 5, 3]
+    gs = fig.add_gridspec(1, 3, hspace=0, wspace=0, width_ratios=widths)
+    ax = gs.subplots(
+        sharex="col",
+        sharey="row",
+    )
+    for idx, item in enumerate(["scenario", "obs_wrapper", "action_wrapper"]):
+        groups = df.groupby(item, dropna=False)
+        labels = []
+        for name in list(groups.groups.keys()):
+            digit = re.findall("\d+", name)
+            if digit:
+                labels.append(digit[0])
+            else:
+                labels.append((1))
+        x = np.arange(len(labels))
+        width = 0.45
+        counts_wo_automation = [len(group.query("automation_wrapper == 'None'")) for name, group in groups]
+        counts_w_automation = [
+            len(group.query("automation_wrapper == 'NPPAutomationWrapper'")) for name, group in groups
+        ]
+        for name, group in groups:
+            ax[idx].bar(x - width / 2, counts_wo_automation, width=width, label="Without Automation", color="#F65E5D")
+            ax[idx].bar_label(ax[idx].containers[0], label_type="edge")
+            ax[idx].bar(x + width / 2, counts_w_automation, width=width, label="With Automation", color="#1D2D5F")
+            ax[idx].bar_label(ax[idx].containers[1], label_type="edge")
+            ax[idx].set_ylabel("Anzahl erfolgreicher Kombinationen")
+            ax[idx].set_xlabel(parse_category(item))
+            ax[idx].set_xticks(x, labels)
+
+        for axs in ax.flat:
+            axs.label_outer()
+    ax[1].legend(["NPPAutomation deaktiviert", "NPPAutomation aktiviert"], loc="upper left")
+
+    plt.show()
+    fig.savefig(
+        f"plot_results/phase2_count_plots_new.png",
+        format="png",
+        dpi=300,
+    )

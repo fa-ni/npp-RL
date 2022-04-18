@@ -24,7 +24,7 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
             scenario, alg, wrapper_maker = parse_information_from_path(path)
             action_wrapper, automation_wrapper, obs_wrapper, reward_wrapper = parse_wrapper(path)
 
-            reward, criticality_score = evaluate(scenario, path, alg, wrapper_maker)
+            cum_reward, criticality_score = evaluate(scenario, path, alg, wrapper_maker)
             result_dict["full_path"] = path
             combination_name = path[:-17]
             if combination_name.endswith("_"):
@@ -36,33 +36,60 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
             result_dict["action_wrapper"] = action_wrapper.__name__ if action_wrapper else None
             result_dict["obs_wrapper"] = obs_wrapper.__name__ if obs_wrapper else None
             result_dict["automation_wrapper"] = automation_wrapper.__name__ if automation_wrapper else None
-            result_dict["reward"] = reward
+            result_dict["cum_reward"] = cum_reward
             result_dict["criticality_score"] = criticality_score
 
             df = pd.concat([df, pd.DataFrame(result_dict, index=[0])], ignore_index=True)
 
-        df.to_csv("output/phase_1_all_combinations_and_runs_with_rewards.csv")
+        df.to_csv("output/phase_1_all_combinations_and_runs_with_returns.csv")
 
-    df_w_automation = df[df["automation_wrapper"] == "NPPAutomationWrapper"]
+    # Fill NaN / None / Null values with correct labels
+    df.loc[df["action_wrapper"] == "None", "action_wrapper"] = "ActionSpaceOption1Wrapper"
+    df.loc[df["obs_wrapper"] == "None", "obs_wrapper"] = "ObservationOption1Wrapper"
+    df.loc[df["action_wrapper"].isna(), "action_wrapper"] = "ActionSpaceOption1Wrapper"
+    df.loc[df["obs_wrapper"].isna(), "obs_wrapper"] = "ObservationOption1Wrapper"
+
     df_wo_automation = df.query("automation_wrapper.isna() == True")
+    df_w_automation = df[df["automation_wrapper"] == "NPPAutomationWrapper"]
 
-    highest_reward_wo_automation = df_wo_automation.query("reward == reward.max()")
-    highest_reward_w_automation = df_w_automation.query("reward == reward.max()")
+    # Get Mean, STD and IQR for each modelling aspect:
+    for item in ["obs_wrapper", "scenario", "action_wrapper", "alg"]:
+        df_special = (
+            df.groupby(item)
+            .agg(
+                return_mean=("cum_reward", "mean"),
+                return_max=("cum_reward", "max"),
+                return_std=("cum_reward", "std"),
+                return_iqr=("cum_reward", iqr),
+                # criticality_score_max=("criticality_score", "max"),
+                # criticality_score_std=("criticality_score", "std"),
+                # criticality_score_iqr=("criticality_score", iqr),
+                # criticality_score_mean=("criticality_score", "mean"),
+            )
+            .round(2)
+        )
+        print(f"Without automation: {item}: {df_special}")
+        print("-----------------Latex-------------------")
+        print(df_special.to_latex())
+
+    highest_return_wo_automation = df_wo_automation.query("cum_reward == cum_reward.max()")
+    highest_return_w_automation = df_w_automation.query("cum_reward == cum_reward.max()")
 
     print(
-        f"Highest reward without automation: {highest_reward_wo_automation.reward.values[0]} from alg {highest_reward_wo_automation.full_path.values[0]}"
+        f"Highest return without automation: {highest_return_wo_automation['cum_reward'].values[0]} from alg {highest_return_wo_automation.full_path.values[0]}"
     )
     print(
-        f"Highest reward with automation: {highest_reward_w_automation.reward.values[0]} from alg {highest_reward_w_automation.full_path.values[0]}"
+        f"Highest return with automation: {highest_return_w_automation['cum_reward'].values[0]} from alg {highest_return_w_automation.full_path.values[0]}"
     )
 
     statistics_wo = (
         df_wo_automation.set_index("full_path")
         .groupby("combination")
         .agg(
-            reward_max=("reward", "max"),
-            reward_std=("reward", "std"),
-            reward_iqr=("reward", iqr),
+            return_mean=("cum_reward", "mean"),
+            return_max=("cum_reward", "max"),
+            return_std=("cum_reward", "std"),
+            return_iqr=("cum_reward", iqr),
             criticality_score_max=("criticality_score", "max"),
             criticality_score_std=("criticality_score", "std"),
             criticality_score__iqr=("criticality_score", iqr),
@@ -78,10 +105,13 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
         df_w_automation.set_index("full_path")
         .groupby("combination")
         .agg(
-            reward_max=("reward", "max"),
-            reward_std=("reward", "std"),
+            return_mean=("cum_reward", "mean"),
+            return_max=("cum_reward", "max"),
+            return_std=("cum_reward", "std"),
+            return_iqr=("cum_reward", iqr),
             criticality_score_max=("criticality_score", "max"),
             criticality_score_std=("criticality_score", "std"),
+            criticality_score__iqr=("criticality_score", iqr),
             scenario=("scenario", "first"),
             alg=("alg", "first"),
             action_wrapper=("action_wrapper", "first"),
@@ -92,8 +122,8 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
 
     create_multi_object_plot(statistics_wo.merge(statistics_w, how="outer"))
 
-    paths_that_fulfil_condition_wo_automation = statistics_wo.query("reward_max>200 and reward_std<15")
-    paths_that_fulfil_condition_w_automation = statistics_w.query("reward_max>200 and reward_std<15")
+    paths_that_fulfil_condition_wo_automation = statistics_wo.query("return_max>200 and return_std<15")
+    paths_that_fulfil_condition_w_automation = statistics_w.query("return_max>200 and return_std<15")
 
     create_phase_2_counts_plots(
         paths_that_fulfil_condition_wo_automation.merge(paths_that_fulfil_condition_w_automation, how="outer")
@@ -140,19 +170,35 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
         "scenario=='scenario3' and action_wrapper=='ActionSpaceOption3Wrapper'"
     )
 
-    print(f"Only ActionSpace3 and scenario1 without automation:\n {wo_automation_scenario1_action_space3}")
-    print(f"Only ActionSpace3 and scenario2 without automation:\n {wo_automation_scenario2_action_space3}")
-    print(f"Only ActionSpace3 and scenario3 without automation:\n {wo_automation_scenario3_action_space3}")
+    print(
+        f"Only ActionSpace3 and scenario1 without automation:\n {wo_automation_scenario1_action_space3[['return_max','return_std']]}"
+    )
+    print(
+        f"Only ActionSpace3 and scenario2 without automation:\n {wo_automation_scenario2_action_space3[['return_max','return_std']]}"
+    )
+    print(
+        f"Only ActionSpace3 and scenario3 without automation:\n {wo_automation_scenario3_action_space3[['return_max','return_std']]}"
+    )
 
-    print(f"Only ActionSpace3 and scenario1 with automation:\n {w_automation_scenario1_action_space3}")
-    print(f"Only ActionSpace3 and scenario2 with automation:\n {w_automation_scenario2_action_space3}")
-    print(f"Only ActionSpace3 and scenario3 with automation:\n {w_automation_scenario3_action_space3}")
+    print(
+        f"Only ActionSpace3 and scenario1 with automation:\n {w_automation_scenario1_action_space3[['return_max','return_std',]]}"
+    )
+    print(
+        f"Only ActionSpace3 and scenario2 with automation:\n {w_automation_scenario2_action_space3[['return_max','return_std',]]}"
+    )
+    print(
+        f"Only ActionSpace3 and scenario3 with automation:\n {w_automation_scenario3_action_space3[['return_max','return_std',]]}"
+    )
+
+    # Find best Scenario 2 with Action Space 3
+    statistics_wo.query("scenario=='scenario2' and action_wrapper=='ActionSpaceOption3Wrapper'")
 
 
-pd.options.display.max_colwidth = 150
+pd.options.display.max_colwidth = 300
 df = pd.DataFrame()
 try:
-    df = pd.read_csv("output/phase_1_all_combinations_and_runs_with_rewards.csv")
+    df = pd.read_csv("output/phase_1_all_combinations_and_runs_with_returns.csv")
 except:
     pass
+
 start_phase_2_evaluation(df)

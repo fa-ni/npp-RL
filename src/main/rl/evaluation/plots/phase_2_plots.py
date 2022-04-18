@@ -13,6 +13,7 @@ color_mapping = {
     "scenario2": "#F65E5D",
     "scenario3": "#FFBC47",
     "None": "#1D2D5F",
+    "ActionSpaceOption1Wrapper": "#1D2D5F",
     "NPPAutomationWrapper": "#F65E5D",
     "ActionSpaceOption2Wrapper": "#F65E5D",
     "ActionSpaceOption3Wrapper": "#FFBC47",
@@ -31,8 +32,8 @@ def create_multi_object_plot(df: pd.DataFrame) -> None:
         labels = []
         for name, group in groups:
             ax.plot(
-                group["reward_std"],
-                group["reward_max"],
+                group["return_std"],
+                group["return_max"],
                 marker="o",
                 linestyle="",
                 label=name,
@@ -41,7 +42,7 @@ def create_multi_object_plot(df: pd.DataFrame) -> None:
             ax.set_xscale("symlog", linthresh=10)
             ax.xaxis.set_major_formatter(ScalarFormatter())
             ax.set_xlabel("Standardabweichung")
-            ax.set_ylabel("Max Reward")
+            ax.set_ylabel("Max Return")
             if item == "action_wrapper":
                 if name == "None":
                     labels.append("ActionSpaceOption1")
@@ -61,7 +62,6 @@ def create_multi_object_plot(df: pd.DataFrame) -> None:
 
 def create_phase_2_counts_plotsA(df: pd.DataFrame) -> None:
     df = df.fillna("None")
-    df.loc[df["action_wrapper"] == "None", "action_wrapper"] = "ActionSpaceOption1Wrapper"
     for idx, item in enumerate(["scenario", "obs_wrapper", "action_wrapper"]):
         fig, ax = plt.subplots(figsize=(3, 5), dpi=300, constrained_layout=True)
         groups = df.groupby(item, dropna=False)

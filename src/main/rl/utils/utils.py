@@ -53,9 +53,9 @@ def parse_category(category: str) -> str:
     if "scenario" in category:
         result = "Szenario"
     elif "obs_wrapper" in category:
-        result = "Observation Space Option"
+        result = "Observation Space\n Option"
     elif "action_wrapper" in category:
-        result = "Action Space Option"
+        result = "Action Space\n Option"
     else:
         raise Exception("Not able to parse category name.")
     return result

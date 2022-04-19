@@ -24,7 +24,7 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
             scenario, alg, wrapper_maker = parse_information_from_path(path)
             action_wrapper, automation_wrapper, obs_wrapper, reward_wrapper = parse_wrapper(path)
 
-            cum_reward, criticality_score = evaluate(scenario, path, alg, wrapper_maker)
+            cum_reward, criticality_score, total_timesteps = evaluate(scenario, path, alg, wrapper_maker)
             result_dict["full_path"] = path
             combination_name = path[:-17]
             if combination_name.endswith("_"):
@@ -38,6 +38,7 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
             result_dict["automation_wrapper"] = automation_wrapper.__name__ if automation_wrapper else None
             result_dict["cum_reward"] = cum_reward
             result_dict["criticality_score"] = criticality_score
+            result_dict["total_timesteps"] = total_timesteps
 
             df = pd.concat([df, pd.DataFrame(result_dict, index=[0])], ignore_index=True)
 
@@ -72,6 +73,10 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
         print("-----------------Latex-------------------")
         print(df_special.to_latex())
 
+    print(
+        f"Max criticality_score without automation: {df_wo_automation.query('criticality_score==criticality_score.max()')['criticality_score']}"
+    )
+
     highest_return_wo_automation = df_wo_automation.query("cum_reward == cum_reward.max()")
     highest_return_w_automation = df_w_automation.query("cum_reward == cum_reward.max()")
 
@@ -90,6 +95,7 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
             return_max=("cum_reward", "max"),
             return_std=("cum_reward", "std"),
             return_iqr=("cum_reward", iqr),
+            timesteps_min=("total_timesteps", "min"),
             criticality_score_max=("criticality_score", "max"),
             criticality_score_std=("criticality_score", "std"),
             criticality_score__iqr=("criticality_score", iqr),
@@ -109,6 +115,7 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
             return_max=("cum_reward", "max"),
             return_std=("cum_reward", "std"),
             return_iqr=("cum_reward", iqr),
+            timesteps_min=("total_timesteps", "min"),
             criticality_score_max=("criticality_score", "max"),
             criticality_score_std=("criticality_score", "std"),
             criticality_score__iqr=("criticality_score", iqr),
@@ -122,8 +129,12 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
 
     create_multi_object_plot(statistics_wo.merge(statistics_w, how="outer"))
 
-    paths_that_fulfil_condition_wo_automation = statistics_wo.query("return_max>200 and return_std<15")
-    paths_that_fulfil_condition_w_automation = statistics_w.query("return_max>200 and return_std<15")
+    paths_that_fulfil_condition_wo_automation = statistics_wo.query(
+        "return_max>200 and return_std<15 and timesteps_min==250 "
+    )
+    paths_that_fulfil_condition_w_automation = statistics_w.query(
+        "return_max>200 and return_std<15 and timesteps_min==250"
+    )
 
     create_phase_2_counts_plots(
         paths_that_fulfil_condition_wo_automation.merge(paths_that_fulfil_condition_w_automation, how="outer")
@@ -151,43 +162,43 @@ def start_phase_2_evaluation(df: pd.DataFrame = pd.DataFrame()):
 
     # Only ActionSpaceOption3Wrapper:
     wo_automation_scenario1_action_space3 = paths_that_fulfil_condition_wo_automation.query(
-        "scenario=='scenario1' and action_wrapper=='ActionSpaceOption3Wrapper'"
+        "scenario=='scenario1' and action_wrapper=='ActionSpaceOption3Wrapper' and timesteps_min==250"
     )
     wo_automation_scenario2_action_space3 = paths_that_fulfil_condition_wo_automation.query(
-        "scenario=='scenario2' and action_wrapper=='ActionSpaceOption3Wrapper'"
+        "scenario=='scenario2' and action_wrapper=='ActionSpaceOption3Wrapper' and timesteps_min==250"
     )
     wo_automation_scenario3_action_space3 = paths_that_fulfil_condition_wo_automation.query(
-        "scenario=='scenario3' and action_wrapper=='ActionSpaceOption3Wrapper'"
+        "scenario=='scenario3' and action_wrapper=='ActionSpaceOption3Wrapper' and timesteps_min==250"
     )
 
     w_automation_scenario1_action_space3 = paths_that_fulfil_condition_w_automation.query(
-        "scenario=='scenario1' and action_wrapper=='ActionSpaceOption3Wrapper'"
+        "scenario=='scenario1' and action_wrapper=='ActionSpaceOption3Wrapper' and timesteps_min==250"
     )
     w_automation_scenario2_action_space3 = paths_that_fulfil_condition_w_automation.query(
-        "scenario=='scenario2' and action_wrapper=='ActionSpaceOption3Wrapper'"
+        "scenario=='scenario2' and action_wrapper=='ActionSpaceOption3Wrapper' and timesteps_min==250"
     )
     w_automation_scenario3_action_space3 = paths_that_fulfil_condition_w_automation.query(
-        "scenario=='scenario3' and action_wrapper=='ActionSpaceOption3Wrapper'"
+        "scenario=='scenario3' and action_wrapper=='ActionSpaceOption3Wrapper' and timesteps_min==250"
     )
 
     print(
-        f"Only ActionSpace3 and scenario1 without automation:\n {wo_automation_scenario1_action_space3[['return_max','return_std']]}"
+        f"Only ActionSpace3 and scenario1 without automation:\n {wo_automation_scenario1_action_space3[['return_max','timesteps_min']]}"
     )
     print(
-        f"Only ActionSpace3 and scenario2 without automation:\n {wo_automation_scenario2_action_space3[['return_max','return_std']]}"
+        f"Only ActionSpace3 and scenario2 without automation:\n {wo_automation_scenario2_action_space3[['return_max','timesteps_min']]}"
     )
     print(
-        f"Only ActionSpace3 and scenario3 without automation:\n {wo_automation_scenario3_action_space3[['return_max','return_std']]}"
+        f"Only ActionSpace3 and scenario3 without automation:\n {wo_automation_scenario3_action_space3[['return_max','timesteps_min']]}"
     )
 
     print(
-        f"Only ActionSpace3 and scenario1 with automation:\n {w_automation_scenario1_action_space3[['return_max','return_std',]]}"
+        f"Only ActionSpace3 and scenario1 with automation:\n {w_automation_scenario1_action_space3[['return_max','timesteps_min',]]}"
     )
     print(
-        f"Only ActionSpace3 and scenario2 with automation:\n {w_automation_scenario2_action_space3[['return_max','return_std',]]}"
+        f"Only ActionSpace3 and scenario2 with automation:\n {w_automation_scenario2_action_space3[['return_max','timesteps_min',]]}"
     )
     print(
-        f"Only ActionSpace3 and scenario3 with automation:\n {w_automation_scenario3_action_space3[['return_max','return_std',]]}"
+        f"Only ActionSpace3 and scenario3 with automation:\n {w_automation_scenario3_action_space3[['return_max','timesteps_min',]]}"
     )
 
     # Find best Scenario 2 with Action Space 3

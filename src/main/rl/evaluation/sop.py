@@ -4,7 +4,15 @@ from src.main.rl.utils.utils import get_scaled_value
 # 1. CR/Moderator Percent 2. WP1 RPM 3. WV1 4. SV1 5. CP RPM
 def get_actions_sop(length: int) -> list:
     result = []
-    if length == 249:
+    if length == 250:
+        result = [
+            get_scaled_value(100, 0),
+            get_scaled_value(2000, 0),
+            get_scaled_value(1, 0),
+            get_scaled_value(1, 0),
+            get_scaled_value(2000, 2000),
+        ]
+    elif length == 249:
         result = [
             get_scaled_value(100, 0),
             get_scaled_value(2000, 0),
@@ -18,18 +26,10 @@ def get_actions_sop(length: int) -> list:
             get_scaled_value(2000, 0),
             get_scaled_value(1, 0),
             get_scaled_value(1, 0),
-            get_scaled_value(2000, 2000),
-        ]
-    elif length == 247:
-        result = [
-            get_scaled_value(100, 0),
-            get_scaled_value(2000, 0),
-            get_scaled_value(1, 0),
-            get_scaled_value(1, 0),
             get_scaled_value(2000, 1700),
         ]
     # 1600 WP1 RPM reached
-    elif length == 246:
+    elif length == 247:
         result = [
             get_scaled_value(100, 0),
             get_scaled_value(2000, 0),
@@ -38,7 +38,7 @@ def get_actions_sop(length: int) -> list:
             get_scaled_value(2000, 1600),
         ]
     # WaterValve 1 opened
-    elif length == 245:
+    elif length == 246:
         result = [
             get_scaled_value(100, 0),
             get_scaled_value(2000, 400),
@@ -47,7 +47,8 @@ def get_actions_sop(length: int) -> list:
             get_scaled_value(2000, 1600),
         ]
     # 200 WP1 RPM reached
-    elif length in [244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232, 231]:
+    # First need to wait until waterlevel reaches 2100 mm
+    elif length in [245, 244, 243, 242, 241, 240, 239, 238, 237, 236, 235, 234, 233, 232]:
         result = [
             get_scaled_value(100, 0),
             get_scaled_value(2000, 200),
@@ -55,8 +56,9 @@ def get_actions_sop(length: int) -> list:
             get_scaled_value(1, 0),
             get_scaled_value(2000, 1600),
         ]
-    elif length < 231 and length >= 223:
-        factor = 231 - length
+    # Pull out rods to stabilize around 2100 mm
+    elif length < 232 and length >= 224:
+        factor = 232 - length
         result = [
             get_scaled_value(100, factor),
             get_scaled_value(2000, 200),
@@ -65,7 +67,7 @@ def get_actions_sop(length: int) -> list:
             get_scaled_value(2000, 1600),
         ]
 
-    elif length == 222:
+    elif length == 223:
         result = [
             get_scaled_value(100, 7),
             get_scaled_value(2000, 200),
@@ -73,9 +75,17 @@ def get_actions_sop(length: int) -> list:
             get_scaled_value(1, 0),
             get_scaled_value(2000, 1600),
         ]
-    elif length == 221:
+    elif length == 222:
         result = [
             get_scaled_value(100, 6),
+            get_scaled_value(2000, 200),
+            get_scaled_value(1, 1),
+            get_scaled_value(1, 0),
+            get_scaled_value(2000, 1600),
+        ]
+    elif length == 221:
+        result = [
+            get_scaled_value(100, 5),
             get_scaled_value(2000, 200),
             get_scaled_value(1, 1),
             get_scaled_value(1, 0),
@@ -97,16 +107,8 @@ def get_actions_sop(length: int) -> list:
             get_scaled_value(1, 0),
             get_scaled_value(2000, 1600),
         ]
-    elif length == 218:
-        result = [
-            get_scaled_value(100, 5),
-            get_scaled_value(2000, 200),
-            get_scaled_value(1, 1),
-            get_scaled_value(1, 0),
-            get_scaled_value(2000, 1600),
-        ]
     # Stabilized by 2100 mm waterlevel
-    elif length == 217:
+    elif length == 218:
         result = [
             get_scaled_value(100, 5),
             get_scaled_value(2000, 200),
@@ -115,8 +117,8 @@ def get_actions_sop(length: int) -> list:
             get_scaled_value(2000, 1600),
         ]
     # Steam Valve 1 opened
-    elif length < 217 and length >= 155:
-        factor = 217 - length
+    elif length < 218 and length >= 156:
+        factor = 218 - length
         wp1_rpm = 400 + 35 * factor if 400 + 35 * factor < 1800 else 1800
         result = [
             get_scaled_value(100, 5 + factor),
@@ -126,7 +128,7 @@ def get_actions_sop(length: int) -> list:
             get_scaled_value(2000, 1600),
         ]
 
-    elif length < 155 and length >= 148:
+    elif length < 156 and length >= 149:
         factor = 155 - length
         result = [
             get_scaled_value(100, 67 - factor),
@@ -135,10 +137,9 @@ def get_actions_sop(length: int) -> list:
             get_scaled_value(1, 1),
             get_scaled_value(2000, 1600),
         ]
-        print("YYY")
     # 700 MW Power Output reached
-    elif length < 148 and length >= 142:
-        factor = 148 - length
+    elif length < 149 and length >= 143:
+        factor = 149 - length
         result = [
             get_scaled_value(100, 67 - factor),
             get_scaled_value(2000, 1780),
@@ -146,9 +147,8 @@ def get_actions_sop(length: int) -> list:
             get_scaled_value(1, 1),
             get_scaled_value(2000, 1600),
         ]
-    # print("YYY")
     # Stabilize around 2100 mm
-    elif length < 142:
+    elif length < 143:
         result = [
             get_scaled_value(100, 60),
             get_scaled_value(2000, 1612),

@@ -13,11 +13,10 @@ from src.main.rl.evaluation.starting_state_option3 import (
     create_starting_state_option3b,
 )
 from src.main.rl.evaluation.wrapper.noise.delay_wrapper import (
-    DelayNoiseWrapperOption3,
+    DelayNoiseWrapperOption2,
     DelayNoiseWrapperOption1,
 )
 from src.main.rl.evaluation.wrapper.noise.obs_varies_wrapper import (
-    ObservationVariesNoiseWrapper2,
     ObservationVariesNoiseWrapper1,
     ObservationVariesPositiveNoiseWrapper,
     ObservationVariesNegativeNoiseWrapper,
@@ -45,9 +44,8 @@ ALL_OBS_NOISE_WRAPPERS = [
     ObservationVariesPositiveNoiseWrapper,
     ObservationVariesNegativeNoiseWrapper,
     ObservationVariesNoiseWrapper1,
-    ObservationVariesNoiseWrapper2,
 ]
-ALL_DELAY_NOISE_WRAPPERS = [DelayNoiseWrapperOption1, DelayNoiseWrapperOption3]
+ALL_DELAY_NOISE_WRAPPERS = [DelayNoiseWrapperOption1, DelayNoiseWrapperOption2]
 
 STARTING_STATE_OPTION1 = [create_starting_state_option1]
 STARTING_STATE_OPTION2 = [
@@ -118,3 +116,17 @@ obs_dimensions_german = {
     ],
 }
 alg_mapping = {"A2C": A2C, "DDPG": DDPG, "PPO": PPO, "SAC": SAC, "TD3": TD3}
+
+color_mapping = {
+    "standard": "#1D2D5F",
+    "red": "#F65E5D",
+    "blue": "#1D2D5F",
+    "scenario1": "#1D2D5F",
+    "scenario2": "#F65E5D",
+    "scenario3": "#FFBC47",
+    "None": "#1D2D5F",
+    "ActionSpaceOption1Wrapper": "#1D2D5F",
+    "NPPAutomationWrapper": "#1D2D5F",
+    "ActionSpaceOption2Wrapper": "#F65E5D",
+    "ActionSpaceOption3Wrapper": "#FFBC47",
+}

@@ -14,7 +14,6 @@ from src.main.rl.evaluation.starting_state_option3 import (
 )
 from src.main.rl.evaluation.wrapper.noise.delay_wrapper import (
     DelayNoiseWrapperOption3,
-    DelayNoiseWrapperOption2,
     DelayNoiseWrapperOption1,
 )
 from src.main.rl.evaluation.wrapper.noise.obs_varies_wrapper import (
@@ -48,7 +47,7 @@ ALL_OBS_NOISE_WRAPPERS = [
     ObservationVariesNoiseWrapper1,
     ObservationVariesNoiseWrapper2,
 ]
-ALL_DELAY_NOISE_WRAPPERS = [DelayNoiseWrapperOption1, DelayNoiseWrapperOption2, DelayNoiseWrapperOption3]
+ALL_DELAY_NOISE_WRAPPERS = [DelayNoiseWrapperOption1, DelayNoiseWrapperOption3]
 
 STARTING_STATE_OPTION1 = [create_starting_state_option1]
 STARTING_STATE_OPTION2 = [
@@ -72,6 +71,7 @@ scaling_factors_scenario3 = [
     pump_change_scenario3,
 ]
 action_dimensions = ["Moderator Percent", "WP1 RPM", "WV1", "SV1", "CP RPM"]
+action_dimensions_german = ["Regelstäbe", "Wasserpumpe 1 RPM", "Wasserventil 1", "Dampfventil 1", "Kondensator RPM"]
 # Observation based information
 obs_scaling_factors = {
     1: [800],
@@ -103,6 +103,17 @@ obs_dimensions = {
         "CP RPM",
         "WV1",
         "SV1",
+        "Blow Counter",
+    ],
+}
+
+obs_dimensions_german = {
+    6: [
+        "Leistungsabgabe",
+        "Wasserlevel Reaktor",
+        "Druck Reaktor",
+        "Wasserlevel Kondensator",
+        "Druck Kondensator",
         "Blow Counter",
     ],
 }

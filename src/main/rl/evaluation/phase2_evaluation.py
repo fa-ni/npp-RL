@@ -7,13 +7,13 @@ from src.main.rl.utils.combined_parser import parse_information_from_path
 from src.main.rl.utils.parser import parse_wrapper, parse_scenario_name
 
 
-def create_evaluation_df_phase2(path_to_save: str):
+def create_evaluation_df_phase2(path_to_save: str, all_files=None):
     df = pd.DataFrame()
-    all_files = []
-    # TODO change path
-    for file in glob.glob("../models/*/*/*/*.zip", recursive=True):
-        all_files.append(file)
-    # Check if all models have been found
+    if not all_files:
+        all_files = []
+        for file in glob.glob("../models/*/*/*/*.zip", recursive=True):
+            all_files.append(file)
+        # Check if all models have been found
     assert len(all_files) == 2400
 
     pd.options.display.max_colwidth = 200

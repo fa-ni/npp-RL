@@ -5,7 +5,7 @@ from src.main.rl.wrapper.reward_calculations import calculate_reward_for_corrido
 
 def prepare_critical_states_analysis(reactor_status_over_time: List[Dict]) -> List[Dict]:
     criticality_over_time = []
-    critical_water = {"Reactor_WaterLevel": [1200, 2800, 1500, 2500], "Condenser_WaterLevel": [800.7000, 1500, 6000]}
+    critical_water = {"Reactor_WaterLevel": [1200, 2800, 1500, 2500], "Condenser_WaterLevel": [800, 7000, 1500, 6000]}
     critical_pressure = {"Reactor_Pressure": [450, 350], "Condenser_Pressure": [110, 80]}
     for item in reactor_status_over_time:
         criticality = {}
@@ -42,12 +42,14 @@ def prepare_critical_states_analysis(reactor_status_over_time: List[Dict]) -> Li
 def calculate_criticality_score_with_reward_functions(reactor_status_over_time: List[Dict]):
     result = []
     for item in reactor_status_over_time:
-        reactor_wl = calculate_reward_for_corridor(1500, 2500, 2100, item["Reactor_WaterLevel"])
-        reactor_pressure = 0 if item["Reactor_Pressure"] >= 350 else 1
+        # 1200,2800 cirtical
+        reactor_wl = calculate_reward_for_corridor(1200, 2800, 2100, item["Reactor_WaterLevel"])
+        reactor_pressure = 1 if item["Reactor_Pressure"] < 350 else (0.5 if item["Reactor_Pressure"] < 450 else 0)
 
-        condenser_wl = calculate_reward_for_corridor(1500, 3750, 6000, item["Condenser_WaterLevel"])
-        condenser_pressure = 0 if item["Condenser_Pressure"] >= 80 else 1
-        blow_counter = calculate_reward_for_corridor(5, 30, 30, item["Blow_Counter"])
+        # 800, 7000
+        condenser_wl = calculate_reward_for_corridor(800, 5100, 2500, item["Condenser_WaterLevel"])
+        condenser_pressure = 1 if item["Condenser_Pressure"] < 80 else (0.5 if item["Condenser_Pressure"] < 110 else 0)
+        blow_counter = 1 if item["Blow_Counter"] > 10 else (0.5 if item["Blow_Counter"] > 5 else 0)
         result.append((reactor_wl + reactor_pressure + condenser_wl + condenser_pressure + blow_counter) / 5)
     return sum(result)
 

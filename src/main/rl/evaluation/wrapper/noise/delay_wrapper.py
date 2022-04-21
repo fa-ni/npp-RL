@@ -14,7 +14,7 @@ class DelayNoiseWrapperOption1(Wrapper):
         return original_result
 
 
-class DelayNoiseWrapperOption3(Wrapper):
+class DelayNoiseWrapperOption2(Wrapper):
     def __init__(self, env):
         super().__init__(env)
         self.fibonacci = [250 - fibonacci_of(n) for n in range(14)]

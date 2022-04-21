@@ -57,40 +57,6 @@ def create_multi_object_plot(df: pd.DataFrame):
     return result
 
 
-def create_phase_2_counts_plotsA(df: pd.DataFrame) -> None:
-    df = df.fillna("None")
-    for idx, item in enumerate(["scenario", "obs_wrapper", "action_wrapper"]):
-        fig, ax = plt.subplots(figsize=(3, 5), dpi=300, constrained_layout=True)
-        groups = df.groupby(item, dropna=False)
-        labels = []
-        for name in list(groups.groups.keys()):
-            digit = re.findall("\d+", name)
-            if digit:
-                labels.append(digit[0])
-            else:
-                labels.append((1))
-        x = np.arange(len(labels))
-        width = 0.45
-        counts_wo_automation = [len(group.query("automation_wrapper == 'None'")) for name, group in groups]
-        counts_w_automation = [
-            len(group.query("automation_wrapper == 'NPPAutomationWrapper'")) for name, group in groups
-        ]
-        for name, group in groups:
-            ax.bar(x - width / 2, counts_wo_automation, width=width, label="Without Automation", color="#F65E5D")
-            ax.bar(x + width / 2, counts_w_automation, width=width, label="With Automation", color="#1D2D5F")
-            ax.set_ylabel("Anzahl erfolgreicher Kombinationen")
-            ax.set_xlabel(parse_category(item))
-            ax.set_xticks(x, labels)
-            ax.legend(["NPPAutomation deaktiviert", "NPPAutomation aktiviert"])
-        plt.show()
-        fig.savefig(
-            f"plot_results/phase2_count_plots{idx}.png",
-            format="png",
-            dpi=300,
-        )
-        plt.clf()
-
-
 def create_phase_2_counts_plots(df: pd.DataFrame) -> None:
     df = df.fillna("None")
     df.loc[df["action_wrapper"] == "None", "action_wrapper"] = "ActionSpaceOption1Wrapper"

@@ -59,12 +59,13 @@ class Scenario3(Env):
             self.state.full_reactor.condenser_pump.rpm_to_be_set += condenser_rpm_setting
         self.state.time_step(1)
 
-        done = is_done(self.state.full_reactor, self.length)
-        if not done:
+        self.done = is_done(self.state.full_reactor, self.length)
+        if not self.done:
             calc_reward = self.state.full_reactor.generator.power / 700
             reward += calc_reward
 
         info = {
+            "Power_Output": self.state.full_reactor.generator.power,
             "Reactor_WaterLevel": self.state.full_reactor.reactor.water_level,
             "Reactor_Pressure": self.state.full_reactor.reactor.pressure,
             "Condenser_WaterLevel": self.state.full_reactor.condenser.water_level,
@@ -78,7 +79,7 @@ class Scenario3(Env):
             # Might need to change if we dont want to have binary for first observation
             np.array([normalized_obs]),
             reward,
-            done,
+            self.done,
             info,
         ]
 
@@ -87,6 +88,7 @@ class Scenario3(Env):
 
     def reset(self):
         self.state = None
+        self.done = False
         self.length = self.length
         if self.starting_state:
             self.state = BackgroundStepService(self.starting_state)

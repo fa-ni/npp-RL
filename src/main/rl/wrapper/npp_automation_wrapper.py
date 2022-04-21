@@ -10,12 +10,13 @@ class NPPAutomationWrapper(Wrapper):
         self.env.step(action)
         reward = 0
         self.npp_automation.run()
-        done = is_done(self.state.full_reactor, self.length)
-        if not done:
+        self.done = is_done(self.state.full_reactor, self.length)
+        if not self.done:
             calc_reward = self.state.full_reactor.generator.power / 700
             reward += calc_reward
 
         info = {
+            "Power_Output": self.state.full_reactor.generator.power,
             "Reactor_WaterLevel": self.state.full_reactor.reactor.water_level,
             "Reactor_Pressure": self.state.full_reactor.reactor.pressure,
             "Condenser_WaterLevel": self.state.full_reactor.condenser.water_level,
@@ -29,11 +30,12 @@ class NPPAutomationWrapper(Wrapper):
             # Might need to change if we dont want to have binary for first observation
             np.array([normalized_obs]),
             reward,
-            done,
+            self.done,
             info,
         ]
 
     def reset(self):
         self.env.reset()
         self.npp_automation = NPPAutomationStepService(self.state)
+        self.done = False
         return np.array([float(-1)])

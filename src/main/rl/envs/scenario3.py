@@ -70,6 +70,8 @@ class Scenario3(Env):
             "Condenser_WaterLevel": self.state.full_reactor.condenser.water_level,
             "Condenser_Pressure": self.state.full_reactor.condenser.pressure,
             "Blow_Counter": self.state.full_reactor.water_pump1.blow_counter,
+            "Condensator_Pump Blown": self.state.full_reactor.condenser_pump.is_blown(),
+            "Water_Pump Blown": self.state.full_reactor.water_pump1.is_blown(),
         }
         normalized_obs = 2 * (self.state.full_reactor.generator.power / 800) - 1
         return [
@@ -85,7 +87,7 @@ class Scenario3(Env):
 
     def reset(self):
         self.state = None
-        self.length = 250
+        self.length = self.length
         if self.starting_state:
             self.state = BackgroundStepService(self.starting_state)
         else:

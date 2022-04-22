@@ -61,7 +61,11 @@ def plot_actions_taken(actions_taken: list, scenario_name: str, y_axis_scale=Non
         ax[idx].plot(action_position, color=color_mapping["standard"])
         for idx, action_position in enumerate(scaled_values)
     ]
-    [ax[idx].xaxis.set_major_locator(plticker.MaxNLocator(11)) for idx in range(action_space_size)]
+
+    [
+        ax[idx].xaxis.set_major_locator(plticker.MaxNLocator(5 if len(actions_positions[0]) >= 5 else 5))
+        for idx in range(action_space_size)
+    ]
     [ax[idx].set_title(action_dimensions_german[idx]) for idx in range(action_space_size)]
     [ax[idx].set_xlabel("Zeitschritte") for idx in range(action_space_size)]
     [ax[idx].set_ylabel("Value") for idx in range(action_space_size)]
@@ -80,25 +84,25 @@ def plot_actions_taken(actions_taken: list, scenario_name: str, y_axis_scale=Non
 def plot_observations(observations_taken: list, y_axis_scale: list = None) -> None:
     if y_axis_scale is None:
         y_axis_scale = [
-            [0, 1000],
-            [0, 4000],
-            [0, 550],
-            [0, 8000],
-            [0, 180],
-            [0, 2000],
-            [0, 100],
-            [0, 2000],
+            [0, 1100],
+            [0, 4200],
+            [0, 570],
+            [0, 6000],
+            [0, 198],
+            [0, 2100],
+            [0, 110],
+            [0, 2100],
             [0, 1.2],
             [0, 1.2],
-            [0, 36],
+            [0, 32],
         ]
     obs_space_size = len(observations_taken[0])
     red_critical_line_1 = [-10, 2800, 450, 5100, 110, -10, -10, -10, -10, -10, 4]
     red_critical_line_2 = [-10, 1200, -10, 800, -10, -10, -10, -10, -10, -10, -10]
     orange_critical_line_1 = [-10, 2500, 350, 4400, 80, -10, -10, -10, -10, -10, 9]
     orange_critical_line_2 = [-10, 1500, -10, 1500, -10, -10, -10, -10, -10, -10, -10]
-    dead_line_1 = [-10, 2900, 500, 5300, 140, 0]
-    dead_line_2 = [-10, 1000, -10, 300, -10, -10]
+    dead_line_1 = [-10, 2900, 500, 5300, 140, -10, -10, -10, -10, -10, 0]
+    dead_line_2 = [-10, 1000, -10, 300, -10, -10, -10, -10, -10, -10, -10]
     fig, ax = plt.subplots(obs_space_size, 1, constrained_layout=True)
     obs_positions = [[] for i in range(obs_space_size)]
     fig.set_figheight(20)

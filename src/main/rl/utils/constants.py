@@ -2,15 +2,12 @@ from stable_baselines3 import A2C, DDPG, PPO, SAC, TD3
 
 from src.main.rl.evaluation.starting_state_option1 import create_starting_state_option1
 from src.main.rl.evaluation.starting_state_option2 import (
-    create_starting_state_option2c,
-    create_starting_state_option2,
     create_starting_state_option2a,
     create_starting_state_option2b,
+    create_starting_state_option2c,
 )
 from src.main.rl.evaluation.starting_state_option3 import (
     create_starting_state_option3,
-    create_starting_state_option3a,
-    create_starting_state_option3b,
 )
 from src.main.rl.evaluation.wrapper.noise.delay_wrapper import (
     DelayNoiseWrapperOption2,
@@ -49,12 +46,11 @@ ALL_DELAY_NOISE_WRAPPERS = [DelayNoiseWrapperOption1, DelayNoiseWrapperOption2]
 
 STARTING_STATE_OPTION1 = [create_starting_state_option1]
 STARTING_STATE_OPTION2 = [
-    create_starting_state_option2,
     create_starting_state_option2a,
     create_starting_state_option2b,
     create_starting_state_option2c,
 ]
-STARTING_STATE_OPTION3 = [create_starting_state_option3, create_starting_state_option3a, create_starting_state_option3b]
+STARTING_STATE_OPTION3 = [create_starting_state_option3]
 
 # Action based information
 scaling_factors_scenario_1 = [100, 2000, 1, 1, 2000]

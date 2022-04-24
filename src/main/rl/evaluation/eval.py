@@ -41,7 +41,12 @@ def evaluate(
         action, _states = model.predict(obs, deterministic=True)
         if i == 0:
             observations_taken.append(obs[0])
-            actions_taken.append([-1 for i in range(len(action[0]))])
+            if scenario_name == "src.main.rl.envs.scenario1:Scenario1":
+                actions_taken.append([-1 for i in range(len(action[0]))])
+            elif scenario_name == "src.main.rl.envs.scenario2:Scenario2":
+                actions_taken.append([0 for i in range(len(action[0]))])
+            elif scenario_name == "src.main.rl.envs.scenario3:Scenario3":
+                actions_taken.append([4 for i in range(len(action[0]))])
         actions_taken.append(action[0])
         obs, reward, done, info = vec_env.step(action)
         if done:
@@ -161,9 +166,40 @@ def evaluate_sop():
             return result, criticality_score, i + 1, actions_taken, observations_taken, info
 
 
+def get_single_reward(
+    scenario_name: str,
+    path: str,
+    alg: OnPolicyAlgorithm,
+    wrapper: WrapperMaker,
+    starting_state=None,
+    episode_length: int = 250,
+) -> list:
+    env_id = "TestEnv-v1"
+    delete_env_id(env_id)
+    register(id=env_id, entry_point=scenario_name)
+    vec_env = make_vec_env(
+        env_id,
+        n_envs=1,
+        wrapper_class=wrapper.make_wrapper,
+        env_kwargs={"starting_state": starting_state, "length": episode_length},
+    )
+
+    rewards_per_timestep = []
+    model = alg.load(path)
+    obs = vec_env.reset()
+
+    for i in range(episode_length):
+        action, _states = model.predict(obs, deterministic=True)
+        obs, reward, done, info = vec_env.step(action)
+        rewards_per_timestep.append(reward[0])
+        if done:
+            return rewards_per_timestep[:-1]
+
+
 # evaluate_sop()
 # path = "../models/scenario1/training_04_06/scenario1_ActionSpaceOption3Wrapper_ObservationOption4Wrapper_None_RewardOption2Wrapper_TD3_training_04_06_5/best_model.zip"
 ###path = "../models/scenario3/training_04_06/scenario3_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_PPO_training_04_06_1/best_model.zip"
+
 ####
 #### path = "../models/models/scenario2/training_04_06/scenario2_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_None_RewardOption2Wrapper_PPO_training_04_06_1/best_model.zip"
 ####

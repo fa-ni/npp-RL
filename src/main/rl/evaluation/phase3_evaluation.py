@@ -103,7 +103,6 @@ def create_evaluation_df_phase3(path_to_save: str, paths_best_models: list = Non
                 wrapper_maker = WrapperMaker(
                     action_wrapper, automation_wrapper, obs_wrapper, reward_wrapper, None, obs_varies_wrapper
                 )
-                # TODO Might need to execute X times if we use randomness!
                 result = evaluate(scenario, path_to_overhand, alg, wrapper_maker)
                 result_dict[obs_varies_wrapper.__name__] = result[0]
                 result_dict[obs_varies_wrapper.__name__ + "_criticality"] = result[1]
@@ -112,7 +111,6 @@ def create_evaluation_df_phase3(path_to_save: str, paths_best_models: list = Non
                 wrapper_maker = WrapperMaker(
                     action_wrapper, automation_wrapper, obs_wrapper, reward_wrapper, delay_wrapper, None
                 )
-                # TODO Might need to execute X times if we use randomness!
                 result = evaluate(scenario, path_to_overhand, alg, wrapper_maker)
                 result_dict[delay_wrapper.__name__] = result[0]
                 result_dict[delay_wrapper.__name__ + "_criticality"] = result[1]

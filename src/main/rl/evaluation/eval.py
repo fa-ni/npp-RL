@@ -166,6 +166,24 @@ def evaluate_sop():
             return result, criticality_score, i + 1, actions_taken, observations_taken, info
 
 
+def get_single_reward_sop() -> list:
+    env_id = "TestEnv-v1"
+    delete_env_id(env_id)
+    register(id=env_id, entry_point="src.main.rl.envs.scenario1:Scenario1")
+    wrapper_maker = WrapperMaker(ActionSpaceOption3Wrapper, None, ObservationOption4Wrapper, RewardOption2Wrapper)
+    vec_env = make_vec_env(env_id, n_envs=1, wrapper_class=wrapper_maker.make_wrapper)
+
+    rewards_per_timestep = []
+    obs = vec_env.reset()
+
+    for i in range(250):
+        action = np.array([get_actions_sop(250 - i)])
+        obs, reward, done, info = vec_env.step(action)
+        rewards_per_timestep.append(reward[0])
+        if done:
+            return rewards_per_timestep[:-1]
+
+
 def get_single_reward(
     scenario_name: str,
     path: str,

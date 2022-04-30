@@ -17,7 +17,7 @@ from src.main.rl.wrapper.npp_automation_wrapper import NPPAutomationWrapper
 def create_evaluation_df_phase3(path_to_save: str, paths_best_models: list = None) -> pd.DataFrame:
     """
     This function creates further evaluations for the best combinations.
-    For each model that was trained (10 for each combinations) a full evaluation is done.
+    For each model that was trained (10 for each combination) a full evaluation is done.
     Full evaluation means that for every of the following options a reward and a criticality score is calculated.
     Options:
     - Normal execution
@@ -131,5 +131,4 @@ def create_evaluation_df_phase3(path_to_save: str, paths_best_models: list = Non
     df.loc[df["action_wrapper"].isna(), "action_wrapper"] = "ActionSpaceOption1Wrapper"
     df.loc[df["obs_wrapper"].isna(), "obs_wrapper"] = "ObservationOption1Wrapper"
     df.to_csv(path_to_save)
-    print(df)
     return df

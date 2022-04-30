@@ -40,9 +40,13 @@ def prepare_critical_states_analysis(reactor_status_over_time: List[Dict]) -> Li
 
 
 def calculate_criticality_score_with_reward_functions(reactor_status_over_time: List[Dict]):
+    """
+    This function calculates the overall criticality score based on the status of different components over
+    the whole evaluation time.
+    """
     result = []
     for item in reactor_status_over_time:
-        # 1200,2800 cirtical
+        # 1200,2800 critical
         reactor_wl = calculate_reward_for_corridor(1200, 2800, 2100, item["Reactor_WaterLevel"])
         reactor_pressure = 1 if item["Reactor_Pressure"] < 350 else (0.5 if item["Reactor_Pressure"] < 450 else 0)
 

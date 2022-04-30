@@ -7,7 +7,12 @@ from src.main.rl.utils.combined_parser import parse_information_from_path
 from src.main.rl.utils.parser import parse_wrapper, parse_scenario_name
 
 
-def create_evaluation_df_phase2(path_to_save: str, all_files=None):
+def create_evaluation_df_phase2(path_to_save: str, all_files: list = None) -> None:
+    """
+    This function is used to calculate the reward and the criticality score of all trained agents.
+    It will also get some more metadata information.
+    The result will be saved as a csv file to the overhanded path.
+    """
     df = pd.DataFrame()
     if not all_files:
         all_files = []

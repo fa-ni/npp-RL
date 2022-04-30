@@ -11,11 +11,9 @@ from src.main.dto.WaterValve import WaterValve
 from src.main.services.ReactorCreatorService import ReactorCreatorService
 
 """
-Starting State Option 1 was created with the following things in mind:
-- Should be a "normal" state - no critical state
-- Should be have a middle power output
-- Was created with the help of the standard SOP policy
-- Which was stopped after the power output reached 350 (or higher) and this state is now used
+Starting State Option 3 was created with the following things in mind:
+- Should be no critical state
+- Should have a state that can not be produced with the GUI of the original simulation
 """
 
 

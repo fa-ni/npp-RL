@@ -14,7 +14,6 @@ Starting State Option 1 was created with the following things in mind:
 - Should be a "normal" state - no critical state
 - Should be have a middle power output
 - Was created with the help of the standard SOP policy
-- Which was stopped after the power output reached 350 (or higher) and this state is now used
 """
 
 

@@ -4,14 +4,18 @@
 ![example workflow](https://github.com/fa-ni/npp-RL/actions/workflows/black.yml/badge.svg)
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 
-This repo currently contains the RL Code to learn the npp-implemenation in python from a earlier project. Currently the project which is called "python-backend" is still within this repository. This might be changed later. For more information about the earlier project, please go to section "python-backend".
+This repo contains  code of a python npp simulation (from an earlier project) and code which can be used to train different reinforcement learning agents.
+The base simulation was implemented in java from Weyers (see below). Thank you for letting us use the original java simulation of the npp.
+It also contains code and jupyter notebooks for an indepth analysis of the results from the reinforcement learning agents.
+For more information of the npp simulation itself please find the readme under src and an overview at the end of this readme.
+The information about the reinforcement learning and the analysis can be found in this file down below.
 
 ## RL
 
-### General information & Background
-This project uses RL Algorithms from stable-baselines3 to learn Standard Operating Procedure for the nuclear power plant simulation. It builds up a custom OpenAI Gym environment with multiple scenarios and wrappers.
+This project uses RL algorithms from the stable-baselines3 implementation to learn a standard operating procedure (sop) for the npp simulation.
+It builds up a custom OpenAI Gym environment with multiple scenarios and wrappers.
 ### How to use
-TODO: Add how to start training, how to start testing
+#### Setup
 This project is tested with python version 3.9.
 To install the necessary packages there are two options available:
 1. Poetry
@@ -20,41 +24,78 @@ To install the necessary packages there are two options available:
    3. Run the command 'poetry install'
 2. Requirements.txt
    1. Run the command 'pip install -r requirements.txt'
-### Scenarios
 
-### Wrapper
+#### Start RL Training of Agents
+The main method is used to start the training of rl agents. You can just configure which environment,
+which wrappers and which algorithms to use. Everything else is like saving the best model of a training run,
+saving tensorboard logs etc. is done automatically.
+
+#### Use and evaluate a RL Agent
+There are two option to use a RL agent.
+1. You can use the eval.py script to get the basic information from your agent like return, observations within the run etc..
+2. You can use the eval_frontend.py script if you also have the suitable jar file here to let your
+   agent execute the action over the frontend, so that you can actually see what is happening. However, this
+   is not possible with all agents. Currently, only agents which use the action_wrapper_option3 are
+   supported.
+#### Evaluation and detailed analysis of lots of models / already trained agents
+You can use the jupyter notebooks provided on the top folder level.
+Maybe you need to adjust paths to point to the right models. The phase2 jupyter notebook
+contains general analytics about all trained models. The phase3 is used to get a
+detailed analysis of some chosen models.
+
+
+### Information about the implementation of the environments and wrappers
+
+#### Scenarios
+The are three different scenarios implemented.
+1. Uses box action space which means only continues action are allowed.
+2. Uses a binary action space which means all actions are transformed to binary decissions.
+3. Uses a multidiscrete action space which means that there are multiple discrete option per action dimension which the
+   agent can use at each timestep.
+
+Each environment has a default of 250 timesteps per episode. This can be overwritten by
+passing a parameter to the specific environments.
+
+Each environment starts the simulation at ground zero. This can be overwritten by
+passing a parameter to the specific environments.
+
+
+#### Wrapper
 
 The wrapper classes help to reduce code duplication. The wrappers can be used in a flexible way in the current scenario.
-Either no wrapper, one ObservationWrapper, one ActionWrapper or a combination of ActionWrapper and ObservationWrapper
-can be used. There is also no need to adjust anything else. With the helper methode make_wrapper, wrapper can be chained
-and overhanded to the
-'make_vec_env' function from gym.
+No wrapper can be used a single one or multiple different ones together. There is also no need to adjust anything else.
+With the helper methode make_wrapper, wrapper can be chained
+and overhanded to the 'make_vec_env' function from gym.
 
-#### ActionWrappers
+##### ActionWrappers
 
 The ActionWrappers only modify the number of action parameters/dimensions. ActionSpaceOption2Wrapper is used to be able
 to have 3 dimensions in the action space. ActionSpaceOption3Wrapper is used to be able to have 5 dimensions in the
 action space. By default, they already can handle all three different scenarios which are included in this package (
 continuous,multibinary,multidiscrete). The different action spaces sizes are handled with if statements in all 3
-scenarios directly. Which exact parameters are behind these functions can be seen in the description of each class.
+scenarios directly.
 
-#### ObservationWrappers
+##### ObservationWrappers
 
 The ObservationWrappers modify the number of dimensions/parameters for the observation space. As the observation space
 is also used in the "reset" and "step" function of the gym environments these functions are also programmed. These
 functions (can) get the output of the original functions from the scenarios. ObservationOption2Wrapper has 3 dimensions.
 ObservationOption3Wrapper has 6 dimensions. ObservationOption4Wrapper has 5 dimensions. ObservationOption5Wrapper has 10
-dimensions. Which exact parameters are behind these functions can be seen in the description of each class.
+dimensions.
 
-### Evaluation
+##### NPPAutomationWrapper
+If this wrapper is used another part in the backend logic of the npp simulation is used.
+This changes the behaviour of the simulation.
 
-To evaluate the performance the eval.py script is used. It computes the mean_reward over multiple test episodes.
+##### RewardWrapper
+The reward wrappers are being used to choose different reward functions to train and evaluate
+the agent with.
 
-### Frontend
+##### More Wrappers
 
-### Training
-
-### Logging and model saving
+There are more wrappers which are being used for some experiments of the trained agents. However,
+they could also be used during the training. These noise wrappers are adding different types of
+noise to the observations and the backend logic.
 
 ##WHY - Explanations of using different stuff
 *Black*: To make a project consistent and easy to read a formatter like black is really helpful.
@@ -71,7 +112,7 @@ if everything is formatted correct and all tests are run successful.
 *Pre-Commit*: This tool can check the code before you do a commit from a local device. In this case it is used, so
 that no unformatted code can be committed if pr-commit is installed on the local device.
 
-## python-backend
+## npp simulation
 This part is used to simulate a nuclear power plant (npp). It contains the backend logic in python. It uses a similar
 logic for the backend as described in [Weyers et al. 2017].
 
@@ -85,6 +126,11 @@ Make sure that you copy the result.csv files to the results folder or change the
 
 The python code should later be used to train a reinforcement learning agent to identify whether it is possible to train an
 agent to fulfill the task of starting and shutting down a nnp.
+
+
+
+TODO: Add how to start training, how to start testing
+
 
 
 ## Citations:

@@ -4,6 +4,9 @@ from src.main.rl.utils.utils import WrapperMaker
 
 
 def parse_information_from_path(path: str):
+    """
+    This function just combines the different parser.
+    """
     scenario_name = parse_scenario_name(path)
     result_scenario = f"src.main.rl.envs.{scenario_name}:{scenario_name.capitalize()}"
     alg = alg_mapping[parse_alg_name(path)]

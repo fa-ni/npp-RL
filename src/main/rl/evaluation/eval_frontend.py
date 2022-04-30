@@ -6,13 +6,24 @@ from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.on_policy_algorithm import OnPolicyAlgorithm
 
 from src.main.rl.utils.combined_parser import parse_information_from_path
-from src.main.rl.utils.constants import scaling_factors_scenario_1, scaling_factors_scenario2, scaling_factors_scenario3
+from src.main.rl.utils.constants import (
+    scaling_factors_scenario_1,
+    scaling_factors_scenario_2,
+    scaling_factors_scenario_3,
+)
 from src.main.rl.utils.parser import parse_scenario_name
 from src.main.rl.utils.utils import delete_env_id, WrapperMaker
 from src.main.rl.wrapper.reward_calculations import calculate_roofed_reward
 
 
-def eval_frontend(scenario_name: str, path: str, alg: OnPolicyAlgorithm, wrappers: WrapperMaker):
+def eval_frontend(scenario_name: str, path: str, alg: OnPolicyAlgorithm, wrappers: WrapperMaker) -> None:
+    """
+    This function is used to use an agent with the java-frontend to visualize the actions taken by the agent.
+    Only ActionSpaceOption3 agents are currently supported.
+    The jar files are within this project which can be used.
+    The trained agent is predicting actions, which are then set via a python-java bridge in the java GUI.
+    The java-backend then get triggered from here to execute the logic with the values from the GUI.
+    """
     env_id = "TestEnv-v1"
     delete_env_id(env_id)
 
@@ -58,7 +69,7 @@ def eval_frontend(scenario_name: str, path: str, alg: OnPolicyAlgorithm, wrapper
                 elif parsed_scenario_name == "scenario2":
                     for idx, item in enumerate(action[0]):
                         scaled_actions.append(
-                            -scaling_factors_scenario2[idx] if item == 0 else scaling_factors_scenario2[idx]
+                            -scaling_factors_scenario_2[idx] if item == 0 else scaling_factors_scenario_2[idx]
                         )
                     frontend.getSliderRodPos().setValue(frontend.getSliderRodPos().getValue() + scaled_actions[0])
                     frontend.getSliderWP1RPM().setValue(frontend.getSliderWP1RPM().getValue() + scaled_actions[1])
@@ -68,7 +79,7 @@ def eval_frontend(scenario_name: str, path: str, alg: OnPolicyAlgorithm, wrapper
 
                 elif parsed_scenario_name == "scenario3":
                     for idx, item in enumerate(action[0]):
-                        scaled_actions.append(scaling_factors_scenario3[idx][item])
+                        scaled_actions.append(scaling_factors_scenario_3[idx][item])
                     y.append(scaled_actions)
                     if scaled_actions[0] == 0 or (scaled_actions[0] < 0 and frontend.getModPer() == 100):
                         frontend.fireChange()

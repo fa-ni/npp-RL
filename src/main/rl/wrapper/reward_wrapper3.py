@@ -5,6 +5,11 @@ from src.main.rl.wrapper.reward_calculations import calculate_roofed_reward, cal
 
 
 class RewardOption3Wrapper(gym.RewardWrapper):
+    """
+    This reward wrapper is used to exchange the reward function. It uses a more complicated reward which
+    also takes into account the criticality of different states.
+    """
+
     def __init__(self, env):
         super().__init__(env)
 

@@ -1,8 +1,14 @@
 # 1. CR/Moderator Percent 2. WP1 RPM 3. WV1 4. SV1 5. CP RPM
 from src.main.rl.utils.utils import get_scaled_value
 
+
 # 1. CR/Moderator Percent 2. WP1 RPM 3. WV1 4. SV1 5. CP RPM
 def get_actions_sop(length: int) -> list:
+    """
+    This function returns values for which can be used with the ActionWrapperOption3.
+    This function mimics a human operator following the standard operating procedure to
+    start up the npp simulation.
+    """
     result = []
     if length == 250:
         result = [

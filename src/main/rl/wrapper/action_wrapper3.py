@@ -6,6 +6,10 @@ from src.main.dto.FullReactor import FullReactor
 
 
 class ActionSpaceOption3Wrapper(Wrapper):
+    """
+    Wrapper used to have 5 dimensions in the action space.
+    """
+
     def __init__(self, env):
         super().__init__(env)
         # 1. CR/Moderator Percent 2. WP1 RPM 3. WV1 4. SV1 5. CP RPM

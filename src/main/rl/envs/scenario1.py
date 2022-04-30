@@ -9,8 +9,14 @@ from src.main.services.ReactorCreatorService import ReactorCreatorService
 
 
 class Scenario1(Env):
-    # Scenario 1 with continuous action spaces
-    # if no wrapper is specified this will use ActionSpaceOption 1 and ObservationSpaceOption1
+    """
+    This openAI gym environment is the first scenario.
+    If no wrapper is specified this will use ActionSpaceOption 1 and ObservationSpaceOption1.
+    It uses a box action space. So it will accept continuous action in the interval [-1,1].
+    The default length after a episode is over is 250. This can be overwritten with the length param.
+    The starting state is the npp simulation with everything set to zero (with ActionSpaceOption3Wrapper). A different starting state can be overhanded with the XX param. If there is no ActionSpace Wrapper used or ActionSpaceOption2Wrapper then some default values are set before the start of the first timestep.
+    """
+
     def __init__(self, starting_state=None, length=250):
         # 1. moderator_percent 2. WP1 RPM
         self.action_space = Box(np.array([-1, -1]).astype(np.float32), np.array([1, 1]).astype(np.float32))
@@ -72,8 +78,8 @@ class Scenario1(Env):
             info,
         ]
 
-    def render(self):
-        pass
+        def render(self, **kwargs):
+            pass
 
     def reset(self):
         self.state = None

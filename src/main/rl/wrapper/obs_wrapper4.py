@@ -3,11 +3,14 @@ from gym import Wrapper
 from gym.spaces import Box
 
 from src.main.dto.FullReactor import FullReactor
-from src.main.rl.utils.reactor_starting_states import get_reactor_starting_state
-from src.main.services.BackgroundStepService import BackgroundStepService
 
 
 class ObservationOption4Wrapper(Wrapper):
+    """
+    Wrapper used to have 3 dimensions in the Observation Space.
+    1. Power Output 2. Reactor WaterLevel 3. Reactor Pressure 4. Condenser WaterLevel 5. Condenser Pressure 6. Blow Counter
+    """
+
     def __init__(self, env):
         super().__init__(env)
         # 1. Power Output 2. Reactor WaterLevel 3. Reactor Pressure 4. Condenser WaterLevel 5. Condenser Pressure 6. Blow Counter

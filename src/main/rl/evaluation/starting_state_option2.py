@@ -12,9 +12,9 @@ from src.main.dto.WaterValve import WaterValve
 """
 Starting State Option 2 was created with the following things in mind:
 - Should be a "critical" state
-- Waterlevel of the Rector is in the critical range
+- Waterlevel or pressure of the Rector is in the critical range
 - Should be have a middle power output
-
+- Was created with the help of the standard SOP policy
 """
 
 

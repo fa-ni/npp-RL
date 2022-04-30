@@ -22,6 +22,10 @@ def train_agent(
     reward_wrapper_name: str = None,
     name_ending: str = None,
 ):
+    """
+    This function starts the training of the defined models. It saves tensorboard logs and
+    saves the best model which is evaluated every certain amount of timesteps during training.
+    """
     try:
         log_name_scenario = parse_scenario_name(scenario_name)
         log_name = f"{log_name_scenario}_{action_wrapper_name}_{obs_wrapper_name}_{npp_automation}_{reward_wrapper_name}_{algorithm.__name__}_{name_ending}"
@@ -61,6 +65,12 @@ def train_all_scenarios(
     automation_wrapper,
     name_ending: str = None,
 ):
+    """
+    This function gets called from the main.py. It starts the training for the defined
+    Algorithms, Scenarios and Wrappers. All of these are automatically created via for-loops.
+    It also takes care of created and deleting the environments of openAIGym, as well as using the right
+    amount of threads per algorithm.
+    """
     env_id = f"env-v1"
     for scenario in scenarios:
         for action_wrapper in ALL_ACTION_WRAPPERS:

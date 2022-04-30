@@ -18,7 +18,12 @@ def evaluate(
     wrapper: WrapperMaker,
     starting_state=None,
     episode_length: int = 250,
-) -> [float, float]:
+) -> [float, float, int, list, list, dict]:
+    """
+    The evaluate function is used to evaluate a trained agent.
+    It returns a lot of information about like return, criticality score, observations, actions taken and
+    more information.
+    """
     env_id = "TestEnv-v1"
     delete_env_id(env_id)
 
@@ -133,7 +138,11 @@ def evaluate_terminal_state_obs(
             return result[0], observations_taken, info
 
 
-def evaluate_sop():
+def evaluate_sop() -> [float, float, int, list, list, dict]:
+    """
+    This function is used to evaluate the SOP policy. It returns the same information as the normal
+    evaluate function for the agents.
+    """
     env_id = "TestEnv-v1"
     delete_env_id(env_id)
     scenario_name = "scenario1"

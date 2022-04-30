@@ -3,15 +3,23 @@ from gym import Env
 from gym.spaces import Box, MultiDiscrete
 
 from src.main.dto.FullReactor import FullReactor
-from src.main.rl.utils.reactor_starting_states import get_reactor_starting_state
 from src.main.rl.utils.utils import is_done
 from src.main.services.BackgroundStepService import BackgroundStepService
 from src.main.services.ReactorCreatorService import ReactorCreatorService
 
 
 class Scenario3(Env):
-    # Scenario 3 with MultiDiscrete Action Spaces
-    # if no wrapper is specified this will use ActionSpaceOption 1 and ObservationSpaceOption1
+    """
+    This openAI gym environment is the third scenario.
+    If no wrapper is specified this will use ActionSpaceOption 1 and ObservationSpaceOption1.
+    It uses a multidiscrete action space. So it will accept different numbers depending on the dimension
+    which are mapped to the actual actions.
+    The starting state is the npp simulation with everything set to zero (with ActionSpaceOption3Wrapper).
+     A different starting state can be overhanded with the XX param.
+     If there is no ActionSpace Wrapper used or ActionSpaceOption2Wrapper then some default values
+     are set before the start of the first timestep.
+    """
+
     def __init__(self, starting_state=None, length=250):
         # 1. moderator_percent 2. WP1 RPM
         self.action_space = MultiDiscrete([9, 9])
@@ -83,7 +91,7 @@ class Scenario3(Env):
             info,
         ]
 
-    def render(self):
+    def render(self, **kwargs):
         pass
 
     def reset(self):

@@ -3,7 +3,6 @@ from gym import Env
 from gym.spaces import MultiBinary, Box
 
 from src.main.dto.FullReactor import FullReactor
-from src.main.rl.utils.reactor_starting_states import get_reactor_starting_state
 from src.main.rl.utils.utils import is_done
 
 from src.main.services.BackgroundStepService import BackgroundStepService
@@ -11,7 +10,16 @@ from src.main.services.ReactorCreatorService import ReactorCreatorService
 
 
 class Scenario2(Env):
-    # Scenario 2 with MultiBinary Action Spaces
+    """
+    This openAI gym environment is the second scenario.
+    If no wrapper is specified this will use ActionSpaceOption 1 and ObservationSpaceOption1.
+    It uses a binary action space. So it will accept only binary actions.
+    The starting state is the npp simulation with everything set to zero (with ActionSpaceOption3Wrapper).
+    A different starting state can be overhanded with the XX param.
+    If there is no ActionSpace Wrapper used or ActionSpaceOption2Wrapper then some default values
+    are set before the start of the first timestep.
+    """
+
     # if no wrapper is specified this will use ActionSpaceOption 1 and ObservationSpaceOption1
     def __init__(self, starting_state=None, length=250):
         # 1. moderator_percent 2. WP1 RPM
@@ -82,7 +90,7 @@ class Scenario2(Env):
             info,
         ]
 
-    def render(self, mode):
+    def render(self, **kwargs):
         pass
 
     def reset(self):

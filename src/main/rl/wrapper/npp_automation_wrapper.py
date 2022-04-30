@@ -6,6 +6,10 @@ from src.main.services.NPPAutomationStepService import NPPAutomationStepService
 
 
 class NPPAutomationWrapper(Wrapper):
+    """
+    This wrapper is used to activate the backend logic of the NPPAutomation.
+    """
+
     def step(self, action):
         self.env.step(action)
         reward = 0

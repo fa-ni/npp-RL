@@ -6,11 +6,14 @@ from src.main.dto.FullReactor import FullReactor
 
 
 class ActionSpaceOption2Wrapper(Wrapper):
+    """
+    Wrapper used to have 3 dimensions in the action space.
+    """
+
     def __init__(self, env):
         super().__init__(
             env,
         )
-        # Maybe we can check here which original value it had, if multibinary we go like this else.. TODO
         # 1. CR/Moderator Percent 2. WP1 RPM 3. WV1
         if type(env.action_space) == MultiBinary:
             self.action_space = MultiBinary(3)

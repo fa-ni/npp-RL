@@ -8,6 +8,12 @@ from src.main.rl.wrapper.obs_wrapper5 import ObservationOption5Wrapper
 from src.main.rl.wrapper.reward_wrapper2 import RewardOption2Wrapper
 from src.main.rl.wrapper.reward_wrapper3 import RewardOption3Wrapper
 
+"""
+This function are parser function which identify certain information from a string then
+parse the information into a specific class or string. These are used to automatically create
+the correct wrappers from a path.
+"""
+
 
 def parse_wrapper(string: str):
     if "ActionSpaceOption2Wrapper" in string:

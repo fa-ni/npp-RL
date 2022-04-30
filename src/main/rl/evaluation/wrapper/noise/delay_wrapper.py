@@ -15,14 +15,6 @@ class DelayNoiseWrapperOption1(Wrapper):
 
 
 class DelayNoiseWrapperOption2(Wrapper):
-    # Executed with a 10 % chance // TODO Or use fibonacci?
-    def step(self, action):
-        original_result = list(self.env.step(action))
-        self.state.time_step(1)
-        return original_result
-
-
-class DelayNoiseWrapperOption3(Wrapper):
     def __init__(self, env):
         super().__init__(env)
         self.fibonacci = [250 - fibonacci_of(n) for n in range(14)]

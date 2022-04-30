@@ -24,6 +24,6 @@ def test_reward_wrapper2(mock1, mock2):
     wrapper = set_up()
     actual = wrapper.reward(0)
     expected = 0.5
-    assert mock1.call_count == 1
+    assert mock1.call_count == 0
     assert mock2.call_count == 1
     assert actual == expected

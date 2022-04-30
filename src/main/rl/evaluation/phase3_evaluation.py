@@ -1,4 +1,3 @@
-import numpy as np
 import pandas as pd
 
 from src.main.rl.evaluation.eval import evaluate
@@ -15,7 +14,7 @@ from src.main.rl.utils.utils import WrapperMaker
 from src.main.rl.wrapper.npp_automation_wrapper import NPPAutomationWrapper
 
 
-def create_evaluation_df() -> pd.DataFrame:
+def create_evaluation_df_phase3(path_to_save: str, paths_best_models: list = None) -> pd.DataFrame:
     """
     This function creates further evaluations for the best combinations.
     For each model that was trained (10 for each combinations) a full evaluation is done.
@@ -32,26 +31,43 @@ def create_evaluation_df() -> pd.DataFrame:
         - Artificial starting state
     More information can be found in the master thesis itself.
     """
-    paths_best_models = [
-        "scenario1/training_18_03/scenario1_ActionSpaceOption3Wrapper_ObservationOption4Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_TD3_training_18_03",
-        "scenario1/training_18_03/scenario1_ActionSpaceOption3Wrapper_ObservationOption4Wrapper_None_RewardOption2Wrapper_TD3_training_18_03",
-    ]
+    if not paths_best_models:
+        paths_best_models = [
+            "../models/scenario1/training_04_06/scenario1_ActionSpaceOption3Wrapper_ObservationOption4Wrapper_None_RewardOption2Wrapper_TD3_training_04_06",
+            "../models/scenario1/training_04_06/scenario1_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_SAC_training_04_06",
+            "../models/scenario2/training_04_06/scenario2_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_None_RewardOption2Wrapper_PPO_training_04_06",
+            "../models/scenario2/training_04_06/scenario2_ActionSpaceOption3Wrapper_ObservationOption4Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_PPO_training_04_06",
+            "../models/scenario3/training_04_06/scenario3_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_None_RewardOption2Wrapper_PPO_training_04_06",
+            "../models/scenario3/training_04_06/scenario3_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_A2C_training_04_06",
+        ]
 
     df = pd.DataFrame()
     # Use Noise Wrappers
     for path in paths_best_models:
-        for number in range(1, 3):
+        for number in range(1, 11):
             result_dict = {}
-
             full_path = path + f"_{number}"
-            result_dict["full_path"] = full_path
-            result_dict["combination"] = path
-            path_to_overhand = "../" + full_path + "/best_model.zip"
+            path_to_overhand = full_path + "/best_model.zip"
+
             action_wrapper, automation_wrapper, obs_wrapper, reward_wrapper = parse_wrapper(full_path)
             scenario, alg, wrapper_maker = parse_information_from_path(full_path)
-            result_normal = evaluate(scenario, path_to_overhand, alg, wrapper_maker)
-            result_dict["normal_result"] = result_normal[0]
-            result_dict["normal_result_criticality"] = result_normal[1]
+            cum_reward, criticality_score, total_timesteps, action_taken, obs_taken, info = evaluate(
+                scenario, path_to_overhand, alg, wrapper_maker
+            )
+            result_dict["combination"] = path
+            result_dict["scenario"] = scenario
+            result_dict["alg"] = alg
+            result_dict["condensator_pump_blown"] = info[0]["Condensator_Pump Blown"]
+            result_dict["water_pump_blown"] = info[0]["Water_Pump Blown"]
+
+            result_dict["action_wrapper"] = action_wrapper.__name__ if action_wrapper else None
+            result_dict["obs_wrapper"] = obs_wrapper.__name__ if obs_wrapper else None
+            result_dict["automation_wrapper"] = automation_wrapper.__name__ if automation_wrapper else None
+            result_dict["cum_reward"] = cum_reward
+            result_dict["criticality_score"] = criticality_score
+            result_dict["total_timesteps"] = total_timesteps
+            result_dict["full_path"] = full_path
+
             # Deactivate NPPAutomationWrapper if it was activated in this specific model, else activate
             # to see how good the models perform with the different setting for NPPAutomation
             if automation_wrapper:
@@ -61,6 +77,8 @@ def create_evaluation_df() -> pd.DataFrame:
                 result_dict["result_wo_npp_automation"] = result_wo_automation_normal[0]
                 result_dict["result_w_npp_automation_criticality"] = None
                 result_dict["result_wo_npp_automation_criticality"] = result_wo_automation_normal[1]
+                result_dict["result_w_npp_automation_timesteps"] = None
+                result_dict["result_wo_npp_automation_timesteps"] = result_wo_automation_normal[2]
             else:
                 wrapper_maker = WrapperMaker(action_wrapper, NPPAutomationWrapper, obs_wrapper, reward_wrapper)
                 result_w_automation_normal = evaluate(scenario, path_to_overhand, alg, wrapper_maker)
@@ -68,78 +86,50 @@ def create_evaluation_df() -> pd.DataFrame:
                 result_dict["result_w_npp_automation"] = result_w_automation_normal[0]
                 result_dict["result_wo_npp_automation_criticality"] = None
                 result_dict["result_w_npp_automation_criticality"] = result_w_automation_normal[1]
+                result_dict["result_wo_npp_automation_timesteps"] = None
+                result_dict["result_w_npp_automation_timesteps"] = result_w_automation_normal[2]
             # Use length == 1000
             wrapper_maker = WrapperMaker(action_wrapper, automation_wrapper, obs_wrapper, reward_wrapper)
             result_1000_episode = evaluate(scenario, path_to_overhand, alg, wrapper_maker, None, episode_length=1000)
-            print(result_1000_episode)
+            result_dict["episode_length_1000_condensator_pump_blown"] = result_1000_episode[5][0][
+                "Condensator_Pump Blown"
+            ]
+            result_dict["episode_length_1000_water_pump_blown"] = result_1000_episode[5][0]["Water_Pump Blown"]
             result_dict["episode_length_1000"] = result_1000_episode[0]
             result_dict["episode_length_1000_criticality"] = result_1000_episode[1]
-
+            result_dict["episode_length_1000_timesteps"] = result_1000_episode[2]
+            # Use Noise in evaluation
             for obs_varies_wrapper in ALL_OBS_NOISE_WRAPPERS:
                 wrapper_maker = WrapperMaker(
                     action_wrapper, automation_wrapper, obs_wrapper, reward_wrapper, None, obs_varies_wrapper
                 )
-                # TODO Might need to execute X times if we use randomness!
                 result = evaluate(scenario, path_to_overhand, alg, wrapper_maker)
                 result_dict[obs_varies_wrapper.__name__] = result[0]
                 result_dict[obs_varies_wrapper.__name__ + "_criticality"] = result[1]
-
+                result_dict[obs_varies_wrapper.__name__ + "_timesteps"] = result[2]
             for delay_wrapper in ALL_DELAY_NOISE_WRAPPERS:
                 wrapper_maker = WrapperMaker(
                     action_wrapper, automation_wrapper, obs_wrapper, reward_wrapper, delay_wrapper, None
                 )
-                # TODO Might need to execute X times if we use randomness!
                 result = evaluate(scenario, path_to_overhand, alg, wrapper_maker)
                 result_dict[delay_wrapper.__name__] = result[0]
                 result_dict[delay_wrapper.__name__ + "_criticality"] = result[1]
-
+                result_dict[delay_wrapper.__name__ + "_timesteps"] = result[2]
             # Use different starting states
             for starting_state in STARTING_STATE_OPTION1 + STARTING_STATE_OPTION2 + STARTING_STATE_OPTION3:
                 wrapper_maker = WrapperMaker(action_wrapper, automation_wrapper, obs_wrapper, reward_wrapper)
                 result = evaluate(scenario, path_to_overhand, alg, wrapper_maker, starting_state=starting_state())
-                print(result)
                 result_dict[starting_state.__name__] = result[0]
                 result_dict[starting_state.__name__ + "_criticality"] = result[1]
+                result_dict[starting_state.__name__ + "_timesteps"] = result[2]
 
             # add to df
             df = pd.concat([df, pd.DataFrame(result_dict, index=[0])], ignore_index=True)
-            print(df)
-            # Count critical state
-
+            # Fill NaN / None / Null values with correct labels
+    df.loc[df["action_wrapper"] == "None", "action_wrapper"] = "ActionSpaceOption1Wrapper"
+    df.loc[df["obs_wrapper"] == "None", "obs_wrapper"] = "ObservationOption1Wrapper"
+    df.loc[df["action_wrapper"].isna(), "action_wrapper"] = "ActionSpaceOption1Wrapper"
+    df.loc[df["obs_wrapper"].isna(), "obs_wrapper"] = "ObservationOption1Wrapper"
+    df.to_csv(path_to_save)
     print(df)
     return df
-
-
-result_df = create_evaluation_df()
-# Create statistics about each model over all tests
-reward_cols = [col for col in result_df.columns if not "_criticality" in col]
-critical_cols = [col for col in result_df.columns if "_criticality" in col]
-df_reward_statistics_with_columns = (
-    result_df[reward_cols]
-    .set_index(["full_path", "combination"])
-    .agg(["min", "max", "std", "mean"], axis=1)
-    .reset_index()
-    .rename(columns={"min": "reward_min", "max": "reward_max", "std": "reward_std", "mean": "reward_mean"})
-)
-df_critical_statistics_with_columns = (
-    result_df[critical_cols + ["full_path", "combination"]]
-    .set_index(["full_path", "combination"])
-    .agg(["min", "max", "std", "mean"], axis=1)
-    .reset_index()
-    .rename(columns={"min": "critical_min", "max": "critical_max", "std": "critical_std", "mean": "critical_mean"})
-)
-
-combined_statistics = pd.merge(
-    df_reward_statistics_with_columns, df_critical_statistics_with_columns, how="inner", on=["full_path", "combination"]
-)
-print(combined_statistics)
-# Create statistics over every combination and all tests
-
-# TODO is hard this way around
-
-
-# Create statistics over every combination per tests
-result_df_grouped_by_models = (
-    result_df.drop(columns=["full_path"]).groupby("combination").agg(["min", "max", "std", "mean"])
-)
-print(result_df_grouped_by_models)

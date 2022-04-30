@@ -10,7 +10,6 @@ class RewardOption2Wrapper(gym.RewardWrapper):
 
     def reward(self, rew: float) -> float:
         result = 0
-        done = is_done(self.state.full_reactor, self.length)
-        if not done:
+        if not self.done:
             result = calculate_roofed_reward(self.state.full_reactor.generator.power)
         return result

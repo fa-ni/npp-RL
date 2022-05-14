@@ -42,8 +42,8 @@ def evaluate(
     observations_taken = []
     reactor_status_over_time = []
     for i in range(episode_length):
-        # vec_env.render()
         action, _states = model.predict(obs, deterministic=True)
+        # Add action for timestep 0 -> Action is always the most neutral one
         if i == 0:
             observations_taken.append(obs[0])
             if scenario_name == "src.main.rl.envs.scenario1:Scenario1":
@@ -65,11 +65,8 @@ def evaluate(
             # plot_observations(observations_taken[:-1])
             criticality_score = calculate_criticality_score_with_reward_functions(reactor_status_over_time)
             print(f"Criticality Score1: {criticality_score}")
-            # criticality_of_states = prepare_critical_states_analysis(reactor_status_over_time)
-            # print(f"Criticality Score2: {calculate_score(criticality_of_states)}")
-            # print(sum(mean_reward_over_multiple_evaluations))
             result = sum(rewards_per_timestep)
-            print(result)
+            print(f"Return: {result[0]}")
             obs = vec_env.reset()
             return result[0], criticality_score, i + 1, actions_taken, observations_taken, info
 
@@ -133,7 +130,7 @@ def evaluate_terminal_state_obs(
             # print(f"Criticality Score2: {calculate_score(criticality_of_states)}")
             # print(sum(mean_reward_over_multiple_evaluations))
             result = sum(rewards_per_timestep)
-            print(result)
+            print(f"Return: {result[0]}")
             obs = vec_env.reset()
             return result[0], observations_taken, info
 
@@ -169,8 +166,8 @@ def evaluate_sop() -> [float, float, int, list, list, dict]:
             # plot_observations(observations_taken[:-1])
             criticality_score = calculate_criticality_score_with_reward_functions(reactor_status_over_time)
             print(f"Criticality Score1: {criticality_score}")
-            print(sum(rewards_per_timestep))
             result = sum(rewards_per_timestep)
+            print(f"Return: {result[0]}")
             obs = vec_env.reset()
             return result, criticality_score, i + 1, actions_taken, observations_taken, info
 

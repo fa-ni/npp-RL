@@ -174,12 +174,18 @@ def plot_observations(observations_taken: list, y_axis_scale: list = None) -> No
 def prepare_one_combination_actions_and_obs_for_analysis(
     path_to_model: str, episode_length: int = 250, number_of_models: int = 10, obs_dimensions: int = 6
 ):
-    # This function transforms the actions and observations for all ten models per combination so that we can easily aggregated per timestep and create
-    # the corresponding statistics per timestamp and not only over the whole evaluation.
-    # It returns a list of 5 dataframes. Each for one dimension of the action space. In the dataframe we have 250 rows (one per timestamp)
-    # and 10 columns with the different models/runs. so if we aggregate of the columns we get the statistics for a action dimession over the 250 episodes (rows).
-    # Same with different number of df for obs.
-    # Also returns just a list were all actions taken and obs taken are appended.
+    """
+    This function transforms the actions and observations for all ten models per combination so that we can easily
+    aggregated per timestep and create the corresponding statistics per timestamp and not only over the whole evaluation.
+    It returns a list of 5 dataframes. Each for one dimension of the action space. In the dataframe we have 250 rows
+    (one per timestamp) and 10 columns with the different models/runs. so if we aggregate of the columns we get the
+     statistics for a action dimension over the 250 episodes (rows). Same with different number of df for obs.
+    Also returns just a list were all actions taken and obs taken are appended.
+
+    Example result_list_actions:
+    A list of 5 dataframes (one per action dimension). A dataframe contains 10 columns corresponding to the ten
+    different models with each 250 rows corresponding to the timesteps.
+    """
     result_list_actions = [pd.DataFrame() for i in range(5)]
     result_list_obs = [pd.DataFrame() for i in range(obs_dimensions)]
 
@@ -197,60 +203,61 @@ def prepare_one_combination_actions_and_obs_for_analysis(
         cum_reward, criticality_score, total_timesteps, actions_taken, obs_taken, info = evaluate(
             scenario, path_to_overhand, alg, wrapper_maker, episode_length=episode_length
         )
-        # actions taken is a list of lists. The first list contains 250 further list (one per timestep). The inner list contaijs 5 values (one per dimension in the action space)
+        # actions taken is a list of lists. The first list contains 250 further list (one per timestep).
+        # The inner list contains 5 values (one per dimension in the action space)
         list_of_all_actions_taken.append(actions_taken)
         list_of_all_obs_taken.append(obs_taken)
         intermediate_df_actions = pd.DataFrame(actions_taken)
         intermediate_df_obs = pd.DataFrame(obs_taken)
         result_list_actions[0] = result_list_actions[0].join(
-            intermediate_df_actions[0].rename(f"action_0_run_{number}").to_frame(), how="outer"
+            intermediate_df_actions[0].rename(f"action_0_model_{number}").to_frame(), how="outer"
         )
         result_list_actions[1] = result_list_actions[1].join(
-            intermediate_df_actions[1].rename(f"action_1_run_{number}").to_frame(), how="outer"
+            intermediate_df_actions[1].rename(f"action_1_model_{number}").to_frame(), how="outer"
         )
         result_list_actions[2] = result_list_actions[2].join(
-            intermediate_df_actions[2].rename(f"action_2_run_{number}").to_frame(), how="outer"
+            intermediate_df_actions[2].rename(f"action_2_model_{number}").to_frame(), how="outer"
         )
         result_list_actions[3] = result_list_actions[3].join(
-            intermediate_df_actions[3].rename(f"action_3_run_{number}").to_frame(), how="outer"
+            intermediate_df_actions[3].rename(f"action_3_model_{number}").to_frame(), how="outer"
         )
         result_list_actions[4] = result_list_actions[4].join(
-            intermediate_df_actions[4].rename(f"action_4_run_{number}").to_frame(), how="outer"
+            intermediate_df_actions[4].rename(f"action_4_model_{number}").to_frame(), how="outer"
         )
 
         result_list_obs[0] = result_list_obs[0].join(
-            intermediate_df_obs[0].rename(f"obs_0_run_{number}").to_frame(), how="outer"
+            intermediate_df_obs[0].rename(f"obs_0_model_{number}").to_frame(), how="outer"
         )
         result_list_obs[1] = result_list_obs[1].join(
-            intermediate_df_obs[1].rename(f"obs_1_run_{number}").to_frame(), how="outer"
+            intermediate_df_obs[1].rename(f"obs_1_model_{number}").to_frame(), how="outer"
         )
         result_list_obs[2] = result_list_obs[2].join(
-            intermediate_df_obs[2].rename(f"obs_2_run_{number}").to_frame(), how="outer"
+            intermediate_df_obs[2].rename(f"obs_2_model_{number}").to_frame(), how="outer"
         )
         result_list_obs[3] = result_list_obs[3].join(
-            intermediate_df_obs[3].rename(f"obs_3_run_{number}").to_frame(), how="outer"
+            intermediate_df_obs[3].rename(f"obs_3_model_{number}").to_frame(), how="outer"
         )
         result_list_obs[4] = result_list_obs[4].join(
-            intermediate_df_obs[4].rename(f"obs_4_run_{number}").to_frame(), how="outer"
+            intermediate_df_obs[4].rename(f"obs_4_model_{number}").to_frame(), how="outer"
         )
         result_list_obs[5] = result_list_obs[5].join(
-            intermediate_df_obs[5].rename(f"obs_5_run_{number}").to_frame(), how="outer"
+            intermediate_df_obs[5].rename(f"obs_5_model_{number}").to_frame(), how="outer"
         )
         if obs_dimensions >= 7:
             result_list_obs[6] = result_list_obs[6].join(
-                intermediate_df_obs[6].rename(f"obs_6_run_{number}").to_frame(), how="outer"
+                intermediate_df_obs[6].rename(f"obs_6_model_{number}").to_frame(), how="outer"
             )
         if obs_dimensions == 11:
             result_list_obs[7] = result_list_obs[7].join(
-                intermediate_df_obs[7].rename(f"obs_7_run_{number}").to_frame(), how="outer"
+                intermediate_df_obs[7].rename(f"obs_7_model_{number}").to_frame(), how="outer"
             )
             result_list_obs[8] = result_list_obs[8].join(
-                intermediate_df_obs[8].rename(f"obs_8_run_{number}").to_frame(), how="outer"
+                intermediate_df_obs[8].rename(f"obs_8_model_{number}").to_frame(), how="outer"
             )
             result_list_obs[9] = result_list_obs[9].join(
-                intermediate_df_obs[9].rename(f"obs_9_run_{number}").to_frame(), how="outer"
+                intermediate_df_obs[9].rename(f"obs_9_model_{number}").to_frame(), how="outer"
             )
             result_list_obs[10] = result_list_obs[10].join(
-                intermediate_df_obs[10].rename(f"obs_10_run_{number}").to_frame(), how="outer"
+                intermediate_df_obs[10].rename(f"obs_10_model_{number}").to_frame(), how="outer"
             )
     return result_list_actions, result_list_obs, list_of_all_actions_taken, list_of_all_obs_taken

@@ -7,7 +7,7 @@ from src.main.rl.utils.combined_parser import parse_information_from_path
 from src.main.rl.utils.parser import parse_wrapper, parse_scenario_name
 
 
-def create_evaluation_df_phase2(path_to_save: str, all_files: list = None) -> None:
+def create_evaluation_df_phase2(path_to_save: str, all_files: list = None) -> pd.DataFrame:
     """
     This function is used to calculate the reward and the criticality score of all trained agents.
     It will also get some more metadata information.
@@ -58,3 +58,4 @@ def create_evaluation_df_phase2(path_to_save: str, all_files: list = None) -> No
     df.loc[df["obs_wrapper"].isna(), "obs_wrapper"] = "ObservationOption1Wrapper"
     # Save
     df.to_csv(path_to_save)
+    return df

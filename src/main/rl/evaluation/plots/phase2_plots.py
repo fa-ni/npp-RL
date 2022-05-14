@@ -61,7 +61,7 @@ def create_phase_2_counts_plots(df: pd.DataFrame) -> None:
     df = df.fillna("None")
     df.loc[df["action_wrapper"] == "None", "action_wrapper"] = "ActionSpaceOption1Wrapper"
     fig = plt.figure(constrained_layout=True, dpi=300)
-    widths = [3, 5, 3]
+    widths = [3, 5.5, 3]
     gs = fig.add_gridspec(1, 3, hspace=0, wspace=0, width_ratios=widths)
     ax = gs.subplots(
         sharex="col",

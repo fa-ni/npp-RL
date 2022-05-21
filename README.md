@@ -6,7 +6,7 @@
 
 This repo contains  code of a python npp simulation (from an earlier project) and code which can be used to train different reinforcement learning agents.
 The base simulation was implemented in java from Weyers (see below). Thank you for letting us use the original java simulation of the npp.
-It also contains code and jupyter notebooks for an indepth analysis of the results from the reinforcement learning agents.
+It also contains code and jupyter notebooks for an in depth analysis of the results from the reinforcement learning agents.
 For more information of the npp simulation itself please find the readme under src and an overview at the end of this readme.
 The information about the reinforcement learning and the analysis can be found in this file down below.
 
@@ -27,7 +27,7 @@ To install the necessary packages there are two options available:
 
 #### Start RL Training of Agents
 The main method is used to start the training of rl agents. You can just configure which environment,
-which wrappers and which algorithms to use. Everything else is like saving the best model of a training run,
+which wrappers and which algorithms to use. Everything else like saving the best model of a training run,
 saving tensorboard logs etc. is done automatically.
 
 #### Use and evaluate a RL Agent
@@ -47,9 +47,9 @@ detailed analysis of some chosen models.
 ### Information about the implementation of the environments and wrappers
 
 #### Scenarios
-The are three different scenarios implemented.
+There are three different scenarios implemented.
 1. Uses box action space which means only continues action are allowed.
-2. Uses a binary action space which means all actions are transformed to binary decissions.
+2. Uses a binary action space which means all actions are transformed to binary decisions.
 3. Uses a multidiscrete action space which means that there are multiple discrete option per action dimension which the
    agent can use at each timestep.
 
@@ -72,7 +72,7 @@ and overhanded to the 'make_vec_env' function from gym.
 The ActionWrappers only modify the number of action parameters/dimensions. ActionSpaceOption2Wrapper is used to be able
 to have 3 dimensions in the action space. ActionSpaceOption3Wrapper is used to be able to have 5 dimensions in the
 action space. By default, they already can handle all three different scenarios which are included in this package (
-continuous,multibinary,multidiscrete). The different action spaces sizes are handled with if statements in all 3
+continuous, multibinary, multidiscrete). The different action spaces sizes are handled with if statements in all 3
 scenarios directly.
 
 ##### ObservationWrappers
@@ -80,7 +80,7 @@ scenarios directly.
 The ObservationWrappers modify the number of dimensions/parameters for the observation space. As the observation space
 is also used in the "reset" and "step" function of the gym environments these functions are also programmed. These
 functions (can) get the output of the original functions from the scenarios. ObservationOption2Wrapper has 3 dimensions.
-ObservationOption3Wrapper has 6 dimensions. ObservationOption4Wrapper has 5 dimensions. ObservationOption5Wrapper has 10
+ObservationOption3Wrapper has 7 dimensions. ObservationOption4Wrapper has 6 dimensions. ObservationOption5Wrapper has 11
 dimensions.
 
 ##### NPPAutomationWrapper
@@ -97,6 +97,13 @@ There are more wrappers which are being used for some experiments of the trained
 they could also be used during the training. These noise wrappers are adding different types of
 noise to the observations and the backend logic.
 
+###Jupyter Notebooks
+
+There are some jupyter notebooks on the top level of this project. They are used to analyse the trained agents.
+First they will evaluate a lot of different stuff and then save the results as a csv file. This csv file is then
+used in the jupyter notebooks to analyze the evaluation results. A lot of different plots are produced. Different tables
+are created and in general pandas and scipy are used to analyze all the produced data.
+
 ##WHY - Explanations of using different stuff
 *Black*: To make a project consistent and easy to read a formatter like black is really helpful.
 
@@ -110,27 +117,23 @@ used. In every Pull request two Github Actions are run automatically which are r
 if everything is formatted correct and all tests are run successful.
 
 *Pre-Commit*: This tool can check the code before you do a commit from a local device. In this case it is used, so
-that no unformatted code can be committed if pr-commit is installed on the local device.
+that no unformatted code can be committed if pre-commit is installed on the local device.
 
 ## npp simulation
 This part is used to simulate a nuclear power plant (npp). It contains the backend logic in python. It uses a similar
 logic for the backend as described in [Weyers et al. 2017].
 
-Next to the logic of the npp, this repo contains a function that can start the reactor and keep at stable at a certain
+Next to the logic of the npp, this repo contains a function that can start the reactor and keep it stable at a certain
 power output.
 
+(The following part ist not relevant for the master thesis):
 It also contains main functions to start a Py4J and a Pyjnius Python-Java-Bridge to connect Python with the Java-Program.
-With the run_benchmark file, you can create a benchmark of the startup performance of the three different versions ( native
+With the run_benchmark file, you can create a benchmark of the startup performance of the three different versions (native
 Python, Py4J-Bridge, Pyjnius-Bridge). You can then also analyze the results with the notebook in the analysis folder.
 Make sure that you copy the result.csv files to the results folder or change the paths in the notebook.
 
 The python code should later be used to train a reinforcement learning agent to identify whether it is possible to train an
 agent to fulfill the task of starting and shutting down a nnp.
-
-
-
-TODO: Add how to start training, how to start testing
-
 
 
 ## Citations:

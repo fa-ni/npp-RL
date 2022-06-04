@@ -9,7 +9,7 @@ from src.main.rl.utils.constants import (
     scaling_factors_scenario_2,
     action_dimensions_german,
     obs_scaling_factors,
-    obs_dimensions,
+    obs_dimensions_german,
     scaling_factors_scenario_3,
 )
 from src.main.rl.utils.parser import parse_scenario_name, parse_wrapper
@@ -29,7 +29,7 @@ color_mapping = {
 }
 
 
-def plot_actions_taken(actions_taken: list, scenario_name: str, y_axis_scale=None) -> None:
+def plot_actions_taken(actions_taken: list, scenario_name: str, y_axis_scale=None, color="standard"):
     if y_axis_scale is None:
         y_axis_scale = [[0, 100], [0, 2200], [0, 1.2], [0, 1.2], [0, 2200]]
     action_space_size = len(actions_taken[0])
@@ -48,7 +48,6 @@ def plot_actions_taken(actions_taken: list, scenario_name: str, y_axis_scale=Non
     parsed_scenario_name = parse_scenario_name(scenario_name)
     if parsed_scenario_name == "scenario1":
         for idx, item in enumerate(actions_positions):
-            # TODO double check
             scaled_values.append([int(round((x + 1) * (scaling_factors_scenario_1[idx] / 2))) for x in item])
     if parsed_scenario_name == "scenario2":
         for idx, item in enumerate(actions_positions):
@@ -60,10 +59,7 @@ def plot_actions_taken(actions_taken: list, scenario_name: str, y_axis_scale=Non
             scaled_values.append([scaling_factors_scenario_3[idx][x] for x in item])
 
     # Plotting
-    [
-        ax[idx].plot(action_position, color=color_mapping["standard"])
-        for idx, action_position in enumerate(scaled_values)
-    ]
+    [ax[idx].plot(action_position, color=color_mapping[color]) for idx, action_position in enumerate(scaled_values)]
 
     [
         ax[idx].xaxis.set_major_locator(plticker.MaxNLocator(5 if len(actions_positions[0]) >= 5 else 5))
@@ -71,12 +67,11 @@ def plot_actions_taken(actions_taken: list, scenario_name: str, y_axis_scale=Non
     ]
     [ax[idx].set_title(action_dimensions_german[idx]) for idx in range(action_space_size)]
     [ax[idx].set_xlabel("Zeitschritte") for idx in range(action_space_size)]
-    [ax[idx].set_ylabel("Value") for idx in range(action_space_size)]
+    [ax[idx].set_ylabel("Wert") for idx in range(action_space_size)]
     if y_axis_scale:
         [ax[idx].set_ylim(y_axis_scale[idx]) for idx in range(action_space_size)]
 
-    plt.show()
-    return fig
+    return fig, ax
     # fig.savefig(
     #    f"src/main/rl/evaluation/plot_results/phase3_actions_plots_scen1_wo_best.png",
     #    format="png",
@@ -84,7 +79,7 @@ def plot_actions_taken(actions_taken: list, scenario_name: str, y_axis_scale=Non
     # )
 
 
-def plot_observations(observations_taken: list, y_axis_scale: list = None) -> None:
+def plot_observations(observations_taken: list, y_axis_scale: list = None, color="standard"):
     if y_axis_scale is None:
         y_axis_scale = [
             [0, 1100],
@@ -116,12 +111,20 @@ def plot_observations(observations_taken: list, y_axis_scale: list = None) -> No
         6: [-10, 1500, -10, 1500, -10, -10],
         11: [-10, 1500, -10, 1500, -10, -10, -10, -10, -10, -10, -10],
     }
-    dead_line_1 = {6: [-10, 2900, 500, 5300, 140, 0], 11: [-10, 2900, 500, 5300, 140, -10, -10, -10, -10, -10, 0]}
-    dead_line_2 = {6: [-10, 1000, -10, 300, -10, -10], 11: [-10, 1000, -10, 300, -10, -10, -10, -10, -10, -10, -10]}
-    fig, ax = plt.subplots(obs_space_size, 1, constrained_layout=True)
+    dead_line_1 = {
+        6: [-10, 2900, 500, 5300, 140, 0],
+        7: [-10, 2900, 500, 5300, 140, -10, -10],
+        11: [-10, 2900, 500, 5300, 140, -10, -10, -10, -10, -10, 0],
+    }
+    dead_line_2 = {
+        6: [-10, 1000, -10, 300, -10, -10],
+        7: [-10, 1000, -10, 300, -10, -10, -10],
+        11: [-10, 1000, -10, 300, -10, -10, -10, -10, -10, -10, -10],
+    }
+    fig, ax = plt.subplots(1, obs_space_size, constrained_layout=True)
     obs_positions = [[] for i in range(obs_space_size)]
-    fig.set_figheight(20)
-    # fig.set_figwidth(20)
+    fig.set_figheight(3)
+    fig.set_figwidth(24)
 
     # Transformation of actions taken. Final result: Each Action e.g. the first action will be togther in a list and will
     # be plotted as one graph. Total will look like the following if obs_space_ length ==3:
@@ -131,12 +134,11 @@ def plot_observations(observations_taken: list, y_axis_scale: list = None) -> No
     # Scaling
     scaled_values_obs = []
     current_obs_scaling_factors = obs_scaling_factors[obs_space_size]
-    current_obs_dimensions = obs_dimensions[obs_space_size]
+    current_obs_dimensions = obs_dimensions_german[obs_space_size]
     for idx, item in enumerate(obs_positions):
         scaled_values_obs.append([int(round((x + 1) * (current_obs_scaling_factors[idx] / 2))) for x in item])
         # Plotting
-    # print(scaled_values_obs)
-    [ax[idx].plot(obs_position, color=color_mapping["standard"]) for idx, obs_position in enumerate(scaled_values_obs)]
+    [ax[idx].plot(obs_position, color=color_mapping[color]) for idx, obs_position in enumerate(scaled_values_obs)]
     [ax[idx].set_ylim(y_axis_scale[idx]) for idx in range(obs_space_size)]
     [
         ax[idx].axhline(red_critical_line_1[obs_space_size][idx], color=color_mapping["red"], ls="--")
@@ -160,15 +162,9 @@ def plot_observations(observations_taken: list, y_axis_scale: list = None) -> No
     [ax[idx].set_xlabel("Zeitschritte") for idx in range(obs_space_size)]
     [ax[idx].yaxis.set_major_locator(plticker.MaxNLocator(5)) for idx in range(obs_space_size)]
     # [ax[idx].xaxis.set_major_locator(plticker.MaxNLocator(11)) for idx in range(obs_space_size)]
-    [ax[idx].set_ylabel("Value") for idx in range(obs_space_size)]
+    [ax[idx].set_ylabel("Wert") for idx in range(obs_space_size)]
 
-    plt.show()
-    return fig
-    # fig.savefig(
-    #    f"src/main/rl/evaluation/plot_results/phase3_obs_plots.png",
-    #    format="png",
-    #    dpi=300,
-    # )
+    return fig, ax
 
 
 def prepare_one_combination_actions_and_obs_for_analysis(

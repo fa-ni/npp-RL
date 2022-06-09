@@ -31,9 +31,9 @@ def eval_frontend(scenario_name: str, path: str, alg: OnPolicyAlgorithm, wrapper
     vec_env = make_vec_env(env_id, n_envs=1, wrapper_class=wrappers.make_wrapper)
     model = alg.load(path)
     if wrappers.npp_automation_wrapper:
-        p = subprocess.Popen(["java", "-jar", "npp_with_automation.jar"])
+        p = subprocess.Popen(["java", "-jar", "src/main/rl/evaluation/npp_with_automation.jar"])
     else:
-        p = subprocess.Popen(["java", "-jar", "npp_without_automation.jar"])
+        p = subprocess.Popen(["java", "-jar", "src/main/rl/evaluation/npp_without_automation.jar"])
     # sleep(1)
     while True:
         try:
@@ -107,8 +107,3 @@ def eval_frontend(scenario_name: str, path: str, alg: OnPolicyAlgorithm, wrapper
             break
         except:
             pass
-
-
-# path = "../models/models/scenario3/training_04_06/scenario3_ActionSpaceOption3Wrapper_ObservationOption5Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_PPO_training_04_06_1/best_model.zip"
-# scenario, alg, wrapper_maker = parse_information_from_path(path)
-# eval_frontend(scenario, path, alg, wrapper_maker)

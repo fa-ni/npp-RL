@@ -108,6 +108,11 @@ There are some jupyter notebooks on the top level of this project. They are used
 First they will evaluate a lot of different stuff and then save the results as a csv file. This csv file is then
 used in the jupyter notebooks to analyze the evaluation results. A lot of different plots are produced. Different tables
 are created and in general pandas and scipy are used to analyze all the produced data.
+All Jupyter notebooks feature a description in the first cell to see what they are doing.
+There is a phase2 jupyter notebooks which creates the plots, statistics and so on for the second phase.
+There are multiple phase3 jupyter notebooks for different kind of analysis.
+There is one actions_in_gui_magic which uses the agents to execute the learned
+actions in the gui. Try it out!
 
 ##WHY - Explanations of using different stuff
 *Black*: To make a project consistent and easy to read a formatter like black is really helpful.

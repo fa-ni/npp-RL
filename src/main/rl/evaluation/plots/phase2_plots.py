@@ -39,7 +39,7 @@ def create_multi_object_plot(df: pd.DataFrame):
                 label=name,
                 color=color_mapping[name],
             )
-            ax.set_xscale("symlog", linthresh=10)
+            ax.set_xscale("symlog")
             ax.xaxis.set_major_formatter(ScalarFormatter())
             ax.set_xlabel("Standardabweichung")
             ax.set_ylabel("Max Return")

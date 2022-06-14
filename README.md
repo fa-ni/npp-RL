@@ -23,8 +23,13 @@ To install the necessary packages there are two options available:
    2. Optional: Run the command 'poetry config virtualenvs.in-project true' to create a new venv only for this project
    3. Run the command 'poetry install'
 2. Requirements.txt
-   1. Run the command 'pip install -r requirements.txt'
+   1. Create a venv with the following command 'python3 -m venv .venv'
+   2. Activate the .venv -> Mac source .venv/bin/activate
+   3. Run the command 'pip install -r requirements.txt'
 
+--> Choose the right sdk for the project. The following example can be used with Intelij Idea on Mac:
+File -> Project Structure -> SDK -> Add SDK -> Python SDK -> Poetry Environment -> Existing Environment -> Choose the 
+one you just created.
 #### Start RL Training of Agents
 The main method is used to start the training of rl agents. You can just configure which environment,
 which wrappers and which algorithms to use. Everything else like saving the best model of a training run,
@@ -103,6 +108,11 @@ There are some jupyter notebooks on the top level of this project. They are used
 First they will evaluate a lot of different stuff and then save the results as a csv file. This csv file is then
 used in the jupyter notebooks to analyze the evaluation results. A lot of different plots are produced. Different tables
 are created and in general pandas and scipy are used to analyze all the produced data.
+All Jupyter notebooks feature a description in the first cell to see what they are doing.
+There is a phase2 jupyter notebooks which creates the plots, statistics and so on for the second phase.
+There are multiple phase3 jupyter notebooks for different kind of analysis.
+There is one actions_in_gui_magic which uses the agents to execute the learned
+actions in the gui. Try it out!
 
 ##WHY - Explanations of using different stuff
 *Black*: To make a project consistent and easy to read a formatter like black is really helpful.

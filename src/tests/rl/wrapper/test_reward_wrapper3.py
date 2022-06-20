@@ -17,7 +17,7 @@ def set_up():
 
 
 @mock.patch("src.main.rl.wrapper.reward_wrapper3.calculate_roofed_reward")
-@mock.patch("src.main.rl.wrapper.reward_wrapper3.calculate_reward_for_corridor")
+@mock.patch("src.main.rl.wrapper.reward_wrapper3.calculate_score_for_corridor_with_perfect_number")
 @mock.patch("src.main.rl.wrapper.reward_wrapper3.is_done")
 # @pytest.mark.number(1)
 def test_reward_wrapper3(mock1, mock2, mock3):

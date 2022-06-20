@@ -1,4 +1,7 @@
-from src.main.rl.wrapper.reward_calculations import calculate_roofed_reward, calculate_reward_for_corridor
+from src.main.rl.wrapper.reward_calculations import (
+    calculate_roofed_reward,
+    calculate_score_for_corridor_with_perfect_number,
+)
 import pytest
 
 
@@ -27,5 +30,5 @@ def test_calculate_roofed_reward(input: float, expected: float):
     ],
 )
 def test_calculate_reward_for_corridor(lower, upper, perfect, number, expected):
-    actual = calculate_reward_for_corridor(lower, upper, perfect, number)
+    actual = calculate_score_for_corridor_with_perfect_number(lower, upper, perfect, number)
     assert round(actual, 5) == expected

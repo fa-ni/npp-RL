@@ -1,4 +1,5 @@
 ,seconds,alg
+src/main/rl/logs\scenario1\new_del\scenario1_ActionSpaceOption2Wrapper_ObservationOption2Wrapper_NPPAutomationWrapper_RewardOption2Wrapper_PPO_new_del_1\events.out.tfevents.1654962188.DESKTOP-VUOVME7.16344.0,12.352631,PPO
 src/main/rl/logs\scenario1\training_04_06\scenario1_ActionSpaceOption2Wrapper_None_None_RewardOption2Wrapper_A2C_training_04_06_1\events.out.tfevents,31.969646,A2C
 src/main/rl/logs\scenario1\training_04_06\scenario1_ActionSpaceOption2Wrapper_None_None_RewardOption2Wrapper_A2C_training_04_06_10\events.out.tfevents,34.370821,A2C
 src/main/rl/logs\scenario1\training_04_06\scenario1_ActionSpaceOption2Wrapper_None_None_RewardOption2Wrapper_A2C_training_04_06_2\events.out.tfevents,31.395345,A2C

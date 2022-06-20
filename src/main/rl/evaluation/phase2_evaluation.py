@@ -19,7 +19,7 @@ def create_evaluation_df_phase2(path_to_save: str, all_files: list = None) -> pd
         for file in glob.glob("../models/*/*/*/*.zip", recursive=True):
             all_files.append(file)
         # Check if all models have been found
-    assert len(all_files) == 2400
+    assert len(all_files) == 2400, "Not the right amount of files found."
 
     pd.options.display.max_colwidth = 200
     for path in all_files:
@@ -30,7 +30,8 @@ def create_evaluation_df_phase2(path_to_save: str, all_files: list = None) -> pd
         result = evaluate(scenario, path, alg, wrapper_maker)
 
         cum_reward = result[0]
-        criticality_score = result[1]
+        criticality_score_single = result[1][0]
+        criticality_score_combined = result[1][1]
         total_timesteps = result[2]
         result_dict["full_path"] = path
         combination_name = path[:-17]
@@ -46,7 +47,8 @@ def create_evaluation_df_phase2(path_to_save: str, all_files: list = None) -> pd
         result_dict["obs_wrapper"] = obs_wrapper.__name__ if obs_wrapper else None
         result_dict["automation_wrapper"] = automation_wrapper.__name__ if automation_wrapper else None
         result_dict["cum_reward"] = cum_reward
-        result_dict["criticality_score"] = criticality_score
+        result_dict["criticality_score_single"] = criticality_score_single
+        result_dict["criticality_score_combined"] = criticality_score_combined
         result_dict["total_timesteps"] = total_timesteps
 
         df = pd.concat([df, pd.DataFrame(result_dict, index=[0])], ignore_index=True)

@@ -53,7 +53,8 @@ def create_evaluation_df_phase3(path_to_save: str, paths_best_models: list) -> p
             result_dict["obs_wrapper"] = obs_wrapper.__name__ if obs_wrapper else None
             result_dict["automation_wrapper"] = automation_wrapper.__name__ if automation_wrapper else None
             result_dict["cum_reward"] = cum_reward
-            result_dict["criticality_score"] = criticality_score
+            result_dict["criticality_score_single"] = criticality_score[0]
+            result_dict["criticality_score_combined"] = criticality_score[1]
             result_dict["total_timesteps"] = total_timesteps
             result_dict["full_path"] = full_path
 
@@ -64,8 +65,6 @@ def create_evaluation_df_phase3(path_to_save: str, paths_best_models: list) -> p
                 result_wo_automation_normal = evaluate(scenario, path_to_overhand, alg, wrapper_maker)
                 result_dict["result_w_npp_automation"] = None
                 result_dict["result_wo_npp_automation"] = result_wo_automation_normal[0]
-                result_dict["result_w_npp_automation_criticality"] = None
-                result_dict["result_wo_npp_automation_criticality"] = result_wo_automation_normal[1]
                 result_dict["result_w_npp_automation_timesteps"] = None
                 result_dict["result_wo_npp_automation_timesteps"] = result_wo_automation_normal[2]
             else:
@@ -73,8 +72,6 @@ def create_evaluation_df_phase3(path_to_save: str, paths_best_models: list) -> p
                 result_w_automation_normal = evaluate(scenario, path_to_overhand, alg, wrapper_maker)
                 result_dict["result_wo_npp_automation"] = None
                 result_dict["result_w_npp_automation"] = result_w_automation_normal[0]
-                result_dict["result_wo_npp_automation_criticality"] = None
-                result_dict["result_w_npp_automation_criticality"] = result_w_automation_normal[1]
                 result_dict["result_wo_npp_automation_timesteps"] = None
                 result_dict["result_w_npp_automation_timesteps"] = result_w_automation_normal[2]
             # Use length == 1000
@@ -85,7 +82,8 @@ def create_evaluation_df_phase3(path_to_save: str, paths_best_models: list) -> p
             ]
             result_dict["episode_length_1000_water_pump_blown"] = result_1000_episode[5][0]["Water_Pump Blown"]
             result_dict["episode_length_1000"] = result_1000_episode[0]
-            result_dict["episode_length_1000_criticality"] = result_1000_episode[1]
+            result_dict["episode_length_1000_criticality_single"] = result_1000_episode[1][0]
+            result_dict["episode_length_1000_criticality_combined"] = result_1000_episode[1][1]
             result_dict["episode_length_1000_timesteps"] = result_1000_episode[2]
             # Use Noise in evaluation
             for obs_varies_wrapper in ALL_OBS_NOISE_WRAPPERS:
@@ -94,7 +92,6 @@ def create_evaluation_df_phase3(path_to_save: str, paths_best_models: list) -> p
                 )
                 result = evaluate(scenario, path_to_overhand, alg, wrapper_maker)
                 result_dict[obs_varies_wrapper.__name__] = result[0]
-                result_dict[obs_varies_wrapper.__name__ + "_criticality"] = result[1]
                 result_dict[obs_varies_wrapper.__name__ + "_timesteps"] = result[2]
             for delay_wrapper in ALL_DELAY_NOISE_WRAPPERS:
                 wrapper_maker = WrapperMaker(
@@ -102,14 +99,12 @@ def create_evaluation_df_phase3(path_to_save: str, paths_best_models: list) -> p
                 )
                 result = evaluate(scenario, path_to_overhand, alg, wrapper_maker)
                 result_dict[delay_wrapper.__name__] = result[0]
-                result_dict[delay_wrapper.__name__ + "_criticality"] = result[1]
                 result_dict[delay_wrapper.__name__ + "_timesteps"] = result[2]
             # Use different starting states
             for starting_state in STARTING_STATE_OPTION1 + STARTING_STATE_OPTION2 + STARTING_STATE_OPTION3:
                 wrapper_maker = WrapperMaker(action_wrapper, automation_wrapper, obs_wrapper, reward_wrapper)
                 result = evaluate(scenario, path_to_overhand, alg, wrapper_maker, starting_state=starting_state())
                 result_dict[starting_state.__name__] = result[0]
-                result_dict[starting_state.__name__ + "_criticality"] = result[1]
                 result_dict[starting_state.__name__ + "_timesteps"] = result[2]
 
             # add to df

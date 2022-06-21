@@ -4,6 +4,7 @@ import numpy as np
 from matplotlib.ticker import ScalarFormatter
 import re
 
+from src.main.rl.utils.parser import parse_alg_name
 from src.main.rl.utils.utils import parse_category
 
 colors_to_use = ["#1D2D5F", "#F65E5D", "#FFBC47", "#40CEE3"]
@@ -17,15 +18,18 @@ color_mapping = {
     "NPPAutomationWrapper": "#F65E5D",
     "ActionSpaceOption2Wrapper": "#F65E5D",
     "ActionSpaceOption3Wrapper": "#FFBC47",
+    "<class 'stable_baselines3.sac.sac.SAC'>": colors_to_use[0],
+    "<class 'stable_baselines3.td3.td3.TD3'>": colors_to_use[1],
+    "<class 'stable_baselines3.a2c.a2c.A2C'>": colors_to_use[2],
+    "<class 'stable_baselines3.ppo.ppo.PPO'>": colors_to_use[3],
 }
-
 
 # Used for showing that random seeds have a significant influence on the result
 def create_multi_object_plot(df: pd.DataFrame):
     # Decide if we want to color for actionSpace, NPPAutomation or Scenario
     df = df.fillna("None")
     result = []
-    for idx, item in enumerate(["scenario", "automation_wrapper", "action_wrapper"]):
+    for idx, item in enumerate(["scenario", "automation_wrapper", "action_wrapper", "alg"]):
         fig, ax = plt.subplots(figsize=(5, 6), dpi=300, constrained_layout=True)
         groups = df.groupby(item, dropna=False)
         counter = 0
@@ -50,8 +54,12 @@ def create_multi_object_plot(df: pd.DataFrame):
                     labels.append(name[:-7])
             else:
                 labels.append(name)
+
             counter += 1
-        ax.legend(groups.groups.keys())
+            if item == "scenario":
+                ax.legend(["Szenario 1", "Szenario 2", "Szenario 3"])
+            else:
+                ax.legend(groups.groups.keys())
         result.append(fig)
     plt.show()
     return result

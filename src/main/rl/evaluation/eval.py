@@ -18,7 +18,7 @@ def evaluate(
     wrapper: WrapperMaker,
     starting_state=None,
     episode_length: int = 250,
-) -> [float, float, int, list, list, dict]:
+) -> [float, list, int, list, list, dict]:
     """
     The evaluate function is used to evaluate a trained agent.
     It returns a lot of information about like return, criticality score, observations, actions taken and
@@ -61,14 +61,20 @@ def evaluate(
         reactor_status_over_time.append(info[0])
         rewards_per_timestep.append(reward)
         if done:
-            # plot_actions_taken(actions_taken, scenario_name)
-            # plot_observations(observations_taken[:-1])
-            criticality_score = calculate_criticality_score_with_reward_functions(reactor_status_over_time)
-            print(f"Criticality Score1: {criticality_score}")
+            single_min_crit_score, combined_score_min = calculate_criticality_score_with_reward_functions(
+                reactor_status_over_time
+            )
             result = sum(rewards_per_timestep)
             print(f"Return: {result[0]}")
             obs = vec_env.reset()
-            return result[0], criticality_score, i + 1, actions_taken, observations_taken, info
+            return (
+                result[0],
+                [single_min_crit_score, combined_score_min],
+                i + 1,
+                actions_taken,
+                observations_taken,
+                info,
+            )
 
 
 def evaluate_terminal_state_obs(
@@ -135,7 +141,7 @@ def evaluate_terminal_state_obs(
             return result[0], observations_taken, info
 
 
-def evaluate_sop() -> [float, float, int, list, list, dict]:
+def evaluate_sop() -> [float, list, int, list, list, dict]:
     """
     This function is used to evaluate the SOP policy. It returns the same information as the normal
     evaluate function for the agents.
@@ -164,12 +170,13 @@ def evaluate_sop() -> [float, float, int, list, list, dict]:
         if done:
             # plot_actions_taken(actions_taken, scenario_name)
             # plot_observations(observations_taken[:-1])
-            criticality_score = calculate_criticality_score_with_reward_functions(reactor_status_over_time)
-            print(f"Criticality Score1: {criticality_score}")
+            single_min_crit_score, combined_score_min = calculate_criticality_score_with_reward_functions(
+                reactor_status_over_time
+            )
             result = sum(rewards_per_timestep)
             print(f"Return: {result[0]}")
             obs = vec_env.reset()
-            return result, criticality_score, i + 1, actions_taken, observations_taken, info
+            return result, [single_min_crit_score, combined_score_min], i + 1, actions_taken, observations_taken, info
 
 
 def get_single_reward_sop() -> list:

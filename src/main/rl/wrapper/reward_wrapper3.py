@@ -1,7 +1,10 @@
 import gym as gym
 
 from src.main.rl.utils.utils import is_done
-from src.main.rl.wrapper.reward_calculations import calculate_roofed_reward, calculate_reward_for_corridor
+from src.main.rl.wrapper.reward_calculations import (
+    calculate_roofed_reward,
+    calculate_score_for_corridor_with_perfect_number,
+)
 
 
 class RewardOption3Wrapper(gym.RewardWrapper):

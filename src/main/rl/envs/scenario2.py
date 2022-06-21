@@ -25,8 +25,8 @@ class Scenario2(Env):
         # 1. moderator_percent 2. WP1 RPM
         self.action_space = MultiBinary(n=2)
         self.observation_space = Box(np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32))
-        self.length_initial = length
         self.length = length
+        self.initial_length = length
         self.starting_state = starting_state
 
     def step(self, action):
@@ -97,7 +97,7 @@ class Scenario2(Env):
     def reset(self):
         self.state = None
         self.done = False
-        self.length = self.length_initial
+        self.length = self.initial_length
         if self.starting_state:
             self.state = BackgroundStepService(self.starting_state)
         else:

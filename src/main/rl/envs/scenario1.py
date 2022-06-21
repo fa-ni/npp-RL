@@ -22,9 +22,8 @@ class Scenario1(Env):
         self.action_space = Box(np.array([-1, -1]).astype(np.float32), np.array([1, 1]).astype(np.float32))
         self.observation_space = Box(np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32))
         self.done = False
-        self.length_initial = length
+        self.initial_length = length
         self.length = length
-
         self.starting_state = starting_state
 
     def step(self, action):
@@ -86,7 +85,7 @@ class Scenario1(Env):
     def reset(self):
         self.state = None
         self.done = False
-        self.length = self.length_initial
+        self.length = self.initial_length
         if self.starting_state:
             self.state = BackgroundStepService(self.starting_state)
         else:

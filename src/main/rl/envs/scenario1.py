@@ -22,8 +22,9 @@ class Scenario1(Env):
         self.action_space = Box(np.array([-1, -1]).astype(np.float32), np.array([1, 1]).astype(np.float32))
         self.observation_space = Box(np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32))
         self.done = False
-        self.length = length
+
         self.initial_length = length
+        self.length = length
         self.starting_state = starting_state
 
     def step(self, action):

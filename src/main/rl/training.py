@@ -6,7 +6,9 @@ from stable_baselines3.common.callbacks import EvalCallback
 from stable_baselines3.common.env_util import make_vec_env
 from stable_baselines3.common.vec_env import VecMonitor
 
+from src.main.rl.utils.combined_parser import parse_information_from_path
 from src.main.rl.utils.constants import ALL_ACTION_WRAPPERS, ALL_OBSERVATION_WRAPPERS
+from src.main.rl.utils.parser import parse_wrapper
 from src.main.rl.utils.utils import WrapperMaker, parse_scenario_name, delete_env_id
 
 log_dir = "./model"
@@ -21,6 +23,7 @@ def train_agent(
     npp_automation: str = None,
     reward_wrapper_name: str = None,
     name_ending: str = None,
+    number_of_timesteps: int = 500000,
 ):
     """
     This function starts the training of the defined models. It saves tensorboard logs and
@@ -49,7 +52,7 @@ def train_agent(
             tensorboard_log=f"./logs/{log_name_scenario}/{name_ending}/",
             device="cpu",
         ).learn(
-            500000,
+            number_of_timesteps,
             tb_log_name=log_name,
             callback=eval_callback,
         )
@@ -83,10 +86,16 @@ def train_all_scenarios(
                     register(id=env_id, entry_point=scenario)
                     # This is needed because make_vec_env does not allow a method with multiple parameters as wrapper_class
                     wrapper_maker = WrapperMaker(
-                        action_wrapper, automation_wrapper, observation_wrapper, reward_wrapper
+                        action_wrapper,
+                        automation_wrapper,
+                        observation_wrapper,
+                        reward_wrapper,
                     )
                     vec_env = make_vec_env(
-                        env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper, monitor_dir=log_dir
+                        env_id,
+                        n_envs=num_cpu,
+                        wrapper_class=wrapper_maker.make_wrapper,
+                        monitor_dir=log_dir,
                     )
                     vec_env_monitor = VecMonitor(vec_env)
 
@@ -152,7 +161,12 @@ def train_all_scenarios(
             else:
                 num_cpu = 8
             register(id=env_id, entry_point=scenario)
-            vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=automation_wrapper, monitor_dir=log_dir)
+            vec_env = make_vec_env(
+                env_id,
+                n_envs=num_cpu,
+                wrapper_class=automation_wrapper,
+                monitor_dir=log_dir,
+            )
             vec_env_monitor = VecMonitor(vec_env)
             train_agent(
                 alg,
@@ -165,3 +179,41 @@ def train_all_scenarios(
                 name_ending,
             )
             delete_env_id(env_id)
+
+
+def train_by_path(paths: list, name_ending: str) -> None:
+    env_id = f"env-v1"
+
+    for path in paths:
+        scenario, alg, wrapper_maker = parse_information_from_path(path)
+        (
+            action_wrapper,
+            automation_wrapper,
+            observation_wrapper,
+            reward_wrapper,
+        ) = parse_wrapper(path)
+        if alg == TD3:
+            num_cpu = 1
+        else:
+            num_cpu = 8
+        register(id=env_id, entry_point=scenario)
+        vec_env = make_vec_env(
+            env_id,
+            n_envs=num_cpu,
+            wrapper_class=wrapper_maker.make_wrapper,
+            monitor_dir=log_dir,
+        )
+        vec_env_monitor = VecMonitor(vec_env)
+
+        train_agent(
+            alg,
+            vec_env_monitor,
+            scenario,
+            action_wrapper.__name__,
+            observation_wrapper.__name__,
+            automation_wrapper.__name__ if automation_wrapper != None else None,
+            reward_wrapper.__name__ if reward_wrapper != None else None,
+            name_ending,
+            2500000,
+        )
+        delete_env_id(env_id)

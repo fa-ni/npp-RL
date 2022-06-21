@@ -24,11 +24,32 @@ class Scenario3(Env):
         # 1. moderator_percent 2. WP1 RPM
         self.action_space = MultiDiscrete([9, 9])
         self.observation_space = Box(np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32))
+
         self.length = length
         self.initial_length = length
         # The key is the action value and the value is the mapping for the actual change for the real value.
-        self.get_moderator_percentage_change = {0: -10, 1: -5, 2: -3, 3: -1, 4: 0, 5: 1, 6: 3, 7: 5, 8: 10}
-        self.get_pump_change = {0: -200, 1: -100, 2: -50, 3: -25, 4: 0, 5: 25, 6: 50, 7: 100, 8: 200}
+        self.get_moderator_percentage_change = {
+            0: -10,
+            1: -5,
+            2: -3,
+            3: -1,
+            4: 0,
+            5: 1,
+            6: 3,
+            7: 5,
+            8: 10,
+        }
+        self.get_pump_change = {
+            0: -200,
+            1: -100,
+            2: -50,
+            3: -25,
+            4: 0,
+            5: 25,
+            6: 50,
+            7: 100,
+            8: 200,
+        }
         self.starting_state = starting_state
 
     def step(self, action):

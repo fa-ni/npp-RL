@@ -23,12 +23,34 @@ class Scenario3(Env):
     def __init__(self, starting_state=None, length=250):
         # 1. moderator_percent 2. WP1 RPM
         self.action_space = MultiDiscrete([9, 9])
-        self.observation_space = Box(np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32))
+        self.observation_space = Box(
+            np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32)
+        )
         self.length = length
         self.initial_length = length
         # The key is the action value and the value is the mapping for the actual change for the real value.
-        self.get_moderator_percentage_change = {0: -10, 1: -5, 2: -3, 3: -1, 4: 0, 5: 1, 6: 3, 7: 5, 8: 10}
-        self.get_pump_change = {0: -200, 1: -100, 2: -50, 3: -25, 4: 0, 5: 25, 6: 50, 7: 100, 8: 200}
+        self.get_moderator_percentage_change = {
+            0: -10,
+            1: -5,
+            2: -3,
+            3: -1,
+            4: 0,
+            5: 1,
+            6: 3,
+            7: 5,
+            8: 10,
+        }
+        self.get_pump_change = {
+            0: -200,
+            1: -100,
+            2: -50,
+            3: -25,
+            4: 0,
+            5: 25,
+            6: 50,
+            7: 100,
+            8: 200,
+        }
         self.starting_state = starting_state
 
     def step(self, action):
@@ -39,7 +61,9 @@ class Scenario3(Env):
         moderator_percent_setting = self.get_moderator_percentage_change[action[0]]
         wp_rpm_setting = self.get_pump_change[action[1]]
         self.state.full_reactor.reactor.moderator_percent = (
-                100 - self.state.full_reactor.reactor.moderator_percent + moderator_percent_setting
+            100
+            - self.state.full_reactor.reactor.moderator_percent
+            + moderator_percent_setting
         )
         if wp_rpm_setting + self.state.full_reactor.water_pump1.rpm_to_be_set > 0:
             self.state.full_reactor.water_pump1.rpm_to_be_set += wp_rpm_setting
@@ -65,7 +89,9 @@ class Scenario3(Env):
             condenser_rpm_setting = self.get_pump_change[action[4]]
             self.state.full_reactor.water_valve1.status = water_valve_setting
             self.state.full_reactor.steam_valve1.status = steam_valve_setting
-            self.state.full_reactor.condenser_pump.rpm_to_be_set += condenser_rpm_setting
+            self.state.full_reactor.condenser_pump.rpm_to_be_set += (
+                condenser_rpm_setting
+            )
         self.state.time_step(1)
 
         self.done = is_done(self.state.full_reactor, self.length)
@@ -102,7 +128,9 @@ class Scenario3(Env):
         if self.starting_state:
             self.state = BackgroundStepService(self.starting_state)
         else:
-            self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
+            self.state = BackgroundStepService(
+                ReactorCreatorService.create_standard_full_reactor()
+            )
             # For ActionSpaceOption 1 we need to set these values in the beginning.
             # If we have a different ActionSpaceOption we will override the values again in the
             # action_wrapper.

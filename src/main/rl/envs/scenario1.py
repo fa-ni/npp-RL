@@ -19,13 +19,10 @@ class Scenario1(Env):
 
     def __init__(self, starting_state=None, length=250):
         # 1. moderator_percent 2. WP1 RPM
-        self.action_space = Box(
-            np.array([-1, -1]).astype(np.float32), np.array([1, 1]).astype(np.float32)
-        )
-        self.observation_space = Box(
-            np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32)
-        )
+        self.action_space = Box(np.array([-1, -1]).astype(np.float32), np.array([1, 1]).astype(np.float32))
+        self.observation_space = Box(np.array([-1]).astype(np.float32), np.array([1]).astype(np.float32))
         self.done = False
+
         self.initial_length = length
         self.length = length
         self.starting_state = starting_state
@@ -93,9 +90,7 @@ class Scenario1(Env):
         if self.starting_state:
             self.state = BackgroundStepService(self.starting_state)
         else:
-            self.state = BackgroundStepService(
-                ReactorCreatorService.create_standard_full_reactor()
-            )
+            self.state = BackgroundStepService(ReactorCreatorService.create_standard_full_reactor())
             # For ActionSpaceOption 1 we need to set these values in the beginning.
             # If we have a different ActionSpaceOption we will override the values again in the
             # action_wrapper.

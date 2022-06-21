@@ -86,10 +86,16 @@ def train_all_scenarios(
                     register(id=env_id, entry_point=scenario)
                     # This is needed because make_vec_env does not allow a method with multiple parameters as wrapper_class
                     wrapper_maker = WrapperMaker(
-                        action_wrapper, automation_wrapper, observation_wrapper, reward_wrapper
+                        action_wrapper,
+                        automation_wrapper,
+                        observation_wrapper,
+                        reward_wrapper,
                     )
                     vec_env = make_vec_env(
-                        env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper, monitor_dir=log_dir
+                        env_id,
+                        n_envs=num_cpu,
+                        wrapper_class=wrapper_maker.make_wrapper,
+                        monitor_dir=log_dir,
                     )
                     vec_env_monitor = VecMonitor(vec_env)
 
@@ -155,7 +161,12 @@ def train_all_scenarios(
             else:
                 num_cpu = 8
             register(id=env_id, entry_point=scenario)
-            vec_env = make_vec_env(env_id, n_envs=num_cpu, wrapper_class=automation_wrapper, monitor_dir=log_dir)
+            vec_env = make_vec_env(
+                env_id,
+                n_envs=num_cpu,
+                wrapper_class=automation_wrapper,
+                monitor_dir=log_dir,
+            )
             vec_env_monitor = VecMonitor(vec_env)
             train_agent(
                 alg,
@@ -175,14 +186,22 @@ def train_by_path(paths: list, name_ending: str) -> None:
 
     for path in paths:
         scenario, alg, wrapper_maker = parse_information_from_path(path)
-        action_wrapper, automation_wrapper, observation_wrapper, reward_wrapper = parse_wrapper(path)
+        (
+            action_wrapper,
+            automation_wrapper,
+            observation_wrapper,
+            reward_wrapper,
+        ) = parse_wrapper(path)
         if alg == TD3:
             num_cpu = 1
         else:
             num_cpu = 8
         register(id=env_id, entry_point=scenario)
         vec_env = make_vec_env(
-            env_id, n_envs=num_cpu, wrapper_class=wrapper_maker.make_wrapper, monitor_dir=log_dir
+            env_id,
+            n_envs=num_cpu,
+            wrapper_class=wrapper_maker.make_wrapper,
+            monitor_dir=log_dir,
         )
         vec_env_monitor = VecMonitor(vec_env)
 

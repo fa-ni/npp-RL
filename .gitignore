@@ -11,3 +11,5 @@
 /src/main/rl/logs
 /src/main/rl/model
 /src/main/rl/models
+/src/main/rl/logs_sparse_rewards/
+/src/main/rl/models_sparse_rewards/

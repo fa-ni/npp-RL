@@ -45,9 +45,10 @@ There are two option to use a RL agent.
    supported.
 #### Evaluation and detailed analysis of lots of models / already trained agents
 You can use the jupyter notebooks provided on the top folder level.
-Maybe you need to adjust paths to point to the right models. The phase2 jupyter notebook
-contains general analytics about all trained models. The phase3 is used to get a
-detailed analysis of some chosen models.
+Maybe you need to adjust paths to point to the right models. The phase1 notebooks contains information about the training
+of the agents. The phase2 jupyter notebook contains general analytics about all trained models. The phase3 notebooks are used to perform a
+detailed analysis of some chosen models. There is one actions_in_gui_magic.ipynb notebook which uses the agents to execute the learned
+actions in the gui. Try it out!
 
 
 ### Information about the implementation of the environments and wrappers
@@ -110,10 +111,6 @@ First they will evaluate a lot of different stuff and then save the results as a
 used in the jupyter notebooks to analyze the evaluation results. A lot of different plots are produced. Different tables
 are created and in general pandas and scipy are used to analyze all the produced data.
 All Jupyter notebooks feature a description in the first cell to see what they are doing.
-There is a phase2 jupyter notebooks which creates the plots, statistics and so on for the second phase.
-There are multiple phase3 jupyter notebooks for different kind of analysis.
-There is one actions_in_gui_magic which uses the agents to execute the learned
-actions in the gui. Try it out!
 
 ## WHY - Explanations of using different stuff
 *Black*: To make a project consistent and easy to read a formatter like black is really helpful.

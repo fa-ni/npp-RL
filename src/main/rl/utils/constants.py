@@ -55,8 +55,28 @@ STARTING_STATE_OPTION3 = [create_starting_state_option3]
 # Action based information
 scaling_factors_scenario_1 = [100, 2000, 1, 1, 2000]
 scaling_factors_scenario_2 = [1, 25, 1, 1, 25]
-moderator_percentage_change_scenario_3 = {0: -10, 1: -5, 2: -3, 3: -1, 4: 0, 5: 1, 6: 3, 7: 5, 8: 10}
-pump_change_scenario_3 = {0: -200, 1: -100, 2: -50, 3: -25, 4: 0, 5: 25, 6: 50, 7: 100, 8: 200}
+moderator_percentage_change_scenario_3 = {
+    0: -10,
+    1: -5,
+    2: -3,
+    3: -1,
+    4: 0,
+    5: 1,
+    6: 3,
+    7: 5,
+    8: 10,
+}
+pump_change_scenario_3 = {
+    0: -200,
+    1: -100,
+    2: -50,
+    3: -25,
+    4: 0,
+    5: 25,
+    6: 50,
+    7: 100,
+    8: 200,
+}
 scaling_factors_scenario_3 = [
     moderator_percentage_change_scenario_3,
     pump_change_scenario_3,
@@ -65,7 +85,13 @@ scaling_factors_scenario_3 = [
     pump_change_scenario_3,
 ]
 action_dimensions = ["Moderator Percent", "WP1 RPM", "WV1", "SV1", "CP RPM"]
-action_dimensions_german = ["Regelstäbe", "Wasserpumpe 1 RPM", "Wasserventil 1", "Dampfventil 1", "Kondensator RPM"]
+action_dimensions_german = [
+    "Regelstäbe",
+    "Wasserpumpe 1 RPM",
+    "Wasserventil 1",
+    "Dampfventil 1",
+    "Kondensator RPM",
+]
 # Observation based information
 obs_scaling_factors = {
     1: [800],
@@ -78,7 +104,15 @@ obs_scaling_factors = {
 obs_dimensions = {
     1: ["Power Output"],
     3: ["Power Output", "WP1 RPM", "Moderator Percentage"],
-    7: ["Power Output", "WP1 RPM", "Moderator Percentage", "CP RPM", "WV1", "SV1", "Blow Counter"],
+    7: [
+        "Power Output",
+        "WP1 RPM",
+        "Moderator Percentage",
+        "CP RPM",
+        "WV1",
+        "SV1",
+        "Blow Counter",
+    ],
     6: [
         "Power Output",
         "Reactor WaterLevel",
@@ -137,13 +171,13 @@ obs_dimensions_german = {
 alg_mapping = {"A2C": A2C, "DDPG": DDPG, "PPO": PPO, "SAC": SAC, "TD3": TD3}
 
 color_mapping = {
-    "standard": "#1D2D5F",
-    "red": "#F65E5D",
-    "blue": "#1D2D5F",
     "yellow": "#FFBC47",
+    "red": "#F65E5D",
+    "standard": "#1D2D5F",
     "turquoise": "#40CEE3",
     "brown": "#B18E72",
-    "grey": "#E0DDD7",
+    "mint": "#94FFB9",
+    "blue": "#1D2D5F",
     "orange": "#FF8800",
     "scenario1": "#1D2D5F",
     "scenario2": "#F65E5D",

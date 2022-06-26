@@ -28,9 +28,12 @@ To install the necessary packages there are two options available:
    3. Run the command 'python -m pip install --upgrade pip'
    4. Run the command 'pip install -r requirements.txt'
 
---> Choose the right sdk for the project. The following example can be used with Intelij Idea on Mac if you have installed the packages via poetry:
+**Choose the right sdk for the project**: 
+The following example can be used with Intelij Idea on Mac if you have installed the packages via poetry:
 File -> Project Structure -> SDK -> Add SDK -> Python SDK -> Poetry Environment -> Existing Environment -> Choose the 
 one you just created.
+If you used the requirements.txt method, you need to choose the right path so that the IDE is using correct packages from 
+the venv.
 #### Start RL Training of Agents
 The main method is used to start the training of rl agents. You can just configure which environment,
 which wrappers and which algorithms to use. Everything else like saving the best model of a training run,

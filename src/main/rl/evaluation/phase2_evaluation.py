@@ -19,14 +19,14 @@ def create_evaluation_df_phase2(path_to_save: str, all_files: list = None) -> pd
         for file in glob.glob("../models/*/*/*/*.zip", recursive=True):
             all_files.append(file)
         # Check if all models have been found
-    assert len(all_files) == 2400, "Not the right amount of files found."
+        assert len(all_files) == 2400, "Not the right amount of files found."
 
     pd.options.display.max_colwidth = 200
     for path in all_files:
         result_dict = {}
         scenario, alg, wrapper_maker = parse_information_from_path(path)
         action_wrapper, automation_wrapper, obs_wrapper, reward_wrapper = parse_wrapper(path)
-
+        print(alg)
         result = evaluate(scenario, path, alg, wrapper_maker)
 
         cum_reward = result[0]

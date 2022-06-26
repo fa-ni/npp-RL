@@ -137,13 +137,15 @@ obs_dimensions_german = {
 alg_mapping = {"A2C": A2C, "DDPG": DDPG, "PPO": PPO, "SAC": SAC, "TD3": TD3}
 
 color_mapping = {
-    "standard": "#1D2D5F",
-    "red": "#F65E5D",
-    "blue": "#1D2D5F",
     "yellow": "#FFBC47",
+    "red": "#F65E5D",
+    "standard": "#1D2D5F",
     "turquoise": "#40CEE3",
+
+
     "brown": "#B18E72",
-    "grey": "#E0DDD7",
+    "mint": "#94FFB9",
+    "blue": "#1D2D5F",
     "orange": "#FF8800",
     "scenario1": "#1D2D5F",
     "scenario2": "#F65E5D",

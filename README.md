@@ -23,11 +23,12 @@ To install the necessary packages there are two options available:
    2. Optional: Run the command 'poetry config virtualenvs.in-project true' to create a new venv only for this project
    3. Run the command 'poetry install'
 2. Requirements.txt
-   1. Create a venv with the following command 'python3 -m venv .venv'
-   2. Activate the .venv -> Mac source .venv/bin/activate
-   3. Run the command 'pip install -r requirements.txt'
+   1. Create a venv with the following command 'python -m venv .venv'
+   2. Activate the .venv -> Mac source .venv/bin/activate 
+   3. Run the command 'python -m pip install --upgrade pip'
+   4. Run the command 'pip install -r requirements.txt'
 
---> Choose the right sdk for the project. The following example can be used with Intelij Idea on Mac:
+--> Choose the right sdk for the project. The following example can be used with Intelij Idea on Mac if you have installed the packages via poetry:
 File -> Project Structure -> SDK -> Add SDK -> Python SDK -> Poetry Environment -> Existing Environment -> Choose the 
 one you just created.
 #### Start RL Training of Agents
@@ -102,7 +103,7 @@ There are more wrappers which are being used for some experiments of the trained
 they could also be used during the training. These noise wrappers are adding different types of
 noise to the observations and the backend logic.
 
-###Jupyter Notebooks
+### Jupyter Notebooks
 
 There are some jupyter notebooks on the top level of this project. They are used to analyse the trained agents.
 First they will evaluate a lot of different stuff and then save the results as a csv file. This csv file is then
@@ -114,7 +115,7 @@ There are multiple phase3 jupyter notebooks for different kind of analysis.
 There is one actions_in_gui_magic which uses the agents to execute the learned
 actions in the gui. Try it out!
 
-##WHY - Explanations of using different stuff
+## WHY - Explanations of using different stuff
 *Black*: To make a project consistent and easy to read a formatter like black is really helpful.
 
 *Pytest* + Mock: To be able to do unit testing. Mocking is an essential part for unit testing.
